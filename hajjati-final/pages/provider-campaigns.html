@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إدارة حملاتي | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body>
+
+  <!-- ══ الشريط الحكومي ══ -->
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+    </div>
+  </div>
+
+  <!-- ══ شريط التنقل ══ -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="/pages/provider-dashboard.html">لوحتي</a>
+      <a class="nav-link active" href="/pages/provider-campaigns.html">حملاتي</a>
+      <a class="nav-link" href="/pages/provider-scanner.html">مسح QR</a>
+    </div>
+    <div class="nav-actions">
+      <div class="nav-user">
+        <span class="nav-user-name" id="navUserName">جارٍ التحميل...</span>
+        <button class="btn-logout" onclick="handleLogout()">خروج</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ تخطيط اللوحة ══ -->
+  <div class="dashboard-layout">
+
+    <!-- ══ الشريط الجانبي ══ -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <img src="/assets/logo_white-removebg.png" alt="حجتي" class="sidebar-logo-img">
+      </div>
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">؟</div>
+        <div>
+          <div class="sidebar-user-name" id="sidebarName">جارٍ التحميل...</div>
+          <div class="sidebar-user-role">مزود الخدمة</div>
+        </div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">الإدارة</div>
+        <a class="sidebar-link" href="/pages/provider-dashboard.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          لوحة التحكم
+        </a>
+        <a class="sidebar-link active" href="/pages/provider-campaigns.html">
+          <svg viewBox="0 0 24 24"><path d="M3 22 12 2l9 20"/><path d="M7.5 14h9"/></svg>
+          حملاتي
+        </a>
+        <a class="sidebar-link" href="/pages/provider-scanner.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          مسح QR
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="sidebar-link" style="width:100%;border:none;background:none;cursor:pointer;" onclick="handleLogout()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          تسجيل الخروج
+        </button>
+      </div>
+    </aside>
+
+    <!-- ══ المحتوى ══ -->
+    <main class="dashboard-main">
+
+      <div class="dashboard-topbar">
+        <div>
+          <div class="dashboard-title">حملاتي</div>
+          <div class="dashboard-sub">إنشاء وإدارة حملاتك ومراجعة طلبات الحجاج</div>
+        </div>
+        <button class="btn btn-primary" onclick="openCampModal()">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          حملة جديدة
+        </button>
+      </div>
+
+      <!-- تبويبات -->
+      <div style="display:flex; gap:0; border-bottom:2px solid var(--c-border); margin-bottom:24px;">
+        <button class="tab-btn active" id="tabCampaigns" onclick="switchTab('campaigns')"
+          style="padding:12px 24px; background:none; border:none; border-bottom:3px solid var(--c-primary); font-size:14px; font-weight:700; color:var(--c-primary); cursor:pointer; margin-bottom:-2px;">
+          حملاتي
+        </button>
+        <button class="tab-btn" id="tabApplications" onclick="switchTab('applications')"
+          style="padding:12px 24px; background:none; border:none; border-bottom:3px solid transparent; font-size:14px; font-weight:600; color:var(--c-label); cursor:pointer; margin-bottom:-2px;">
+          طلبات الحجاج
+          <span id="appsBadge" class="badge badge-pending" style="margin-right:6px; display:none;"></span>
+        </button>
+      </div>
+
+      <!-- ═ تبويب: حملاتي ═ -->
+      <div id="panelCampaigns">
+        <div id="campaignsList">
+          <div style="text-align:center; padding:60px 0; color:var(--c-label);">
+            <div style="font-size:48px; margin-bottom:16px;">🏕️</div>
+            <div style="font-size:16px; font-weight:700; margin-bottom:6px;">لا توجد حملات بعد</div>
+            <div style="font-size:13px; margin-bottom:20px;">أنشئ أول حملة لك لاستقبال الحجاج</div>
+            <button class="btn btn-primary" onclick="openCampModal()">إنشاء حملة جديدة</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═ تبويب: طلبات الحجاج ═ -->
+      <div id="panelApplications" style="display:none;">
+        <!-- فلتر الحملة -->
+        <div style="display:flex; gap:12px; margin-bottom:16px; align-items:center;">
+          <select id="campFilter" class="form-input form-select" style="width:240px;" onchange="filterApplications()">
+            <option value="">كل الحملات</option>
+          </select>
+          <select id="statusFilter" class="form-input form-select" style="width:160px;" onchange="filterApplications()">
+            <option value="">كل الحالات</option>
+            <option value="pending">بانتظار الموافقة</option>
+            <option value="approved">مقبول</option>
+            <option value="paid">مدفوع</option>
+            <option value="rejected">مرفوض</option>
+          </select>
+        </div>
+        <div class="surface-card" style="padding:0; overflow:hidden;">
+          <table class="data-table" id="applicationsTable">
+            <thead>
+              <tr>
+                <th>الحاج</th>
+                <th>الحملة</th>
+                <th>تاريخ الطلب</th>
+                <th>الحالة</th>
+                <th>إجراء</th>
+              </tr>
+            </thead>
+            <tbody id="applicationsBody">
+              <tr><td colspan="5" style="text-align:center; padding:40px; color:var(--c-label);">جارٍ التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ══ مودال إنشاء / تعديل حملة ══ -->
+  <div id="campModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999; align-items:flex-start; justify-content:center; overflow-y:auto; padding:40px 20px;">
+    <div style="background:#fff; border-radius:10px; width:100%; max-width:560px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="background:var(--c-primary); padding:18px 24px; display:flex; align-items:center; justify-content:space-between;">
+        <span id="campModalTitle" style="font-size:16px; font-weight:700; color:#fff;">إنشاء حملة جديدة</span>
+        <span onclick="closeCampModal()" style="color:rgba(255,255,255,0.7); cursor:pointer; font-size:22px;">✕</span>
+      </div>
+      <div style="padding:28px;">
+        <div id="campModalError" style="display:none; background:#FEE2E2; border:1px solid #FECACA; border-radius:6px; padding:10px 14px; font-size:13px; font-weight:600; color:#991B1B; margin-bottom:16px;"></div>
+
+        <div class="form-field">
+          <label class="form-label">اسم الحملة <span class="form-req">*</span></label>
+          <input id="cName" type="text" class="form-input" placeholder="حملة الرحمة للحج ١٤٤٧">
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">نوع الحملة <span class="form-req">*</span></label>
+            <select id="cType" class="form-input form-select">
+              <option value="">اختر...</option>
+              <option value="economy">اقتصادية</option>
+              <option value="standard">عادية</option>
+              <option value="vip">مميزة</option>
+              <option value="family">عائلية</option>
+              <option value="platinum">بلاتينية</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">الطاقة الاستيعابية <span class="form-req">*</span></label>
+            <input id="cCapacity" type="number" class="form-input" placeholder="50" min="1" max="1000">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">السعر (ريال) <span class="form-req">*</span></label>
+            <input id="cPrice" type="number" class="form-input" placeholder="15000" min="1">
+          </div>
+          <div class="form-field">
+            <label class="form-label">رقم الترخيص <span class="form-req">*</span></label>
+            <input id="cLicense" type="text" class="form-input" placeholder="HC-XXXXXXXX">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">تاريخ البدء</label>
+            <input id="cStartDate" type="date" class="form-input">
+          </div>
+          <div class="form-field">
+            <label class="form-label">تاريخ الانتهاء</label>
+            <input id="cEndDate" type="date" class="form-input">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">وصف الحملة</label>
+          <textarea id="cDesc" class="form-input form-textarea" rows="3" placeholder="اكتب وصفاً للخدمات المقدمة..."></textarea>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:6px;">
+          <button class="btn btn-outline" style="flex:1;" onclick="closeCampModal()">إلغاء</button>
+          <button id="saveCampBtn" class="btn btn-primary" style="flex:2;" onclick="saveCampaign()">حفظ الحملة</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <script type="module">
+    import { getSession, signOut }                    from '/js/auth.js';
+    import { getProviderCampaigns, createCampaign,
+             getProviderApplications,
+             updateApplicationStatus }               from '/js/data-service.js';
+    import { showToast }                              from '/js/ui.js';
+
+    let allApplications = [];
+    let allCampaigns    = [];
+    let currentUserId   = null;
+    let editingCampId   = null;
+
+    /* ── تهيئة ── */
+    async function init() {
+      const session = await getSession();
+      if (!session) { window.location.href = '/pages/login.html'; return; }
+
+      currentUserId = session.user.id;
+      const name = `${session.profile.first_name||''} ${session.profile.last_name||''}`.trim() || 'مزود';
+      document.getElementById('navUserName').textContent  = name;
+      document.getElementById('sidebarName').textContent  = name;
+      document.getElementById('sidebarAvatar').textContent = name.charAt(0) || '؟';
+
+      const [camps, apps] = await Promise.all([
+        getProviderCampaigns(currentUserId),
+        getProviderApplications(currentUserId),
+      ]);
+
+      allCampaigns    = camps;
+      allApplications = apps;
+
+      renderCampaigns(camps);
+      populateCampFilter(camps);
+      renderApplications(apps);
+
+      const pending = apps.filter(a => a.status === 'pending').length;
+      if (pending > 0) {
+        const b = document.getElementById('appsBadge');
+        b.textContent   = pending;
+        b.style.display = 'inline-flex';
+      }
+    }
+
+    /* ── حملات ── */
+    function renderCampaigns(camps) {
+      const el = document.getElementById('campaignsList');
+      if (!camps.length) return;
+
+      const typeLabels = { economy:'اقتصادية', standard:'عادية', vip:'مميزة', family:'عائلية', platinum:'بلاتينية' };
+
+      el.innerHTML = camps.map(c => {
+        const paid      = allApplications.filter(a => a.campaign_id === c.id && a.status === 'paid').length;
+        const pending   = allApplications.filter(a => a.campaign_id === c.id && a.status === 'pending').length;
+        const seatsLeft = c.seats_left ?? c.capacity;
+
+        return `
+        <div class="surface-card" style="margin-bottom:16px;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:14px;">
+            <div>
+              <div style="font-size:17px; font-weight:800; color:var(--c-text); margin-bottom:4px;">${c.name}</div>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <span class="badge ${c.status==='open'?'badge-open':'badge-complete'}">${c.status==='open'?'مفتوحة':'مغلقة'}</span>
+                ${c.campaign_type ? `<span style="font-size:11px; color:var(--c-label);">${typeLabels[c.campaign_type]||c.campaign_type}</span>` : ''}
+              </div>
+            </div>
+            <div style="font-size:22px; font-weight:900; color:var(--c-primary);">${Number(c.price||0).toLocaleString('ar-SA')} <span style="font-size:12px; font-weight:600;">ر.س</span></div>
+          </div>
+          <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:16px;">
+            <div style="background:var(--c-bg); border-radius:6px; padding:10px; text-align:center; border:1px solid var(--c-border);">
+              <div style="font-size:20px; font-weight:800; color:var(--c-text);">${c.capacity}</div>
+              <div style="font-size:11px; color:var(--c-label);">الطاقة</div>
+            </div>
+            <div style="background:var(--c-bg); border-radius:6px; padding:10px; text-align:center; border:1px solid var(--c-border);">
+              <div style="font-size:20px; font-weight:800; color:var(--c-primary);">${paid}</div>
+              <div style="font-size:11px; color:var(--c-label);">مدفوعون</div>
+            </div>
+            <div style="background:var(--c-bg); border-radius:6px; padding:10px; text-align:center; border:1px solid var(--c-border);">
+              <div style="font-size:20px; font-weight:800; color:#c97a00;">${pending}</div>
+              <div style="font-size:11px; color:var(--c-label);">بانتظار</div>
+            </div>
+            <div style="background:var(--c-bg); border-radius:6px; padding:10px; text-align:center; border:1px solid var(--c-border);">
+              <div style="font-size:20px; font-weight:800; color:${seatsLeft<=5?'var(--c-danger)':'var(--c-text)'};">${seatsLeft}</div>
+              <div style="font-size:11px; color:var(--c-label);">متبقٍ</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button onclick="switchTabToApps('${c.id}')" class="btn btn-outline" style="flex:1; font-size:12px; padding:8px;">
+              عرض الطلبات
+            </button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    /* ── طلبات ── */
+    function populateCampFilter(camps) {
+      const sel = document.getElementById('campFilter');
+      camps.forEach(c => {
+        const o = document.createElement('option');
+        o.value = c.id; o.textContent = c.name;
+        sel.appendChild(o);
+      });
+    }
+
+    function renderApplications(apps) {
+      const tbody  = document.getElementById('applicationsBody');
+      if (!apps.length) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:40px; color:var(--c-label);">لا توجد طلبات بعد</td></tr>`;
+        return;
+      }
+      const statusLabel = { pending:'بانتظار الموافقة', approved:'مقبول', paid:'مدفوع', rejected:'مرفوض' };
+      const badgeClass  = { pending:'badge-pending', approved:'badge-open', paid:'badge-paid', rejected:'badge-rejected' };
+
+      tbody.innerHTML = apps.map(app => `
+        <tr>
+          <td style="font-weight:600;">${app.profiles?.first_name||''} ${app.profiles?.last_name||''}</td>
+          <td style="font-size:12px; color:var(--c-label);">${app.campaigns?.name||'—'}</td>
+          <td style="font-size:12px; color:var(--c-label);">${new Date(app.created_at).toLocaleDateString('ar-SA')}</td>
+          <td><span class="badge ${badgeClass[app.status]||'badge-pending'}">${statusLabel[app.status]||app.status}</span></td>
+          <td>
+            ${app.status === 'pending' ? `
+              <div style="display:flex; gap:6px;">
+                <button onclick="decide('${app.id}','approved')" class="btn btn-primary" style="padding:5px 12px; font-size:11px;">قبول</button>
+                <button onclick="decide('${app.id}','rejected')" class="btn btn-danger" style="padding:5px 12px; font-size:11px;">رفض</button>
+              </div>` : `<span style="font-size:12px; color:var(--c-label);">—</span>`}
+          </td>
+        </tr>`).join('');
+    }
+
+    window.filterApplications = () => {
+      const campId = document.getElementById('campFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      const filtered = allApplications.filter(a =>
+        (!campId || a.campaign_id === campId) &&
+        (!status || a.status === status)
+      );
+      renderApplications(filtered);
+    };
+
+    /* ── تبويبات ── */
+    window.switchTab = (tab) => {
+      const isCamps = tab === 'campaigns';
+      document.getElementById('panelCampaigns').style.display    = isCamps ? 'block' : 'none';
+      document.getElementById('panelApplications').style.display = isCamps ? 'none'  : 'block';
+      document.getElementById('tabCampaigns').style.borderBottomColor    = isCamps ? 'var(--c-primary)' : 'transparent';
+      document.getElementById('tabCampaigns').style.color                = isCamps ? 'var(--c-primary)' : 'var(--c-label)';
+      document.getElementById('tabApplications').style.borderBottomColor = isCamps ? 'transparent' : 'var(--c-primary)';
+      document.getElementById('tabApplications').style.color             = isCamps ? 'var(--c-label)' : 'var(--c-primary)';
+    };
+
+    window.switchTabToApps = (campId) => {
+      switchTab('applications');
+      document.getElementById('campFilter').value = campId;
+      filterApplications();
+    };
+
+    /* ── إنشاء حملة ── */
+    window.openCampModal  = () => { editingCampId = null; document.getElementById('campModal').style.display = 'flex'; };
+    window.closeCampModal = () => { document.getElementById('campModal').style.display = 'none'; clearForm(); };
+
+    function clearForm() {
+      ['cName','cType','cCapacity','cPrice','cLicense','cStartDate','cEndDate','cDesc']
+        .forEach(id => { const el = document.getElementById(id); if(el) el.value = ''; });
+      document.getElementById('campModalError').style.display = 'none';
+    }
+
+    window.saveCampaign = async () => {
+      const errEl = document.getElementById('campModalError');
+      const btn   = document.getElementById('saveCampBtn');
+      errEl.style.display = 'none';
+
+      const name     = document.getElementById('cName').value.trim();
+      const type     = document.getElementById('cType').value;
+      const capacity = parseInt(document.getElementById('cCapacity').value);
+      const price    = parseFloat(document.getElementById('cPrice').value);
+      const license  = document.getElementById('cLicense').value.trim();
+
+      if (!name || !type || !capacity || !price || !license) {
+        errEl.textContent   = 'يرجى تعبئة جميع الحقول المطلوبة.';
+        errEl.style.display = 'block'; return;
+      }
+
+      btn.disabled  = true;
+      btn.innerHTML = '<span class="spinner"></span> جارٍ الحفظ...';
+
+      try {
+        await createCampaign({
+          name, campaign_type: type, capacity, price,
+          license_number: license,
+          start_date:  document.getElementById('cStartDate').value || null,
+          end_date:    document.getElementById('cEndDate').value   || null,
+          description: document.getElementById('cDesc').value.trim() || null,
+          provider_id: currentUserId,
+          seats_left:  capacity,
+          status:      'open',
+        });
+        showToast('تم إنشاء الحملة بنجاح ✓', 'success');
+        closeCampModal();
+        setTimeout(() => location.reload(), 800);
+      } catch (e) {
+        errEl.textContent   = e.message || 'حدث خطأ، يرجى المحاولة مجدداً.';
+        errEl.style.display = 'block';
+        btn.disabled        = false;
+        btn.textContent     = 'حفظ الحملة';
+      }
+    };
+
+    /* ── قبول / رفض ── */
+    window.decide = async (appId, status) => {
+      try {
+        await updateApplicationStatus(appId, status);
+        showToast(status === 'approved' ? 'تم قبول الطلب ✓' : 'تم رفض الطلب', status === 'approved' ? 'success' : 'warning');
+        setTimeout(() => location.reload(), 700);
+      } catch (e) {
+        showToast(e.message || 'حدث خطأ', 'error');
+      }
+    };
+
+    /* ── تسجيل الخروج ── */
+    window.handleLogout = async () => { await signOut(); window.location.href = '/pages/primaryHome.html'; };
+
+    init();
+  </script>
+
+</body>
+</html>

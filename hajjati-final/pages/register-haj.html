@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل حاج | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body class="page-otp auth-bg">
+
+  <!-- ══ الشريط الحكومي ══ -->
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+    </div>
+  </div>
+
+  <!-- ══ شريط التنقل ══ -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-actions">
+      <button class="btn-register" onclick="window.location.href='/pages/register.html'">← اختيار نوع الحساب</button>
+    </div>
+  </nav>
+
+  <!-- ══ منطقة الكارد ══ -->
+  <div class="auth-main" style="padding: 32px 20px;">
+    <div class="auth-card" style="max-width:520px;">
+
+      <!-- رأس الكارد -->
+      <div class="auth-card-header">
+        <div class="auth-card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+        </div>
+        <div>
+          <div class="auth-card-title">إنشاء حساب حاج</div>
+          <div class="auth-card-sub">أدخل بياناتك وسيُرسل رمز التحقق لبريدك</div>
+        </div>
+      </div>
+
+      <!-- شريط الخطوات -->
+      <div style="padding: 16px 28px 0; display:flex; align-items:center; gap:0;">
+        <div id="step1Ind" style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--c-primary);">
+          <div style="width:26px; height:26px; border-radius:50%; background:var(--c-primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;">١</div>
+          البيانات الشخصية
+        </div>
+        <div style="flex:1; height:2px; background:var(--c-border); margin:0 10px;"></div>
+        <div id="step2Ind" style="display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--c-label);">
+          <div id="step2Circle" style="width:26px; height:26px; border-radius:50%; background:var(--c-border); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800;">٢</div>
+          بيانات الحساب
+        </div>
+      </div>
+
+      <!-- جسم الكارد -->
+      <div class="auth-card-body">
+
+        <!-- رسالة الخطأ -->
+        <div id="errorMsg" style="display:none; background:#FEE2E2; border:1px solid #FECACA; border-radius:6px; padding:10px 14px; font-size:13px; font-weight:600; color:#991B1B; margin-bottom:16px;"></div>
+
+        <!-- ── الخطوة الأولى: البيانات الشخصية ── -->
+        <div id="step1">
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">الاسم الأول <span class="form-req">*</span></label>
+              <input id="firstName" type="text" class="form-input" placeholder="محمد">
+            </div>
+            <div class="form-field">
+              <label class="form-label">اسم العائلة <span class="form-req">*</span></label>
+              <input id="lastName" type="text" class="form-input" placeholder="العتيبي">
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">رقم الهوية الوطنية <span class="form-req">*</span></label>
+            <input id="idNumber" type="text" class="form-input" placeholder="١٠٠٠٠٠٠٠٠٠" maxlength="10">
+            <span class="form-hint">١٠ أرقام</span>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label class="form-label">الجنس <span class="form-req">*</span></label>
+              <select id="gender" class="form-input form-select">
+                <option value="">اختر...</option>
+                <option value="male">ذكر</option>
+                <option value="female">أنثى</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">تاريخ الميلاد <span class="form-req">*</span></label>
+              <input id="birthDate" type="date" class="form-input">
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">رقم الجوال <span class="form-req">*</span></label>
+            <input id="phone" type="tel" class="form-input" placeholder="05XXXXXXXX" maxlength="10">
+          </div>
+          <button class="auth-submit" onclick="nextStep()">التالي ←</button>
+        </div>
+
+        <!-- ── الخطوة الثانية: بيانات الحساب ── -->
+        <div id="step2" style="display:none;">
+          <div class="form-field">
+            <label class="form-label">البريد الإلكتروني <span class="form-req">*</span></label>
+            <input id="email" type="email" class="form-input" placeholder="example@email.com">
+          </div>
+          <div class="form-field">
+            <label class="form-label">كلمة المرور <span class="form-req">*</span></label>
+            <div style="position:relative;">
+              <input id="password" type="password" class="form-input" placeholder="٨ أحرف على الأقل" style="padding-left:44px;">
+              <button type="button" onclick="togglePass('password')" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--c-label); padding:0;">
+                <svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+            <span class="form-hint">٨ أحرف على الأقل، يحتوي حرفاً ورقماً</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">تأكيد كلمة المرور <span class="form-req">*</span></label>
+            <input id="confirmPassword" type="password" class="form-input" placeholder="أعد إدخال كلمة المرور">
+          </div>
+
+          <!-- الموافقة على الشروط -->
+          <div style="display:flex; align-items:flex-start; gap:10px; margin:14px 0;">
+            <input id="terms" type="checkbox" style="margin-top:3px; accent-color:var(--c-primary); width:16px; height:16px; flex-shrink:0;">
+            <label for="terms" style="font-size:12px; color:var(--c-muted); line-height:1.6; cursor:pointer;">
+              أوافق على
+              <a href="#" style="color:var(--c-primary); font-weight:700;">شروط الاستخدام</a>
+              و
+              <a href="#" style="color:var(--c-primary); font-weight:700;">سياسة الخصوصية</a>
+            </label>
+          </div>
+
+          <div style="display:flex; gap:10px;">
+            <button class="btn btn-outline" style="flex:1;" onclick="prevStep()">→ رجوع</button>
+            <button id="registerBtn" class="auth-submit" style="flex:2; margin-top:0;" onclick="handleRegister()">إنشاء الحساب</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- تذييل الكارد -->
+      <div class="auth-card-footer">
+        لديك حساب بالفعل؟
+        <a href="/pages/login-haj.html">تسجيل الدخول</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ التذييل المختصر ══ -->
+  <footer>
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,0.06);">
+      <span>© ١٤٤٧ هـ — منصة حجتي</span>
+    </div>
+  </footer>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <script type="module">
+    import { registerAccount } from '/js/auth.js';
+
+    window.togglePass = (id) => {
+      const el = document.getElementById(id);
+      el.type = el.type === 'password' ? 'text' : 'password';
+    };
+
+    window.nextStep = () => {
+      const errEl = document.getElementById('errorMsg');
+      errEl.style.display = 'none';
+
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName  = document.getElementById('lastName').value.trim();
+      const idNumber  = document.getElementById('idNumber').value.trim();
+      const gender    = document.getElementById('gender').value;
+      const birthDate = document.getElementById('birthDate').value;
+      const phone     = document.getElementById('phone').value.trim();
+
+      if (!firstName || !lastName || !idNumber || !gender || !birthDate || !phone) {
+        errEl.textContent   = 'يرجى تعبئة جميع الحقول المطلوبة.';
+        errEl.style.display = 'block';
+        return;
+      }
+      if (idNumber.length !== 10 || !/^\d+$/.test(idNumber)) {
+        errEl.textContent   = 'رقم الهوية يجب أن يكون ١٠ أرقام.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      document.getElementById('step1').style.display = 'none';
+      document.getElementById('step2').style.display = 'block';
+      document.getElementById('step2Ind').style.color = 'var(--c-primary)';
+      document.getElementById('step2Circle').style.background = 'var(--c-primary)';
+    };
+
+    window.prevStep = () => {
+      document.getElementById('step2').style.display = 'none';
+      document.getElementById('step1').style.display = 'block';
+      document.getElementById('step2Ind').style.color = 'var(--c-label)';
+      document.getElementById('step2Circle').style.background = 'var(--c-border)';
+      document.getElementById('errorMsg').style.display = 'none';
+    };
+
+    window.handleRegister = async () => {
+      const errEl = document.getElementById('errorMsg');
+      const btn   = document.getElementById('registerBtn');
+      errEl.style.display = 'none';
+
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const confirm  = document.getElementById('confirmPassword').value;
+      const terms    = document.getElementById('terms').checked;
+
+      if (!email || !password || !confirm) {
+        errEl.textContent   = 'يرجى تعبئة جميع حقول بيانات الحساب.';
+        errEl.style.display = 'block'; return;
+      }
+      if (password.length < 8) {
+        errEl.textContent   = 'كلمة المرور يجب أن تكون ٨ أحرف على الأقل.';
+        errEl.style.display = 'block'; return;
+      }
+      if (password !== confirm) {
+        errEl.textContent   = 'كلمة المرور وتأكيدها غير متطابقتين.';
+        errEl.style.display = 'block'; return;
+      }
+      if (!terms) {
+        errEl.textContent   = 'يرجى الموافقة على شروط الاستخدام وسياسة الخصوصية.';
+        errEl.style.display = 'block'; return;
+      }
+
+      btn.disabled  = true;
+      btn.innerHTML = '<span class="spinner"></span> جارٍ إنشاء الحساب...';
+
+      try {
+        const userData = {
+          first_name: document.getElementById('firstName').value.trim(),
+          last_name:  document.getElementById('lastName').value.trim(),
+          id_number:  document.getElementById('idNumber').value.trim(),
+          gender:     document.getElementById('gender').value,
+          birth_date: document.getElementById('birthDate').value,
+          phone:      document.getElementById('phone').value.trim(),
+          role:       'pilgrim',
+        };
+        await registerAccount(email, password, userData);
+        sessionStorage.setItem('otp_email', email);
+        sessionStorage.setItem('otp_role',  'pilgrim');
+        window.location.href = '/pages/otp.html';
+      } catch (err) {
+        errEl.textContent   = err.message || 'حدث خطأ، يرجى المحاولة مجدداً.';
+        errEl.style.display = 'block';
+        btn.disabled        = false;
+        btn.textContent     = 'إنشاء الحساب';
+      }
+    };
+  </script>
+
+</body>
+</html>

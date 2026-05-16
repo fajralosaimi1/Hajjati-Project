@@ -1,0 +1,430 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>التوجه الذكي | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+  <!-- Google Maps — المفتاح يُجلب من .env عبر Vercel -->
+  <script>
+    window.MAPS_API_KEY = typeof __MAPS_API_KEY__ !== 'undefined' ? __MAPS_API_KEY__ : '';
+  </script>
+</head>
+<body class="page-guide">
+
+  <!-- ══ الشريط الحكومي ══ -->
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+      <a class="gov-bar-link active" href="/pages/smart-guide.html">التوجه الذكي</a>
+    </div>
+  </div>
+
+  <!-- ══ شريط التنقل ══ -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="/pages/primaryHome.html">الرئيسية</a>
+      <a class="nav-link active" href="/pages/smart-guide.html">التوجه الذكي</a>
+      <a class="nav-link" href="/pages/emergency.html">الطوارئ</a>
+      <a class="nav-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+    </div>
+    <div class="nav-actions">
+      <div id="navGuest" class="nav-actions">
+        <button class="btn-login" onclick="window.location.href='/pages/login.html'">تسجيل الدخول</button>
+      </div>
+      <div id="navUser" class="nav-user" style="display:none;">
+        <span class="nav-user-name" id="navUserName"></span>
+        <button class="btn-logout" onclick="handleLogout()">خروج</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ رأس الصفحة ══ -->
+  <div class="page-hero" style="padding-bottom:32px;">
+    <div class="breadcrumb">
+      <a href="/pages/primaryHome.html">الرئيسية</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">التوجه الذكي</span>
+    </div>
+    <h1 class="page-hero-title">التوجه الذكي</h1>
+    <p class="page-hero-sub">مساعد ذكي لإرشادك في مناسك الحج مع خريطة تفاعلية لمشاعر مكة المكرمة</p>
+  </div>
+
+  <!-- ══ التخطيط الرئيسي ══ -->
+  <div class="guide-layout" style="background:var(--c-bg);">
+
+    <!-- ═ الشات ═ -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+
+      <div class="chat-wrap">
+        <!-- رأس الشات -->
+        <div class="chat-header">
+          <div class="chat-header-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div>
+            <div class="chat-header-title">مساعد التوجه الذكي</div>
+            <div class="chat-header-sub">متخصص في مناسك الحج والمشاعر المقدسة</div>
+          </div>
+          <div style="margin-right:auto; display:flex; align-items:center; gap:6px;">
+            <div style="width:8px; height:8px; background:#4ade80; border-radius:50%; animation:blink 2s infinite;"></div>
+            <span style="font-size:11px; color:rgba(255,255,255,0.6);">متصل</span>
+          </div>
+        </div>
+
+        <!-- منطقة الرسائل -->
+        <div class="chat-box" id="chatBox">
+          <!-- رسالة الترحيب -->
+          <div class="msg bot">
+            <strong>أهلاً بك في التوجه الذكي 👋</strong><br><br>
+            أنا مساعدك المتخصص في مناسك الحج والمشاعر المقدسة.<br>
+            يمكنني مساعدتك في:
+            <ul style="margin:8px 0 0 0; padding-right:18px; line-height:1.8;">
+              <li>إرشادات الحج خطوة بخطوة</li>
+              <li>معلومات عن المشاعر المقدسة</li>
+              <li>الأدعية والأذكار في كل موقف</li>
+              <li>الإجابة على أسئلتك الفقهية</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- منطقة الإدخال -->
+        <div class="chat-input-wrap">
+          <input id="chatInput" type="text" class="chat-input"
+            placeholder="اكتب سؤالك هنا... مثال: ما خطوات الطواف؟"
+            onkeydown="if(event.key==='Enter') sendMessage()">
+          <button class="chat-send" id="sendBtn" onclick="sendMessage()">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- اقتراحات سريعة -->
+      <div>
+        <div style="font-size:12px; font-weight:700; color:var(--c-label); margin-bottom:8px; letter-spacing:0.5px;">اقتراحات سريعة</div>
+        <div class="quick-prompts">
+          <button class="prompt-chip" onclick="askPrompt('ما هي خطوات الطواف بالكعبة المشرفة؟')">خطوات الطواف</button>
+          <button class="prompt-chip" onclick="askPrompt('كيف أؤدي السعي بين الصفا والمروة؟')">السعي بين الصفا والمروة</button>
+          <button class="prompt-chip" onclick="askPrompt('ما الدعاء المستحب عند الوقوف بعرفات؟')">دعاء عرفات</button>
+          <button class="prompt-chip" onclick="askPrompt('ما هي فضائل رمي الجمرات وكيف تؤدى؟')">رمي الجمرات</button>
+          <button class="prompt-chip" onclick="askPrompt('ماذا يفعل الحاج في منى؟')">أعمال منى</button>
+          <button class="prompt-chip" onclick="askPrompt('ما آداب دخول المسجد الحرام؟')">آداب المسجد الحرام</button>
+          <button class="prompt-chip" onclick="askPrompt('ما هي حدود مزدلفة وماذا يفعل الحاج فيها؟')">المبيت بمزدلفة</button>
+          <button class="prompt-chip" onclick="askPrompt('ما هي محظورات الإحرام؟')">محظورات الإحرام</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═ الخريطة ═ -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+
+      <div class="map-wrap">
+        <!-- رأس الخريطة -->
+        <div class="map-header">
+          <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          <div>
+            <div class="map-header-title">مشاعر الحج — مكة المكرمة</div>
+            <div class="map-header-sub">اضغط على أي موقع لعرض تفاصيله</div>
+          </div>
+        </div>
+
+        <!-- خريطة Google Maps -->
+        <div id="hajj-map" style="flex:1;"></div>
+
+        <!-- أزرار المواقع -->
+        <div class="map-sites">
+          <button class="map-site-chip active" onclick="flyTo('haram')" data-site="haram">المسجد الحرام</button>
+          <button class="map-site-chip" onclick="flyTo('mina')" data-site="mina">منى</button>
+          <button class="map-site-chip" onclick="flyTo('arafat')" data-site="arafat">عرفات</button>
+          <button class="map-site-chip" onclick="flyTo('muzdalifah')" data-site="muzdalifah">مزدلفة</button>
+          <button class="map-site-chip" onclick="flyTo('jamarat')" data-site="jamarat">الجمرات</button>
+          <button class="map-site-chip" onclick="flyTo('safa')" data-site="safa">الصفا والمروة</button>
+        </div>
+      </div>
+
+      <!-- معلومات الموقع المحدد -->
+      <div class="surface-card" id="siteInfo">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+          <div style="width:36px; height:36px; background:var(--c-accent-bg); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span id="siteEmoji" style="font-size:18px;">🕋</span>
+          </div>
+          <div>
+            <div id="siteName" style="font-size:15px; font-weight:800; color:var(--c-text);">المسجد الحرام</div>
+            <div id="siteSubtitle" style="font-size:11px; color:var(--c-label);">مكة المكرمة، المملكة العربية السعودية</div>
+          </div>
+        </div>
+        <div id="siteDesc" style="font-size:13px; color:var(--c-muted); line-height:1.7;"></div>
+        <button id="siteAskBtn" class="btn btn-outline btn-full" style="margin-top:12px; font-size:12px;" onclick="askAboutSite()">
+          اسأل عن هذا الموقع ←
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <script>
+    /* ══ بيانات مشاعر الحج ══ */
+    const HAJJ_SITES = {
+      haram: {
+        name:     'المسجد الحرام',
+        emoji:    '🕋',
+        subtitle: 'مكة المكرمة — أقدس البقاع في الإسلام',
+        lat: 21.4225, lng: 39.8262,
+        zoom: 17,
+        desc: 'أقدس مساجد الإسلام ويضم الكعبة المشرفة قبلة المسلمين، وزمزم، والحجر الأسود. يؤدى فيه الطواف والسعي.',
+        question: 'ما هي آداب وأعمال المسجد الحرام؟'
+      },
+      mina: {
+        name:     'منى',
+        emoji:    '⛺',
+        subtitle: 'وادي منى — على بعد ٥ كم من المسجد الحرام',
+        lat: 21.4133, lng: 39.8930,
+        zoom: 15,
+        desc: 'يُسمى خيمة الله، يمكث فيها الحجاج أيام التشريق، ويُؤدى فيها رمي الجمرات والنحر والحلق.',
+        question: 'ماذا يفعل الحاج في منى وما أعمال أيام التشريق؟'
+      },
+      arafat: {
+        name:     'جبل عرفات',
+        emoji:    '🏔️',
+        subtitle: 'سهل عرفات — ركن الحج الأعظم',
+        lat: 21.3549, lng: 39.9845,
+        zoom: 14,
+        desc: 'الوقوف بعرفة ركن الحج الأعظم، يقف فيه الحجاج يوم التاسع من ذي الحجة من الزوال حتى غروب الشمس.',
+        question: 'ما أعمال وآداب الوقوف بعرفات؟'
+      },
+      muzdalifah: {
+        name:     'مزدلفة',
+        emoji:    '🌙',
+        subtitle: 'بين منى وعرفات — المشعر الحرام',
+        lat: 21.3750, lng: 39.9367,
+        zoom: 14,
+        desc: 'يتوجه إليها الحجاج بعد الإفاضة من عرفات لصلاة المغرب والعشاء والمبيت ليلة العاشر وجمع الحصى.',
+        question: 'ما أعمال الحاج في مزدلفة وما المبيت فيها؟'
+      },
+      jamarat: {
+        name:     'جسر الجمرات',
+        emoji:    '🪨',
+        subtitle: 'منى — موقع رمي الجمرات الثلاث',
+        lat: 21.4229, lng: 39.8730,
+        zoom: 16,
+        desc: 'يُرمى فيه الجمرات الثلاث: الصغرى والوسطى والكبرى (العقبة) أيام التشريق تأسياً بسيدنا إبراهيم.',
+        question: 'كيف يُؤدى رمي الجمرات وما شروطه وآدابه؟'
+      },
+      safa: {
+        name:     'الصفا والمروة',
+        emoji:    '🚶',
+        subtitle: 'داخل المسجد الحرام — المسعى',
+        lat: 21.4234, lng: 39.8268,
+        zoom: 17,
+        desc: 'يُؤدى بينهما السعي سبعة أشواط تأسياً بالسيدة هاجر، يبدأ من الصفا وينتهي عند المروة.',
+        question: 'كيف أؤدي السعي بين الصفا والمروة وما أدعيته؟'
+      }
+    };
+
+    let map           = null;
+    let markers       = {};
+    let currentSite   = 'haram';
+    let chatHistory   = [];
+    let isTyping      = false;
+
+    /* ══ تهيئة الخريطة ══ */
+    function initMap() {
+      const site = HAJJ_SITES.haram;
+      map = new google.maps.Map(document.getElementById('hajj-map'), {
+        center:    { lat: site.lat, lng: site.lng },
+        zoom:      site.zoom,
+        mapTypeId: 'satellite',
+        mapTypeControl:        true,
+        streetViewControl:     false,
+        fullscreenControl:     true,
+        zoomControlOptions:    { position: google.maps.ControlPosition.LEFT_BOTTOM },
+        styles: [
+          { featureType:'poi', elementType:'labels', stylers:[{ visibility:'off' }] }
+        ]
+      });
+
+      // إضافة علامات المواقع
+      Object.entries(HAJJ_SITES).forEach(([key, s]) => {
+        const marker = new google.maps.Marker({
+          position: { lat: s.lat, lng: s.lng },
+          map,
+          title: s.name,
+          icon: {
+            url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
+              <svg xmlns="http://www.w3.org/2000/svg" width="36" height="44" viewBox="0 0 36 44">
+                <path fill="${key==='haram'?'#0B4D2E':'#083D23'}" stroke="white" stroke-width="1.5"
+                  d="M18 0 C8 0 0 8 0 18 C0 30 18 44 18 44 C18 44 36 30 36 18 C36 8 28 0 18 0Z"/>
+                <text x="18" y="24" text-anchor="middle" font-size="16">${s.emoji}</text>
+              </svg>`)}`,
+            scaledSize: new google.maps.Size(36, 44),
+            anchor:     new google.maps.Point(18, 44),
+          }
+        });
+
+        const infoWindow = new google.maps.InfoWindow({
+          content: `
+            <div style="font-family:Tajawal,sans-serif; direction:rtl; padding:4px; min-width:180px;">
+              <div style="font-size:15px; font-weight:800; color:#0B4D2E; margin-bottom:4px;">${s.emoji} ${s.name}</div>
+              <div style="font-size:12px; color:#6B8878; line-height:1.6;">${s.desc}</div>
+            </div>`
+        });
+
+        marker.addListener('click', () => {
+          Object.values(markers).forEach(({ info }) => info.close());
+          infoWindow.open(map, marker);
+          selectSite(key);
+        });
+
+        markers[key] = { marker, info: infoWindow };
+      });
+
+      updateSiteInfo('haram');
+    }
+
+    /* ══ التنقل بين المواقع ══ */
+    window.flyTo = (key) => {
+      if (!map || !HAJJ_SITES[key]) return;
+      const site = HAJJ_SITES[key];
+      map.panTo({ lat: site.lat, lng: site.lng });
+      map.setZoom(site.zoom);
+      selectSite(key);
+      Object.values(markers).forEach(({ info }) => info.close());
+      if (markers[key]) markers[key].info.open(map, markers[key].marker);
+    };
+
+    function selectSite(key) {
+      currentSite = key;
+      document.querySelectorAll('.map-site-chip').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.site === key);
+      });
+      updateSiteInfo(key);
+    }
+
+    function updateSiteInfo(key) {
+      const s = HAJJ_SITES[key];
+      if (!s) return;
+      document.getElementById('siteEmoji').textContent    = s.emoji;
+      document.getElementById('siteName').textContent     = s.name;
+      document.getElementById('siteSubtitle').textContent = s.subtitle;
+      document.getElementById('siteDesc').textContent     = s.desc;
+    }
+
+    window.askAboutSite = () => {
+      const q = HAJJ_SITES[currentSite]?.question;
+      if (q) askPrompt(q);
+    };
+
+    /* ══ تحميل Google Maps ══ */
+    function loadGoogleMaps() {
+      const key = window.MAPS_API_KEY;
+      if (!key) {
+        document.getElementById('hajj-map').innerHTML = `
+          <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:24px; text-align:center;">
+            <div style="font-size:40px;">🗺️</div>
+            <div style="font-size:14px; font-weight:700; color:var(--c-text);">الخريطة غير متاحة حالياً</div>
+            <div style="font-size:12px; color:var(--c-label); line-height:1.7;">أضف مفتاح <strong>GOOGLE_MAPS_API_KEY</strong><br>في ملف <strong>.env</strong> لتفعيل الخريطة</div>
+          </div>`;
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&callback=initMap&language=ar&region=SA`;
+      script.async = true;
+      script.defer = true;
+      document.head.appendChild(script);
+    }
+
+    /* ══ الشات ══ */
+    function appendMsg(text, type) {
+      const box = document.getElementById('chatBox');
+      const div = document.createElement('div');
+      div.className = `msg ${type}`;
+      div.innerHTML = text.replace(/\n/g, '<br>');
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+      return div;
+    }
+
+    window.askPrompt = (text) => {
+      document.getElementById('chatInput').value = text;
+      sendMessage();
+    };
+
+    window.sendMessage = async () => {
+      const input = document.getElementById('chatInput');
+      const text  = input.value.trim();
+      if (!text || isTyping) return;
+
+      input.value = '';
+      appendMsg(text, 'user');
+
+      isTyping = true;
+      document.getElementById('sendBtn').disabled = true;
+
+      const thinking = appendMsg('...جارٍ التفكير', 'bot thinking');
+
+      chatHistory.push({ role: 'user', content: text });
+
+      try {
+        const res = await fetch('/api/smart-guide', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: chatHistory,
+            site: HAJJ_SITES[currentSite]?.name || '',
+          })
+        });
+
+        const data = await res.json();
+        const reply = data.reply || 'عذراً، حدث خطأ في الاتصال.';
+
+        thinking.remove();
+        appendMsg(reply, 'bot');
+        chatHistory.push({ role: 'assistant', content: reply });
+
+        // احتفظ بآخر ١٠ رسائل فقط
+        if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+
+      } catch (e) {
+        thinking.remove();
+        appendMsg('عذراً، تعذّر الاتصال بالمساعد. يرجى المحاولة مجدداً.', 'bot');
+      }
+
+      isTyping = false;
+      document.getElementById('sendBtn').disabled = false;
+      input.focus();
+    };
+
+    /* ══ الجلسة ══ */
+    async function initSession() {
+      try {
+        const { getSession, signOut } = await import('/js/auth.js');
+        const session = await getSession();
+        if (session) {
+          const name = `${session.profile?.first_name||''} ${session.profile?.last_name||''}`.trim();
+          document.getElementById('navGuest').style.display  = 'none';
+          document.getElementById('navUser').style.display   = 'flex';
+          document.getElementById('navUserName').textContent = name;
+          window.handleLogout = async () => { await signOut(); location.reload(); };
+        }
+      } catch (e) { /* الزوار يستخدمون الشات بدون تسجيل دخول */ }
+    }
+
+    loadGoogleMaps();
+    initSession();
+  </script>
+
+</body>
+</html>

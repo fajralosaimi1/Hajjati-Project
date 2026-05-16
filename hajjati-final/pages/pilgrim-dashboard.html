@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة الحاج | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body>
+
+  <!-- ══ الشريط الحكومي ══ -->
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+      <a class="gov-bar-link" href="/pages/smart-guide.html">التوجه الذكي</a>
+    </div>
+  </div>
+
+  <!-- ══ شريط التنقل ══ -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link active" href="/pages/pilgrim-dashboard.html">لوحتي</a>
+      <a class="nav-link" href="/pages/pilgrim-campaigns.html">الحملات</a>
+      <a class="nav-link" href="/pages/smart-guide.html">التوجه الذكي</a>
+      <a class="nav-link" href="/pages/emergency.html">الطوارئ</a>
+    </div>
+    <div class="nav-actions">
+      <div class="nav-user">
+        <span class="nav-user-name" id="navUserName">جارٍ التحميل...</span>
+        <button class="btn-logout" onclick="handleLogout()">خروج</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ المحتوى الرئيسي ══ -->
+  <div class="dashboard-layout">
+
+    <!-- ══ الشريط الجانبي ══ -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <img src="/assets/logo_white-removebg.png" alt="حجتي" class="sidebar-logo-img">
+      </div>
+
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">؟</div>
+        <div>
+          <div class="sidebar-user-name" id="sidebarName">جارٍ التحميل...</div>
+          <div class="sidebar-user-role">حاج</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">القائمة الرئيسية</div>
+        <a class="sidebar-link active" href="/pages/pilgrim-dashboard.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          لوحة التحكم
+        </a>
+        <a class="sidebar-link" href="/pages/pilgrim-campaigns.html">
+          <svg viewBox="0 0 24 24"><path d="M3 22 12 2l9 20"/><path d="M7.5 14h9"/></svg>
+          استعراض الحملات
+        </a>
+        <a class="sidebar-link" href="/pages/smart-guide.html">
+          <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+          التوجه الذكي
+        </a>
+
+        <div class="sidebar-section">الخدمات</div>
+        <a class="sidebar-link" href="/pages/emergency.html">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          الطوارئ
+          <span class="sidebar-badge" id="emergencyBadge" style="display:none;">!</span>
+        </a>
+        <a class="sidebar-link" href="/pages/faq.html">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          الأسئلة الشائعة
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="sidebar-link" style="width:100%; border:none; background:none; cursor:pointer; color:rgba(255,255,255,0.5);" onclick="handleLogout()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          تسجيل الخروج
+        </button>
+      </div>
+    </aside>
+
+    <!-- ══ المحتوى ══ -->
+    <main class="dashboard-main">
+
+      <!-- رأس الصفحة -->
+      <div class="dashboard-topbar">
+        <div>
+          <div class="dashboard-title" id="welcomeTitle">أهلاً بك 👋</div>
+          <div class="dashboard-sub" id="welcomeSub">هذه لوحة التحكم الخاصة بك</div>
+        </div>
+        <a href="/pages/pilgrim-campaigns.html" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          استعراض الحملات
+        </a>
+      </div>
+
+      <!-- بطاقات الإحصاء -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num" id="statApplications">—</div>
+          <div class="stat-label">طلباتي</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-num" id="statPaid">—</div>
+          <div class="stat-label">مدفوعة</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-num" id="statPending">—</div>
+          <div class="stat-label">قيد المراجعة</div>
+        </div>
+        <div class="stat-card danger">
+          <div class="stat-num" id="statRejected">—</div>
+          <div class="stat-label">مرفوضة</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 340px; gap:20px;">
+
+        <!-- طلباتي -->
+        <div class="surface-card">
+          <div class="surface-card-title">
+            طلباتي
+            <a href="/pages/pilgrim-campaigns.html" style="font-size:12px; font-weight:600; color:var(--c-primary);">تقديم طلب جديد ←</a>
+          </div>
+          <div id="applicationsList">
+            <div style="text-align:center; padding:40px 0; color:var(--c-label);">
+              <div style="font-size:40px; margin-bottom:12px;">📋</div>
+              <div style="font-size:14px; font-weight:600;">لا توجد طلبات بعد</div>
+              <div style="font-size:12px; margin-top:4px;">ابدأ بتصفح الحملات المتاحة</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- الجانب الأيسر -->
+        <div style="display:flex; flex-direction:column; gap:20px;">
+
+          <!-- باركود الدخول -->
+          <div class="surface-card" id="qrSection" style="display:none;">
+            <div class="surface-card-title">باركود دخولك</div>
+            <div style="text-align:center; padding:10px 0;">
+              <div id="qrContainer" style="width:140px; height:140px; margin:0 auto 12px; background:var(--c-bg); border:1px solid var(--c-border); border-radius:8px; display:flex; align-items:center; justify-content:center;">
+                <svg viewBox="0 0 24 24" style="width:40px;height:40px;stroke:var(--c-label);fill:none;stroke-width:1.5;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 17h4"/><path d="M17 21v-4"/><path d="M21 17v4"/></svg>
+              </div>
+              <div id="qrCampName" style="font-size:13px; font-weight:700; color:var(--c-text);"></div>
+              <div id="qrStatus" style="font-size:11px; color:var(--c-label); margin-top:4px;"></div>
+            </div>
+          </div>
+
+          <!-- إشعارات -->
+          <div class="surface-card">
+            <div class="surface-card-title">
+              الإشعارات
+              <span id="notifCount" class="badge badge-pending" style="display:none;"></span>
+            </div>
+            <div id="notifList" style="display:flex; flex-direction:column; gap:10px;">
+              <div style="font-size:12px; color:var(--c-label); text-align:center; padding:16px 0;">لا توجد إشعارات جديدة</div>
+            </div>
+          </div>
+
+          <!-- روابط سريعة -->
+          <div class="surface-card">
+            <div class="surface-card-title">روابط سريعة</div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <a href="/pages/smart-guide.html" class="btn btn-outline" style="justify-content:flex-start; gap:10px; font-size:13px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/></svg>
+                التوجه الذكي
+              </a>
+              <a href="/pages/emergency.html" class="btn btn-danger" style="justify-content:flex-start; gap:10px; font-size:13px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                تقديم بلاغ طارئ
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ══ مودال الدفع ══ -->
+  <div id="payModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:10px; width:440px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="background:var(--c-primary); padding:18px 24px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:16px; font-weight:700; color:#fff;">إتمام الدفع</span>
+        <span onclick="closePayModal()" style="color:rgba(255,255,255,0.6); cursor:pointer; font-size:20px; line-height:1;">✕</span>
+      </div>
+      <div style="padding:28px;">
+        <div id="payDetails" style="background:var(--c-bg); border-radius:8px; padding:16px; margin-bottom:20px; font-size:13px; line-height:1.8; color:var(--c-muted);"></div>
+        <div style="background:#FEF3C7; border-radius:6px; padding:10px 14px; font-size:12px; color:#92400E; margin-bottom:20px;">
+          ⚠️ هذا دفع تجريبي للعرض فقط — لا يتم خصم أي مبلغ فعلي
+        </div>
+        <button id="confirmPayBtn" class="btn btn-primary btn-full" onclick="confirmPay()">تأكيد الدفع واستلام الباركود</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <script type="module">
+    import { getSession, signOut }           from '/js/auth.js';
+    import { getPilgrimApplications,
+             confirmMockPayment }            from '/js/data-service.js';
+    import { showToast }                     from '/js/ui.js';
+
+    let currentAppId = null;
+
+    /* ── جلسة المستخدم ── */
+    async function init() {
+      const session = await getSession();
+      if (!session) { window.location.href = '/pages/login.html'; return; }
+
+      const profile = session.profile;
+      const name    = `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || 'حاج';
+
+      document.getElementById('navUserName').textContent   = name;
+      document.getElementById('sidebarName').textContent   = name;
+      document.getElementById('sidebarAvatar').textContent = name.charAt(0) || '؟';
+      document.getElementById('welcomeTitle').textContent  = `أهلاً ${name} 👋`;
+      document.getElementById('welcomeSub').textContent    = new Date().toLocaleDateString('ar-SA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+      await loadApplications(session.user.id);
+    }
+
+    /* ── تحميل الطلبات ── */
+    async function loadApplications(userId) {
+      try {
+        const apps = await getPilgrimApplications(userId);
+
+        document.getElementById('statApplications').textContent = apps.length;
+        document.getElementById('statPaid').textContent         = apps.filter(a => a.status === 'paid').length;
+        document.getElementById('statPending').textContent      = apps.filter(a => a.status === 'pending').length;
+        document.getElementById('statRejected').textContent     = apps.filter(a => a.status === 'rejected').length;
+
+        if (!apps.length) return;
+
+        // باركود أول طلب مدفوع
+        const paid = apps.find(a => a.status === 'paid' && a.qr_code);
+        if (paid) {
+          document.getElementById('qrSection').style.display   = 'block';
+          document.getElementById('qrCampName').textContent    = paid.campaigns?.name || 'حملتي';
+          document.getElementById('qrStatus').textContent      = 'باركود دخول نشط';
+        }
+
+        // قائمة الطلبات
+        const list = document.getElementById('applicationsList');
+        list.innerHTML = apps.map(app => `
+          <div style="border:1px solid var(--c-border); border-radius:8px; padding:14px; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div style="font-size:14px; font-weight:700; color:var(--c-text);">${app.campaigns?.name || 'حملة'}</div>
+              <span class="badge ${badgeClass(app.status)}">${statusLabel(app.status)}</span>
+            </div>
+            <div style="font-size:12px; color:var(--c-label); display:flex; gap:16px;">
+              <span>💰 ${app.campaigns?.price?.toLocaleString('ar-SA') || '—'} ر.س</span>
+              <span>📅 ${new Date(app.created_at).toLocaleDateString('ar-SA')}</span>
+            </div>
+            ${app.status === 'approved' ? `
+            <button onclick="openPayModal('${app.id}','${app.campaigns?.name}',${app.campaigns?.price})"
+              class="btn btn-primary" style="margin-top:10px; width:100%; font-size:13px; padding:9px;">
+              إتمام الدفع واستلام الباركود
+            </button>` : ''}
+          </div>
+        `).join('');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function badgeClass(s) {
+      return { pending:'badge-pending', approved:'badge-open', paid:'badge-paid', rejected:'badge-rejected' }[s] || 'badge-pending';
+    }
+    function statusLabel(s) {
+      return { pending:'قيد المراجعة', approved:'مقبول - بانتظار الدفع', paid:'مدفوع ✓', rejected:'مرفوض' }[s] || s;
+    }
+
+    /* ── الدفع ── */
+    window.openPayModal = (id, name, price) => {
+      currentAppId = id;
+      document.getElementById('payDetails').innerHTML =
+        `<strong>الحملة:</strong> ${name}<br><strong>المبلغ:</strong> ${Number(price).toLocaleString('ar-SA')} ريال سعودي`;
+      const m = document.getElementById('payModal');
+      m.style.display = 'flex';
+    };
+    window.closePayModal = () => { document.getElementById('payModal').style.display = 'none'; };
+
+    window.confirmPay = async () => {
+      const btn = document.getElementById('confirmPayBtn');
+      btn.disabled  = true;
+      btn.innerHTML = '<span class="spinner"></span> جارٍ المعالجة...';
+      try {
+        await confirmMockPayment(currentAppId);
+        closePayModal();
+        showToast('تم الدفع بنجاح! سيظهر باركودك قريباً.', 'success');
+        setTimeout(() => location.reload(), 1500);
+      } catch (e) {
+        showToast(e.message || 'حدث خطأ في الدفع', 'error');
+        btn.disabled  = false;
+        btn.textContent = 'تأكيد الدفع واستلام الباركود';
+      }
+    };
+
+    /* ── تسجيل الخروج ── */
+    window.handleLogout = async () => {
+      await signOut();
+      window.location.href = '/pages/primaryHome.html';
+    };
+
+    init();
+  </script>
+
+</body>
+</html>

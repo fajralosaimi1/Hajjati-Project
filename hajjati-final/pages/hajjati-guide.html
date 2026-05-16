@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دليل المستخدم | منصة حجتي</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body>
+
+<!-- ══ الشريط الحكومي ══ -->
+<div class="gov-bar">
+  <div class="gov-bar-right">
+    <span>المملكة العربية السعودية</span>
+    <div class="gov-sep"></div>
+    <span class="gov-ministry">وزارة الحج والعمرة</span>
+  </div>
+  <div class="gov-bar-left">
+    <a class="gov-bar-link" href="/pages/hajjati-guide.html" style="color:#7FD4A0;">دليل المستخدم</a>
+    <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+  </div>
+</div>
+
+<!-- ══ شريط التنقل ══ -->
+<nav class="navbar">
+  <a class="nav-brand" href="/pages/primaryHome.html">
+    <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img"
+         onerror="this.style.display='none'">
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="/pages/primaryHome.html">الرئيسية</a>
+    <a class="nav-link active" href="/pages/hajjati-guide.html">دليل المستخدم</a>
+    <a class="nav-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-login" onclick="window.location.href='/pages/login.html'">تسجيل الدخول</button>
+  </div>
+</nav>
+
+<!-- ══ رأس الصفحة + تبويبات نوع المستخدم ══ -->
+<div class="page-hero">
+  <div class="breadcrumb">
+    <a href="/pages/primaryHome.html">الرئيسية</a>
+    <span class="breadcrumb-sep">&#8249;</span>
+    <span class="breadcrumb-current">دليل المستخدم</span>
+  </div>
+  <div class="page-hero-title">دليل المستخدم</div>
+  <div class="page-hero-sub">اختر نوع حسابك واتبع الخطوات بسهولة</div>
+
+  <!-- تبويبات نوع المستخدم -->
+  <div class="user-tabs">
+    <button class="user-tab active" onclick="switchUser(this,'hajj')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+      الحاج
+    </button>
+    <button class="user-tab" onclick="switchUser(this,'supervisor')">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      مشرف الحملة
+    </button>
+  </div>
+</div>
+
+<!-- ══ التخطيط الرئيسي ══ -->
+<div class="guide-layout">
+
+  <!-- الشريط الجانبي — يُبنى بـ guide.js -->
+  <div class="guide-sidebar" id="sidebar">
+    <div class="sidebar-header">المواضيع</div>
+  </div>
+
+  <!-- ══ محتوى الحاج ══ -->
+  <div class="guide-content">
+
+    <div class="user-content active" id="content-hajj">
+
+      <!-- موضوع ١: التسجيل والدخول -->
+      <div class="guide-topic active" id="hajj-t1">
+        <div class="topic-header">
+          <div class="topic-header-icon">
+            <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          </div>
+          <div>
+            <div class="topic-header-title">كيف أسجل وأدخل للمنصة</div>
+            <div class="topic-header-sub">إنشاء حساب جديد أو تسجيل الدخول في حال لديك حساب.</div>
+          </div>
+        </div>
+        <div class="steps-list">
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">١</div>
+              <div class="step-body">
+                <div class="step-title">افتح الصفحة الرئيسية</div>
+                <div class="step-desc">ادخل على منصة حجتي من أي متصفح. ستجد بطاقة تسجيل الدخول على يسار الشاشة مباشرة في الصفحة الرئيسية.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٢</div>
+              <div class="step-body">
+                <div class="step-title">اختر طريقة الدخول</div>
+                <div class="step-desc">لديك خياران: إنشاء حساب جديد في حال لم تكن مسجلاً مسبقاً، أو تسجيل الدخول في حال لديك حساب مسبق.</div>
+                <div class="step-tip">&#9432; هذه المنصة لا تدعم حاليًا تسجيل الدخول عبر النفاذ الوطني.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٣</div>
+              <div class="step-body">
+                <div class="step-title">إنشاء حساب جديد (إذا لم يكن لديك)</div>
+                <div class="step-desc">اضغط على زر "إنشاء حساب" في شريط التنقل أو رابط "سجّل الآن" في بطاقة الدخول، ثم أدخل بياناتك الأساسية.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٤</div>
+              <div class="step-body">
+                <div class="step-title">تأكيد الدخول</div>
+                <div class="step-desc">بعد الدخول الناجح ستُنقل تلقائياً للوحة التحكم الخاصة بك وستظهر اسمك في شريط التنقل العلوي.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="go-btn" href="/pages/login.html">
+          <svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          انتقل لصفحة الدخول
+        </a>
+      </div>
+
+      <!-- موضوع ٢: الحجز -->
+      <div class="guide-topic" id="hajj-t2">
+        <div class="topic-header">
+          <div class="topic-header-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <div>
+            <div class="topic-header-title">كيف أحجز حملة حج</div>
+            <div class="topic-header-sub">من تصفح الحملات حتى تأكيد الحجز خطوة بخطوة</div>
+          </div>
+        </div>
+        <div class="steps-list">
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">١</div>
+              <div class="step-body">
+                <div class="step-title">ادخل على صفحة الحملات</div>
+                <div class="step-desc">اضغط على رابط "الحملات" في شريط التنقل. ستجد قائمة بجميع الحملات المتاحة لهذا الموسم.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٢</div>
+              <div class="step-body">
+                <div class="step-title">فلتر وابحث عن الحملة المناسبة</div>
+                <div class="step-desc">استخدم أزرار التصفية لتضييق الخيارات. اضغط على أي حملة لعرض تفاصيلها الكاملة في الجانب الأيمن.</div>
+                <div class="step-tip">&#9432; التفاصيل تشمل: السعر، نوع الغرفة، التواريخ، اسم المشرف، والمقاعد المتبقية.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٣</div>
+              <div class="step-body">
+                <div class="step-title">اضغط "متابعة الحجز"</div>
+                <div class="step-desc">بعد اختيار الحملة المناسبة اضغط الزر الأخضر "متابعة الحجز".</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٤</div>
+              <div class="step-body">
+                <div class="step-title">أدخل بياناتك الشخصية</div>
+                <div class="step-desc">أدخل اسمك الكامل، رقم الهوية، رقم الجوال، البريد الإلكتروني.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٥</div>
+              <div class="step-body">
+                <div class="step-title">راجع وأكّد الحجز</div>
+                <div class="step-desc">راجع كامل تفاصيل حجزك. إذا كل شيء صحيح اضغط "تأكيد الحجز والدفع". ستصلك رسالة تأكيد فورية.</div>
+                <div class="step-tip">&#9432; احتفظ برقم الحجز — ستحتاجه لمتابعة رحلتك.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="go-btn" href="/pages/pilgrim-campaigns.html">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          تصفح الحملات الآن
+        </a>
+      </div>
+
+      <!-- موضوع ٣: المساعد الذكي -->
+      <div class="guide-topic" id="hajj-t3">
+        <div class="topic-header">
+          <div class="topic-header-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div>
+            <div class="topic-header-title">كيف أستخدم المساعد الذكي</div>
+            <div class="topic-header-sub">للمناسك والفتاوى والتوجيه في المشاعر</div>
+          </div>
+        </div>
+        <div class="steps-list">
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">١</div>
+              <div class="step-body">
+                <div class="step-title">افتح نافذة المساعد الذكي</div>
+                <div class="step-desc">اضغط على "التوجه الذكي" من شريط التنقل أو من الصفحة الرئيسية في قسم أبرز الخدمات.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٢</div>
+              <div class="step-body">
+                <div class="step-title">اكتب سؤالك أو استخدم الاقتراحات</div>
+                <div class="step-desc">اكتب سؤالك في حقل الإدخال واضغط إرسال، أو اختر من الاقتراحات السريعة الجاهزة أسفل المحادثة.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٣</div>
+              <div class="step-body">
+                <div class="step-title">في حالات الطوارئ الفورية</div>
+                <div class="step-desc">اضغط زر "الإبلاغ عن طارئ" في الشريط الجانبي. سيُبلَّغ مشرف حملتك فوراً وستظهر أرقام الطوارئ المهمة.</div>
+                <div class="step-warn">&#9888; في الحالات الخطيرة اتصل بـ ٩١١ مباشرة ولا تنتظر.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="go-btn" href="/pages/smart-guide.html">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          افتح المساعد الذكي
+        </a>
+      </div>
+
+      <!-- موضوع ٤: متابعة الحجز -->
+      <div class="guide-topic" id="hajj-t4">
+        <div class="topic-header">
+          <div class="topic-header-icon">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div>
+            <div class="topic-header-title">كيف أتابع حجزي</div>
+            <div class="topic-header-sub">متابعة تفاصيل الرحلة وتحميل الوثائق</div>
+          </div>
+        </div>
+        <div class="steps-list">
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">١</div>
+              <div class="step-body">
+                <div class="step-title">ادخل على لوحتك</div>
+                <div class="step-desc">بعد الحجز في حملة سيظهر رمز الاستجابة السريعة (QR Code) الخاص بك في لوحة الحاج.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٢</div>
+              <div class="step-body">
+                <div class="step-title">عرض تفاصيل الحجز عبر الباركود</div>
+                <div class="step-desc">للاطلاع على بيانات الحجز الرسمية، قم بمسح الباركود الظاهر بعد الحجز. سيتيح لك هذا الرمز الوصول السريع إلى كافة تفاصيل الحملة المسجل بها.</div>
+                <div class="step-tip">&#9432; سيقوم المشرف بإرسال تفاصيل الرحلة والتعليمات إلى رقم جوالك المسجل لدينا.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٣</div>
+              <div class="step-body">
+                <div class="step-title">استلام تفاصيل الرحلة والتحديثات</div>
+                <div class="step-desc">لن تحتاج لمتابعة الجدول الزمني يدوياً؛ حيث سيقوم المشرف المسؤول بإرسال كافة تفاصيل الرحلة والتعليمات اليومية مباشرة إلى رقم جوالك المسجل في المنصة.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="go-btn" href="/pages/pilgrim-dashboard.html">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          انتقل للوحتي
+        </a>
+      </div>
+
+      <!-- موضوع ٥: التواصل في الطوارئ -->
+      <div class="guide-topic" id="hajj-t5">
+        <div class="topic-header">
+          <div class="topic-header-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.72a16 16 0 0 0 6 6l.86-.86a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
+          </div>
+          <div>
+            <div class="topic-header-title">كيف أتصل بمشرف حملتي في الطوارئ</div>
+            <div class="topic-header-sub">طرق التواصل السريع مع المشرف والجهات المختصة</div>
+          </div>
+        </div>
+        <div class="steps-list">
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">١</div>
+              <div class="step-body">
+                <div class="step-title">تواصل مع مشرفك قبل الرحلة</div>
+                <div class="step-desc">غالبًا سيقوم مشرف الحملة بالتواصل معك قبل بدء الرحلة وتزويدك برقمه. احرص على حفظ الرقم في هاتفك قبل المغادرة.</div>
+                <div class="step-tip">&#9432; احفظ الرقم باسم "مشرف الحملة" ليسهل الوصول إليه وقت الحاجة.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٢</div>
+              <div class="step-body">
+                <div class="step-title">التواصل المباشر مع المشرف</div>
+                <div class="step-desc">من لوحة الحاج يمكنك إرسال رسالة مباشرة لمشرف حملتك. سيصله الإشعار فوراً على جهازه.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٣</div>
+              <div class="step-body">
+                <div class="step-title">تقديم بلاغ طارئ عبر المنصة</div>
+                <div class="step-desc">في الحالات الطارئة، توجه لصفحة الطوارئ، اختر نوع البلاغ، ثم عبّئ النموذج بالمعلومات المطلوبة وأرسل الطلب.</div>
+                <div class="step-warn">&#9888; إذا كنت في خطر، ابقَ في مكانك وتجنب التحرك العشوائي حتى تصلك المساعدة.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="info-card">
+          <div class="info-card-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <div>
+            <div class="info-card-title">أرقام الطوارئ المهمة</div>
+            <div class="info-card-text">
+              الطوارئ العامة: <strong>٩١١</strong> &nbsp;|&nbsp;
+              الإسعاف: <strong>٩٩٧</strong> &nbsp;|&nbsp;
+              الهلال الأحمر: <strong>٩٩٢</strong> &nbsp;|&nbsp;
+              الدفاع المدني: <strong>٩٩٨</strong>
+            </div>
+          </div>
+        </div>
+        <a class="go-btn" href="/pages/emergency.html">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+          صفحة الطوارئ
+        </a>
+      </div>
+
+    </div><!-- نهاية content-hajj -->
+
+
+    <!-- ══ محتوى مشرف الحملة ══ -->
+    <div class="user-content" id="content-supervisor">
+
+      <!-- موضوع ١: إدارة الحجاج -->
+      <div class="guide-topic active" id="sup-t1">
+        <div class="topic-header">
+          <div class="topic-header-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <div>
+            <div class="topic-header-title">إدارة بيانات الحجاج</div>
+            <div class="topic-header-sub">إضافة وتعديل ومتابعة بيانات حجاج حملتك</div>
+          </div>
+        </div>
+        <div class="steps-list">
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">١</div>
+              <div class="step-body">
+                <div class="step-title">ادخل للوحة تحكم المشرف</div>
+                <div class="step-desc">سجّل الدخول باستخدام بيانات حساب المشرف. ستُنقل تلقائياً للوحة التحكم الخاصة بمشرفي الحملات.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٢</div>
+              <div class="step-body">
+                <div class="step-title">استعرض قائمة الحجاج والطلبات</div>
+                <div class="step-desc">من لوحة التحكم ستجد جدولاً كاملاً بأسماء حجاجك وبياناتهم وحالة كل منهم (قيد المراجعة / مقبول / مدفوع).</div>
+                <div class="step-tip">&#9432; يمكنك قبول أو رفض كل طلب من نفس الجدول مباشرة.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="go-btn" href="/pages/provider-dashboard.html">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          انتقل للوحة التحكم
+        </a>
+      </div>
+
+      <!-- موضوع ٢: الإشعارات -->
+      <div class="guide-topic" id="sup-t2">
+        <div class="topic-header">
+          <div class="topic-header-icon">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07"/><path d="M11 5H6a2 2 0 0 0-2 2v11l4-4h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1"/></svg>
+          </div>
+          <div>
+            <div class="topic-header-title">إرسال إشعارات جماعية</div>
+            <div class="topic-header-sub">التواصل مع جميع حجاج حملتك بنقرة واحدة</div>
+          </div>
+        </div>
+        <div class="steps-list">
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">١</div>
+              <div class="step-body">
+                <div class="step-title">افتح قسم الإشعارات</div>
+                <div class="step-desc">من لوحة التحكم اختر "الإشعارات" ثم "إشعار جديد".</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٢</div>
+              <div class="step-body">
+                <div class="step-title">حدد المستلمين واكتب الرسالة</div>
+                <div class="step-desc">اختر إرسال لجميع الحجاج أو لمجموعة محددة. اكتب نص الإشعار مع تحديد درجة الأهمية (عادي / عاجل / طارئ).</div>
+                <div class="step-warn">&#9888; الإشعارات العاجلة تُرسل كـ SMS أيضاً — استخدمها بحكمة.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٣</div>
+              <div class="step-body">
+                <div class="step-title">أرسل وتابع الاستلام</div>
+                <div class="step-desc">اضغط إرسال وستظهر لك نسبة الاستلام في الوقت الفعلي.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- موضوع ٣: الطوارئ -->
+      <div class="guide-topic" id="sup-t3">
+        <div class="topic-header">
+          <div class="topic-header-icon">
+            <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="topic-header-title">إدارة حالات الطوارئ</div>
+            <div class="topic-header-sub">الاستجابة السريعة لحالات الفقدان والحوادث</div>
+          </div>
+        </div>
+        <div class="steps-list">
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">١</div>
+              <div class="step-body">
+                <div class="step-title">استقبال بلاغ الطارئ</div>
+                <div class="step-desc">ستصلك إشعار فوري على جهازك عند إبلاغ أي حاج من حملتك عن طارئ. اضغط على الإشعار للاطلاع على التفاصيل.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٢</div>
+              <div class="step-body">
+                <div class="step-title">تواصل مع الحاج فوراً</div>
+                <div class="step-desc">من صفحة الطارئ اضغط "اتصل الآن" للتواصل المباشر مع الحاج المبلّغ. حدد موقعه بدقة واطلب منه البقاء في مكانه.</div>
+              </div>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-card-inner">
+              <div class="step-num-col">٣</div>
+              <div class="step-body">
+                <div class="step-title">أغلق الحالة بعد الحل</div>
+                <div class="step-desc">بعد حل الحالة اضغط "إغلاق الطارئ" وأدخل ملاحظة موجزة عما حدث. ستُحفظ في سجل حملتك تلقائياً.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="go-btn" href="/pages/provider-dashboard.html">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+          إدارة الطوارئ
+        </a>
+      </div>
+
+    </div><!-- نهاية content-supervisor -->
+
+  </div><!-- نهاية guide-content -->
+</div><!-- نهاية guide-layout -->
+
+
+<!-- ══ التذييل ══ -->
+<footer>
+  <div class="footer-bottom">
+    <div>&#169; ١٤٤٧ هـ &mdash; منصة حجتي &mdash; وزارة الحج والعمرة</div>
+    <div class="footer-bottom-links">
+      <a href="/pages/faq.html">الأسئلة الشائعة</a>
+      <a href="/pages/smart-guide.html">المساعد الذكي</a>
+    </div>
+  </div>
+</footer>
+
+<!-- JS خارجي -->
+<script src="/js/guide.js"></script>
+
+</body>
+</html>

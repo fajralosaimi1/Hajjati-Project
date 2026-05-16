@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مسح QR | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body>
+
+  <!-- ══ الشريط الحكومي ══ -->
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+  </div>
+
+  <!-- ══ شريط التنقل ══ -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="/pages/provider-dashboard.html">لوحتي</a>
+      <a class="nav-link" href="/pages/provider-campaigns.html">حملاتي</a>
+      <a class="nav-link active" href="/pages/provider-scanner.html">مسح QR</a>
+    </div>
+    <div class="nav-actions">
+      <div class="nav-user">
+        <span class="nav-user-name" id="navUserName">جارٍ التحميل...</span>
+        <button class="btn-logout" onclick="handleLogout()">خروج</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ رأس الصفحة ══ -->
+  <div class="page-hero" style="padding-bottom:32px;">
+    <div class="breadcrumb">
+      <a href="/pages/provider-dashboard.html">لوحتي</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">مسح QR</span>
+    </div>
+    <h1 class="page-hero-title">مسح باركود الدخول</h1>
+    <p class="page-hero-sub">امسح باركود الحاج للتحقق من تسجيله وإتمام دخوله</p>
+  </div>
+
+  <!-- ══ المحتوى ══ -->
+  <div style="background:var(--c-bg); padding:40px 60px; min-height:60vh;">
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:28px; max-width:900px; margin:0 auto;">
+
+      <!-- ═ الكاميرا ═ -->
+      <div>
+        <div class="surface-card" style="padding:0; overflow:hidden;">
+          <div style="background:var(--c-primary); padding:14px 20px; display:flex; align-items:center; gap:10px;">
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 17h4"/><path d="M17 21v-4"/><path d="M21 17v4"/></svg>
+            <span style="font-size:14px; font-weight:700; color:#fff;">الكاميرا</span>
+          </div>
+          <div class="scanner-box" style="border-radius:0; aspect-ratio:1;">
+            <video id="scannerVideo" autoplay playsinline style="width:100%; height:100%; object-fit:cover;"></video>
+            <div class="scanner-overlay">
+              <div class="scanner-frame" id="scannerFrame">
+                <!-- خطوط الزوايا -->
+                <div style="position:absolute; top:-3px; right:-3px; width:20px; height:20px; border-top:3px solid var(--c-accent); border-right:3px solid var(--c-accent); border-radius:0 4px 0 0;"></div>
+                <div style="position:absolute; top:-3px; left:-3px; width:20px; height:20px; border-top:3px solid var(--c-accent); border-left:3px solid var(--c-accent); border-radius:4px 0 0 0;"></div>
+                <div style="position:absolute; bottom:-3px; right:-3px; width:20px; height:20px; border-bottom:3px solid var(--c-accent); border-right:3px solid var(--c-accent); border-radius:0 0 4px 0;"></div>
+                <div style="position:absolute; bottom:-3px; left:-3px; width:20px; height:20px; border-bottom:3px solid var(--c-accent); border-left:3px solid var(--c-accent); border-radius:0 0 0 4px;"></div>
+                <!-- خط المسح المتحرك -->
+                <div id="scanLine" style="position:absolute; top:0; left:0; right:0; height:2px; background:var(--c-accent); opacity:0.8; animation:scanAnim 2s linear infinite;"></div>
+              </div>
+            </div>
+          </div>
+          <div style="padding:16px 20px; display:flex; gap:10px;">
+            <button id="startBtn" class="btn btn-primary btn-full" onclick="startScanner()">
+              <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+              تشغيل الكاميرا
+            </button>
+            <button id="stopBtn" class="btn btn-outline btn-full" onclick="stopScanner()" style="display:none;">
+              <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="6" y="6" width="12" height="12"/></svg>
+              إيقاف
+            </button>
+          </div>
+        </div>
+
+        <!-- إدخال يدوي -->
+        <div class="surface-card" style="margin-top:16px;">
+          <div class="surface-card-title">أو أدخل الرمز يدوياً</div>
+          <div style="display:flex; gap:10px;">
+            <input id="manualCode" type="text" class="form-input" placeholder="أدخل رمز الباركود هنا..." style="flex:1;">
+            <button class="btn btn-primary" onclick="verifyManual()">تحقق</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═ نتيجة المسح ═ -->
+      <div>
+        <!-- حالة الانتظار -->
+        <div id="resultWaiting" class="surface-card" style="text-align:center; padding:48px 24px;">
+          <div style="width:80px; height:80px; background:var(--c-bg); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
+            <svg viewBox="0 0 24 24" style="width:36px;height:36px;stroke:var(--c-label);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg>
+          </div>
+          <div style="font-size:16px; font-weight:700; color:var(--c-text); margin-bottom:8px;">جاهز للمسح</div>
+          <div style="font-size:13px; color:var(--c-label); line-height:1.7;">شغّل الكاميرا ووجّهها نحو باركود الحاج،<br>أو أدخل الرمز يدوياً</div>
+        </div>
+
+        <!-- نتيجة صحيحة -->
+        <div id="resultValid" class="scanner-result valid" style="display:none;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+            <div style="width:48px; height:48px; background:#D1FAE5; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#065F46;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div>
+              <div style="font-size:16px; font-weight:800; color:#065F46;">باركود صحيح ✓</div>
+              <div style="font-size:12px; color:#6EE7B7;">تم التحقق بنجاح</div>
+            </div>
+          </div>
+          <div id="validDetails" style="display:flex; flex-direction:column; gap:8px;"></div>
+          <button onclick="resetScanner()" class="btn btn-outline btn-full" style="margin-top:16px;">مسح باركود آخر</button>
+        </div>
+
+        <!-- نتيجة مستخدمة -->
+        <div id="resultUsed" class="scanner-result used" style="display:none;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+            <div style="width:48px; height:48px; background:#FEF3C7; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#92400E;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </div>
+            <div>
+              <div style="font-size:16px; font-weight:800; color:#92400E;">تم الاستخدام مسبقاً</div>
+              <div style="font-size:12px; color:#D97706;">هذا الباركود سبق تسجيله</div>
+            </div>
+          </div>
+          <div id="usedDetails" style="font-size:13px; color:var(--c-muted); line-height:1.7;"></div>
+          <button onclick="resetScanner()" class="btn btn-outline btn-full" style="margin-top:16px;">مسح باركود آخر</button>
+        </div>
+
+        <!-- نتيجة خاطئة -->
+        <div id="resultInvalid" class="scanner-result invalid" style="display:none;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:16px;">
+            <div style="width:48px; height:48px; background:#FEE2E2; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+              <svg viewBox="0 0 24 24" style="width:24px;height:24px;stroke:#991B1B;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </div>
+            <div>
+              <div style="font-size:16px; font-weight:800; color:#991B1B;">باركود غير صحيح ✗</div>
+              <div id="invalidReason" style="font-size:12px; color:#F87171;">الرمز غير موجود أو منتهي الصلاحية</div>
+            </div>
+          </div>
+          <button onclick="resetScanner()" class="btn btn-outline btn-full">حاول مجدداً</button>
+        </div>
+
+        <!-- سجل المسح اليوم -->
+        <div class="surface-card" style="margin-top:16px;">
+          <div class="surface-card-title">
+            سجل اليوم
+            <span id="todayCount" style="font-size:12px; font-weight:600; color:var(--c-label);">٠ حاج</span>
+          </div>
+          <div id="scanLog" style="display:flex; flex-direction:column; gap:8px; max-height:220px; overflow-y:auto;">
+            <div style="font-size:12px; color:var(--c-label); text-align:center; padding:16px 0;">لا توجد عمليات مسح بعد</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <style>
+    @keyframes scanAnim {
+      0%   { top: 0; }
+      50%  { top: calc(100% - 2px); }
+      100% { top: 0; }
+    }
+  </style>
+
+  <script type="module">
+    import { getSession, signOut } from '/js/auth.js';
+    import { verifyQRCode }        from '/js/data-service.js';
+    import { showToast }           from '/js/ui.js';
+
+    let stream      = null;
+    let scanning    = false;
+    let scanLog     = [];
+    let lastScanned = null;
+
+    /* ── تهيئة ── */
+    async function init() {
+      const session = await getSession();
+      if (!session) { window.location.href = '/pages/login.html'; return; }
+      const name = `${session.profile.first_name||''} ${session.profile.last_name||''}`.trim() || 'مزود';
+      document.getElementById('navUserName').textContent = name;
+    }
+
+    /* ── تشغيل الكاميرا ── */
+    window.startScanner = async () => {
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        document.getElementById('scannerVideo').srcObject = stream;
+        document.getElementById('startBtn').style.display = 'none';
+        document.getElementById('stopBtn').style.display  = 'block';
+        scanning = true;
+        scanFrame();
+        showToast('الكاميرا تعمل — وجّهها نحو الباركود', 'info');
+      } catch (e) {
+        showToast('تعذّر الوصول للكاميرا — استخدم الإدخال اليدوي', 'error');
+      }
+    };
+
+    window.stopScanner = () => {
+      scanning = false;
+      if (stream) stream.getTracks().forEach(t => t.stop());
+      document.getElementById('startBtn').style.display = 'block';
+      document.getElementById('stopBtn').style.display  = 'none';
+    };
+
+    /* ── معالجة الفريم (محاكاة — تحتاج jsQR في الإنتاج) ── */
+    function scanFrame() {
+      if (!scanning) return;
+      requestAnimationFrame(scanFrame);
+      // في الإنتاج: استخدم مكتبة jsQR لقراءة الباركود من الفيديو
+    }
+
+    /* ── تحقق يدوي ── */
+    window.verifyManual = async () => {
+      const code = document.getElementById('manualCode').value.trim();
+      if (!code) { showToast('يرجى إدخال رمز الباركود', 'warning'); return; }
+      await processCode(code);
+      document.getElementById('manualCode').value = '';
+    };
+
+    /* ── معالجة الرمز ── */
+    async function processCode(code) {
+      if (code === lastScanned) return;
+      lastScanned = code;
+
+      hideAllResults();
+
+      try {
+        const result = await verifyQRCode(code);
+
+        if (result.status === 'valid') {
+          showValid(result);
+          addToLog(result.pilgrim_name || 'حاج', 'valid');
+          showToast(`✓ ${result.pilgrim_name || 'الحاج'} — دخول مسموح`, 'success');
+        } else if (result.status === 'used') {
+          showUsed(result);
+          showToast('هذا الباركود استُخدم مسبقاً', 'warning');
+        } else {
+          showInvalid(result.message || 'باركود غير صحيح');
+          showToast('باركود غير صحيح', 'error');
+        }
+      } catch (e) {
+        showInvalid(e.message || 'حدث خطأ في التحقق');
+        showToast(e.message || 'حدث خطأ', 'error');
+      }
+    }
+
+    function showValid(r) {
+      document.getElementById('resultValid').style.display = 'block';
+      document.getElementById('validDetails').innerHTML = [
+        { label:'اسم الحاج',  value: r.pilgrim_name || '—' },
+        { label:'الحملة',     value: r.campaign_name || '—' },
+        { label:'رقم الهوية', value: r.id_number || '—' },
+        { label:'وقت الدخول', value: new Date().toLocaleTimeString('ar-SA') },
+      ].map(i => `
+        <div style="display:flex; justify-content:space-between; padding:8px 12px; background:var(--c-bg); border-radius:6px; border:1px solid var(--c-border);">
+          <span style="font-size:12px; color:var(--c-label);">${i.label}</span>
+          <span style="font-size:13px; font-weight:700; color:var(--c-text);">${i.value}</span>
+        </div>`).join('');
+    }
+
+    function showUsed(r) {
+      document.getElementById('resultUsed').style.display = 'block';
+      document.getElementById('usedDetails').innerHTML =
+        `الحاج <strong>${r.pilgrim_name||'—'}</strong> سجّل دخوله بالفعل.<br>وقت الدخول السابق: ${r.scanned_at ? new Date(r.scanned_at).toLocaleString('ar-SA') : '—'}`;
+    }
+
+    function showInvalid(msg) {
+      document.getElementById('resultInvalid').style.display = 'block';
+      document.getElementById('invalidReason').textContent   = msg;
+    }
+
+    function hideAllResults() {
+      ['resultWaiting','resultValid','resultUsed','resultInvalid']
+        .forEach(id => document.getElementById(id).style.display = 'none');
+    }
+
+    window.resetScanner = () => {
+      lastScanned = null;
+      hideAllResults();
+      document.getElementById('resultWaiting').style.display = 'block';
+    };
+
+    /* ── سجل المسح ── */
+    function addToLog(name, status) {
+      scanLog.unshift({ name, status, time: new Date().toLocaleTimeString('ar-SA') });
+      document.getElementById('todayCount').textContent = `${scanLog.length} حاج`;
+      document.getElementById('scanLog').innerHTML = scanLog.map(entry => `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:${entry.status==='valid'?'#F0FDF4':'#FEF2F2'}; border-radius:6px;">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:14px;">${entry.status==='valid'?'✓':'✗'}</span>
+            <span style="font-size:13px; font-weight:600; color:var(--c-text);">${entry.name}</span>
+          </div>
+          <span style="font-size:11px; color:var(--c-label);">${entry.time}</span>
+        </div>`).join('');
+    }
+
+    window.handleLogout = async () => { await signOut(); window.location.href = '/pages/primaryHome.html'; };
+
+    init();
+  </script>
+
+</body>
+</html>

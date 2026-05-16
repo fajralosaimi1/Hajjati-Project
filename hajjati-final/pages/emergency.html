@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>الطوارئ | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body class="page-emergency">
+
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+      <a class="gov-bar-link" href="/pages/smart-guide.html">التوجه الذكي</a>
+    </div>
+  </div>
+
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="/pages/primaryHome.html">الرئيسية</a>
+      <a class="nav-link active" href="/pages/emergency.html">الطوارئ</a>
+      <a class="nav-link" href="/pages/smart-guide.html">التوجه الذكي</a>
+    </div>
+    <div class="nav-actions">
+      <div id="navUser" class="nav-user" style="display:none;">
+        <span class="nav-user-name" id="navUserName"></span>
+        <button class="btn-logout" onclick="handleLogout()">خروج</button>
+      </div>
+      <div id="navGuest">
+        <button class="btn-login" onclick="window.location.href='/pages/login.html'">تسجيل الدخول</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- رأس الصفحة + تبويبات -->
+  <div class="page-hero" style="padding-bottom:0;">
+    <div class="breadcrumb">
+      <a href="/pages/primaryHome.html">الرئيسية</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">الطوارئ</span>
+    </div>
+    <h1 class="page-hero-title">الإبلاغ عن حالة طارئة</h1>
+    <p class="page-hero-sub">بلاغك يصل فوراً لصاحب حملتك فقط — استجابة سريعة في أسرع وقت</p>
+    <div class="report-types">
+      <button class="rtype-btn active-health" id="btnHealth" onclick="selectType('health')">
+        <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        حالة صحية
+      </button>
+      <button class="rtype-btn" id="btnLost" onclick="selectType('lost')">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        شخص مفقود
+      </button>
+      <button class="rtype-btn" id="btnSec" onclick="selectType('security')">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        حادثة أمنية
+      </button>
+    </div>
+  </div>
+
+  <!-- المحتوى -->
+  <div style="background:var(--c-bg); padding:32px 0; min-height:60vh;">
+    <div class="emergency-layout">
+
+      <!-- تنبيه غير مسجل -->
+      <div id="loginAlert" style="display:none; background:#FEF3C7; border:1px solid #FDE68A; border-radius:8px; padding:14px 18px; margin-bottom:20px; align-items:center; gap:12px;">
+        <span style="font-size:20px;">⚠️</span>
+        <div>
+          <div style="font-size:13px; font-weight:700; color:#92400E;">يجب تسجيل الدخول أولاً</div>
+          <div style="font-size:12px; color:#B45309; margin-top:2px;">لتقديم بلاغ يجب أن تكون مسجلاً حتى يصل بلاغك لصاحب حملتك</div>
+        </div>
+        <a href="/pages/login.html" style="margin-right:auto; padding:8px 18px; background:#92400E; color:#fff; border-radius:6px; font-size:12px; font-weight:700; text-decoration:none;">تسجيل الدخول</a>
+      </div>
+
+      <!-- نموذج البلاغ -->
+      <div class="emergency-form-wrap">
+        <div class="emergency-form-header health" id="formHeader">
+          <div class="emergency-form-icon">
+            <svg viewBox="0 0 24 24" id="formIcon"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+          </div>
+          <div>
+            <div class="emergency-form-title" id="formTitle">الإبلاغ عن حالة صحية</div>
+            <div class="emergency-form-sub">سيصل بلاغك فوراً لصاحب حملتك فقط</div>
+          </div>
+        </div>
+
+        <div class="emergency-form-body">
+          <div id="errorMsg" style="display:none; background:#FEE2E2; border:1px solid #FECACA; border-radius:6px; padding:10px 14px; font-size:13px; font-weight:600; color:#991B1B; margin-bottom:16px;"></div>
+
+          <div id="successMsg" style="display:none; background:#D1FAE5; border:1px solid #A7F3D0; border-radius:8px; padding:24px; text-align:center; margin-bottom:16px;">
+            <div style="font-size:36px; margin-bottom:10px;">✅</div>
+            <div style="font-size:15px; font-weight:800; color:#065F46; margin-bottom:6px;">تم إرسال بلاغك بنجاح</div>
+            <div style="font-size:13px; color:#047857; line-height:1.7;">وصل بلاغك لصاحب حملتك وسيتواصل معك فوراً.<br>ستصلك إشعار عند الرد على بلاغك.</div>
+            <button onclick="resetForm()" class="btn btn-outline" style="margin-top:14px; font-size:13px;">تقديم بلاغ آخر</button>
+          </div>
+
+          <div id="formFields">
+            <!-- الموقع -->
+            <div class="form-field">
+              <label class="form-label">موقعك الحالي <span class="form-req">*</span></label>
+              <select id="location" class="form-input form-select">
+                <option value="">اختر موقعك...</option>
+                <option value="المسجد الحرام">المسجد الحرام</option>
+                <option value="منى">منى</option>
+                <option value="عرفات">عرفات</option>
+                <option value="مزدلفة">مزدلفة</option>
+                <option value="الجمرات">الجمرات</option>
+                <option value="الفندق">الفندق / السكن</option>
+                <option value="موقع آخر">موقع آخر</option>
+              </select>
+            </div>
+
+            <!-- حقول الصحة -->
+            <div id="healthFields">
+              <div class="form-field">
+                <label class="form-label">نوع الحالة الصحية <span class="form-req">*</span></label>
+                <select id="healthType" class="form-input form-select">
+                  <option value="">اختر...</option>
+                  <option value="إغماء أو فقدان وعي">إغماء أو فقدان وعي</option>
+                  <option value="ضربة شمس أو إجهاد حراري">ضربة شمس أو إجهاد حراري</option>
+                  <option value="كسر أو إصابة جسدية">كسر أو إصابة جسدية</option>
+                  <option value="ألم في الصدر">ألم في الصدر / أزمة قلبية</option>
+                  <option value="صعوبة في التنفس">صعوبة في التنفس</option>
+                  <option value="حالة أخرى">حالة أخرى</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- حقول المفقود -->
+            <div id="lostFields" style="display:none;">
+              <div class="form-row">
+                <div class="form-field">
+                  <label class="form-label">اسم المفقود <span class="form-req">*</span></label>
+                  <input id="lostName" type="text" class="form-input" placeholder="الاسم الكامل">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">العمر التقريبي</label>
+                  <input id="lostAge" type="number" class="form-input" placeholder="العمر">
+                </div>
+              </div>
+              <div class="form-field">
+                <label class="form-label">وصف الملابس والمظهر <span class="form-req">*</span></label>
+                <input id="lostDesc" type="text" class="form-input" placeholder="مثال: ثوب أبيض وعمامة خضراء">
+              </div>
+            </div>
+
+            <!-- حقول الأمن -->
+            <div id="secFields" style="display:none;">
+              <div class="form-field">
+                <label class="form-label">نوع الحادثة <span class="form-req">*</span></label>
+                <select id="secType" class="form-input form-select">
+                  <option value="">اختر...</option>
+                  <option value="سرقة أو نشل">سرقة أو نشل</option>
+                  <option value="تدافع أو ازدحام خطير">تدافع أو ازدحام خطير</option>
+                  <option value="تحرش أو اعتداء">تحرش أو اعتداء</option>
+                  <option value="حريق أو دخان">حريق أو دخان</option>
+                  <option value="حادثة أخرى">حادثة أخرى</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- تفاصيل إضافية -->
+            <div class="form-field">
+              <label class="form-label">تفاصيل إضافية</label>
+              <textarea id="extraDetails" class="form-input form-textarea" rows="3"
+                placeholder="أضف أي تفاصيل تساعد صاحب الحملة على مساعدتك..."></textarea>
+            </div>
+
+            <!-- جوال التواصل -->
+            <div class="form-field">
+              <label class="form-label">رقم جوال للتواصل</label>
+              <input id="contactPhone" type="tel" class="form-input" placeholder="05XXXXXXXX">
+              <span class="form-hint">اختياري — لتسهيل التواصل الفوري</span>
+            </div>
+
+            <button id="submitBtn" class="btn btn-danger btn-full" style="font-size:15px; padding:13px;" onclick="submitReport()">
+              <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              إرسال البلاغ الآن
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- أرقام الطوارئ -->
+      <div class="emergency-numbers" style="margin-top:20px;">
+        <svg viewBox="0 0 24 24" style="width:22px;height:22px;stroke:var(--c-primary);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9a16 16 0 0 0 6.29 6.29l.86-.86a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <div class="emergency-numbers-text">
+          أرقام الطوارئ:&nbsp;
+          الإسعاف <strong style="color:var(--c-danger);">911</strong> &nbsp;|&nbsp;
+          وزارة الحج <strong style="color:var(--c-primary);">997</strong> &nbsp;|&nbsp;
+          الهلال الأحمر <strong style="color:var(--c-danger);">992</strong>
+        </div>
+      </div>
+
+      <!-- بلاغاتي السابقة -->
+      <div class="surface-card" style="margin-top:20px;">
+        <div class="surface-card-title">بلاغاتي السابقة</div>
+        <div id="myReportsList">
+          <div style="text-align:center; padding:20px 0; font-size:13px; color:var(--c-label);">لا توجد بلاغات سابقة</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <script type="module">
+    import { getSession, signOut }           from '/js/auth.js';
+    import { createEmergencyReport,
+             getMyEmergencyReports }         from '/js/data-service.js';
+    import { showToast }                     from '/js/ui.js';
+
+    let currentType   = 'health';
+    let currentUserId = null;
+    let myCampaignId  = null;
+
+    async function init() {
+      const session = await getSession();
+      if (session) {
+        const name = `${session.profile?.first_name||''} ${session.profile?.last_name||''}`.trim();
+        document.getElementById('navGuest').style.display  = 'none';
+        document.getElementById('navUser').style.display   = 'flex';
+        document.getElementById('navUserName').textContent = name;
+        currentUserId = session.user.id;
+        myCampaignId  = session.profile?.active_campaign_id || null;
+        loadMyReports();
+      } else {
+        const al = document.getElementById('loginAlert');
+        al.style.display = 'flex';
+        document.getElementById('submitBtn').disabled    = true;
+        document.getElementById('submitBtn').style.opacity = '0.5';
+      }
+      window.handleLogout = async () => { await signOut(); location.reload(); };
+    }
+
+    window.selectType = (type) => {
+      currentType = type;
+      const configs = {
+        health:   { btn:'btnHealth', cls:'active-health', hdr:'health', title:'الإبلاغ عن حالة صحية',   icon:'<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>' },
+        lost:     { btn:'btnLost',   cls:'active-lost',   hdr:'lost',   title:'الإبلاغ عن شخص مفقود',  icon:'<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>' },
+        security: { btn:'btnSec',    cls:'active-sec',    hdr:'sec',    title:'الإبلاغ عن حادثة أمنية', icon:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>' },
+      };
+      const c = configs[type];
+      document.querySelectorAll('.rtype-btn').forEach(b => b.className = 'rtype-btn');
+      document.getElementById(c.btn).classList.add(c.cls);
+      document.getElementById('formHeader').className    = `emergency-form-header ${c.hdr}`;
+      document.getElementById('formTitle').textContent   = c.title;
+      document.getElementById('formIcon').innerHTML      = c.icon;
+      document.getElementById('healthFields').style.display = type === 'health'   ? 'block' : 'none';
+      document.getElementById('lostFields').style.display   = type === 'lost'     ? 'block' : 'none';
+      document.getElementById('secFields').style.display    = type === 'security' ? 'block' : 'none';
+    };
+
+    window.submitReport = async () => {
+      if (!currentUserId) { showToast('يجب تسجيل الدخول أولاً', 'warning'); return; }
+      const errEl    = document.getElementById('errorMsg');
+      const btn      = document.getElementById('submitBtn');
+      const location = document.getElementById('location').value;
+      errEl.style.display = 'none';
+
+      if (!location) { errEl.textContent = 'يرجى تحديد موقعك الحالي.'; errEl.style.display = 'block'; return; }
+
+      let description = '';
+      if (currentType === 'health') {
+        const v = document.getElementById('healthType').value;
+        if (!v) { errEl.textContent = 'يرجى تحديد نوع الحالة الصحية.'; errEl.style.display = 'block'; return; }
+        description = `حالة صحية: ${v}`;
+      } else if (currentType === 'lost') {
+        const nm = document.getElementById('lostName').value.trim();
+        const ds = document.getElementById('lostDesc').value.trim();
+        if (!nm || !ds) { errEl.textContent = 'يرجى إدخال اسم المفقود ووصف مظهره.'; errEl.style.display = 'block'; return; }
+        const age = document.getElementById('lostAge').value;
+        description = `شخص مفقود: ${nm}${age?' (العمر: '+age+')':''} — ${ds}`;
+      } else {
+        const v = document.getElementById('secType').value;
+        if (!v) { errEl.textContent = 'يرجى تحديد نوع الحادثة.'; errEl.style.display = 'block'; return; }
+        description = `حادثة أمنية: ${v}`;
+      }
+
+      const extra = document.getElementById('extraDetails').value.trim();
+      if (extra) description += ` — تفاصيل: ${extra}`;
+
+      btn.disabled  = true;
+      btn.innerHTML = '<span class="spinner"></span> جارٍ إرسال البلاغ...';
+
+      try {
+        await createEmergencyReport({
+          pilgrim_id:    currentUserId,
+          campaign_id:   myCampaignId,
+          type:          currentType,
+          location,
+          description,
+          contact_phone: document.getElementById('contactPhone').value.trim() || null,
+          status:        'open',
+        });
+        document.getElementById('formFields').style.display = 'none';
+        document.getElementById('successMsg').style.display = 'block';
+        showToast('تم إرسال البلاغ بنجاح ✓', 'success');
+        loadMyReports();
+      } catch (e) {
+        errEl.textContent   = e.message || 'حدث خطأ، يرجى المحاولة مجدداً.';
+        errEl.style.display = 'block';
+        btn.disabled        = false;
+        btn.textContent     = 'إرسال البلاغ الآن';
+      }
+    };
+
+    window.resetForm = () => {
+      document.getElementById('formFields').style.display = 'block';
+      document.getElementById('successMsg').style.display = 'none';
+      document.getElementById('submitBtn').disabled       = false;
+      document.getElementById('location').value          = '';
+      document.getElementById('extraDetails').value      = '';
+      document.getElementById('contactPhone').value      = '';
+    };
+
+    async function loadMyReports() {
+      if (!currentUserId) return;
+      try {
+        const reports = await getMyEmergencyReports(currentUserId);
+        const el = document.getElementById('myReportsList');
+        if (!reports.length) return;
+        const tl = { health:'صحية', lost:'مفقود', security:'أمنية' };
+        const sc = { open:{ label:'مفتوح', bg:'#FEE2E2', color:'#991B1B' }, resolved:{ label:'تم الحل ✓', bg:'#D1FAE5', color:'#065F46' } };
+        el.innerHTML = reports.map(r => {
+          const s = sc[r.status] || sc.open;
+          return `
+          <div style="border:1px solid var(--c-border); border-radius:8px; padding:14px; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+              <div>
+                <div style="font-size:13px; font-weight:700; color:var(--c-text);">${tl[r.type]||r.type}</div>
+                <div style="font-size:11px; color:var(--c-label); margin-top:2px;">📅 ${new Date(r.created_at).toLocaleDateString('ar-SA')}</div>
+              </div>
+              <span style="background:${s.bg}; color:${s.color}; font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px;">${s.label}</span>
+            </div>
+            <div style="font-size:12px; color:var(--c-muted); line-height:1.6;">${r.description}</div>
+            ${r.response ? `
+            <div style="margin-top:10px; background:var(--c-accent-bg); border-right:3px solid var(--c-primary); padding:10px 12px; border-radius:0 6px 6px 0;">
+              <div style="font-size:11px; font-weight:700; color:var(--c-primary); margin-bottom:3px;">رد صاحب الحملة:</div>
+              <div style="font-size:12px; color:var(--c-muted);">${r.response}</div>
+            </div>` : ''}
+          </div>`;
+        }).join('');
+      } catch(e) { /* صامت */ }
+    }
+
+    init();
+  </script>
+
+</body>
+</html>

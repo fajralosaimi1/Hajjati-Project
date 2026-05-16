@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دخول الحاج | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body class="page-otp auth-bg">
+
+  <!-- ══ الشريط الحكومي ══ -->
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+    </div>
+  </div>
+
+  <!-- ══ شريط التنقل ══ -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-actions">
+      <button class="btn-register" onclick="window.location.href='/pages/login.html'">← اختيار الدور</button>
+    </div>
+  </nav>
+
+  <!-- ══ منطقة الكارد ══ -->
+  <div class="auth-main">
+    <div class="auth-card otp-card">
+
+      <!-- رأس الكارد -->
+      <div class="auth-card-header">
+        <div class="auth-card-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+        </div>
+        <div>
+          <div class="auth-card-title">تسجيل دخول الحاج</div>
+          <div class="auth-card-sub">أدخل بياناتك للوصول إلى حسابك</div>
+        </div>
+      </div>
+
+      <!-- جسم الكارد -->
+      <div class="auth-card-body">
+
+        <!-- رسالة الخطأ -->
+        <div id="errorMsg" style="display:none; background:#FEE2E2; border:1px solid #FECACA; border-radius:6px; padding:10px 14px; font-size:13px; font-weight:600; color:#991B1B; margin-bottom:16px;"></div>
+
+        <!-- حقل الإيميل -->
+        <div class="form-field">
+          <label class="form-label">البريد الإلكتروني <span class="form-req">*</span></label>
+          <input id="email" type="email" class="form-input" placeholder="example@email.com" autocomplete="email">
+        </div>
+
+        <!-- حقل كلمة المرور -->
+        <div class="form-field">
+          <label class="form-label">كلمة المرور <span class="form-req">*</span></label>
+          <div style="position:relative;">
+            <input id="password" type="password" class="form-input" placeholder="••••••••" autocomplete="current-password" style="padding-left:44px;">
+            <button type="button" id="togglePass" onclick="togglePassword()" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--c-label); padding:0;">
+              <svg id="eyeIcon" viewBox="0 0 24 24" style="width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- نسيت كلمة المرور -->
+        <div style="text-align:left; margin-bottom:6px;">
+          <a href="/pages/reset-pass-1.html" style="font-size:12px; color:var(--c-primary); font-weight:600;">نسيت كلمة المرور؟</a>
+        </div>
+
+        <!-- زر الدخول -->
+        <button id="loginBtn" class="auth-submit" onclick="handleLogin()">
+          تسجيل الدخول
+        </button>
+
+      </div>
+
+      <!-- تذييل الكارد -->
+      <div class="auth-card-footer">
+        ليس لديك حساب؟
+        <a href="/pages/register-haj.html">إنشاء حساب حاج</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ التذييل المختصر ══ -->
+  <footer>
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,0.06);">
+      <span>© ١٤٤٧ هـ — منصة حجتي</span>
+      <div class="footer-bottom-links">
+        <a href="/pages/faq.html">الأسئلة الشائعة</a>
+        <a href="#">سياسة الخصوصية</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <script type="module">
+    import { signInWithEmail } from '/js/auth.js';
+    import { showToast }       from '/js/ui.js';
+
+    window.togglePassword = function () {
+      const p = document.getElementById('password');
+      p.type = p.type === 'password' ? 'text' : 'password';
+    };
+
+    window.handleLogin = async function () {
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const errEl    = document.getElementById('errorMsg');
+      const btn      = document.getElementById('loginBtn');
+
+      errEl.style.display = 'none';
+
+      if (!email || !password) {
+        errEl.textContent    = 'يرجى إدخال البريد الإلكتروني وكلمة المرور.';
+        errEl.style.display  = 'block';
+        return;
+      }
+
+      btn.disabled    = true;
+      btn.innerHTML   = '<span class="spinner"></span> جارٍ الدخول...';
+
+      try {
+        const { role } = await signInWithEmail(email, password, 'pilgrim');
+        // حفظ بريد للـ OTP
+        sessionStorage.setItem('otp_email', email);
+        sessionStorage.setItem('otp_role',  'pilgrim');
+        window.location.href = '/pages/otp.html';
+      } catch (err) {
+        errEl.textContent   = err.message || 'بيانات الدخول غير صحيحة.';
+        errEl.style.display = 'block';
+        btn.disabled        = false;
+        btn.textContent     = 'تسجيل الدخول';
+      }
+    };
+
+    // دخول بـ Enter
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') window.handleLogin();
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الدخول | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body class="page-role-select">
+
+  <!-- ══ الشريط الحكومي ══ -->
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/hajjati-guide.html">دليل المستخدم</a>
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+    </div>
+  </div>
+
+  <!-- ══ شريط التنقل ══ -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="/pages/primaryHome.html">الرئيسية</a>
+      <a class="nav-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+      <a class="nav-link" href="/pages/hajjati-guide.html">دليل المستخدم</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn-register" onclick="window.location.href='/pages/register.html'">إنشاء حساب</button>
+    </div>
+  </nav>
+
+  <!-- ══ منطقة اختيار الدور ══ -->
+  <div class="role-select-wrap">
+
+    <!-- العنوان -->
+    <div style="text-align:center; margin-bottom:40px;">
+      <div style="display:inline-flex; align-items:center; gap:8px; background:var(--c-accent-bg); border:1px solid var(--c-border); padding:6px 16px; border-radius:4px; font-size:12px; font-weight:700; color:var(--c-primary); margin-bottom:18px; letter-spacing:0.5px;">
+        <span>🔒</span> بوابة الدخول الآمن
+      </div>
+      <h1 class="role-select-title">من أنت؟</h1>
+      <p class="role-select-sub">اختر نوع حسابك للدخول إلى لوحة التحكم المناسبة</p>
+    </div>
+
+    <!-- بطاقتا الدور -->
+    <div class="role-cards">
+
+      <!-- حاج -->
+      <a class="role-card" href="/pages/login-haj.html">
+        <div class="role-card-header">
+          <div class="role-card-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+          </div>
+          <div>
+            <div class="role-card-name">حاج</div>
+            <div class="role-card-desc">تسجيل دخول لحساب الحاج</div>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="role-feature"><span class="role-check">✓</span> تصفح الحملات والتقديم عليها</div>
+          <div class="role-feature"><span class="role-check">✓</span> متابعة حالة طلبك والدفع</div>
+          <div class="role-feature"><span class="role-check">✓</span> استلام باركود الدخول</div>
+          <div class="role-feature"><span class="role-check">✓</span> التوجه الذكي والطوارئ</div>
+          <div class="role-card-cta">دخول كحاج ←</div>
+        </div>
+      </a>
+
+      <!-- مزود خدمة -->
+      <a class="role-card" href="/pages/company-login.html">
+        <div class="role-card-header alt">
+          <div class="role-card-icon">
+            <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <div>
+            <div class="role-card-name">مزود الخدمة</div>
+            <div class="role-card-desc">تسجيل دخول لصاحب الحملة</div>
+          </div>
+        </div>
+        <div class="role-card-body">
+          <div class="role-feature"><span class="role-check">✓</span> إنشاء وإدارة الحملات</div>
+          <div class="role-feature"><span class="role-check">✓</span> مراجعة طلبات الحجاج</div>
+          <div class="role-feature"><span class="role-check">✓</span> مسح باركود الدخول</div>
+          <div class="role-feature"><span class="role-check">✓</span> استقبال بلاغات الطوارئ</div>
+          <div class="role-card-cta">دخول كمزود خدمة ←</div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- رابط التسجيل -->
+    <p style="margin-top:32px; font-size:13px; color:var(--c-label); text-align:center;">
+      ليس لديك حساب؟
+      <a href="/pages/register.html" style="color:var(--c-primary); font-weight:700;">إنشاء حساب جديد</a>
+    </p>
+
+  </div>
+
+  <!-- ══ التذييل المختصر ══ -->
+  <footer>
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,0.06);">
+      <span>© ١٤٤٧ هـ — منصة حجتي</span>
+      <div class="footer-bottom-links">
+        <a href="/pages/faq.html">الأسئلة الشائعة</a>
+        <a href="#">سياسة الخصوصية</a>
+        <a href="/pages/primaryHome.html#footer">تواصل معنا</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+</body>
+</html>

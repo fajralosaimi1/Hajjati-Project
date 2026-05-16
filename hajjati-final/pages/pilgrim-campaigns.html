@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>استعراض الحملات | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body>
+
+  <!-- ══ الشريط الحكومي ══ -->
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+      <a class="gov-bar-link" href="/pages/smart-guide.html">التوجه الذكي</a>
+    </div>
+  </div>
+
+  <!-- ══ شريط التنقل ══ -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="/pages/pilgrim-dashboard.html">لوحتي</a>
+      <a class="nav-link active" href="/pages/pilgrim-campaigns.html">الحملات</a>
+      <a class="nav-link" href="/pages/smart-guide.html">التوجه الذكي</a>
+      <a class="nav-link" href="/pages/emergency.html">الطوارئ</a>
+    </div>
+    <div class="nav-actions">
+      <div class="nav-user">
+        <span class="nav-user-name" id="navUserName">جارٍ التحميل...</span>
+        <button class="btn-logout" onclick="handleLogout()">خروج</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ رأس الصفحة ══ -->
+  <div class="page-hero" style="padding-bottom:32px;">
+    <div class="breadcrumb">
+      <a href="/pages/pilgrim-dashboard.html">لوحتي</a>
+      <span class="breadcrumb-sep">›</span>
+      <span class="breadcrumb-current">استعراض الحملات</span>
+    </div>
+    <h1 class="page-hero-title">حملات الحج المتاحة</h1>
+    <p class="page-hero-sub">تصفح الحملات المعتمدة وقدّم طلبك</p>
+  </div>
+
+  <!-- ══ المحتوى ══ -->
+  <div style="padding:32px 60px; background:var(--c-bg); min-height:60vh;">
+
+    <!-- شريط البحث والفلترة -->
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px; flex-wrap:wrap;">
+      <div style="position:relative; flex:1; min-width:240px;">
+        <svg viewBox="0 0 24 24" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); width:16px; height:16px; stroke:var(--c-label); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="searchInput" type="text" class="form-input" placeholder="ابحث عن حملة..." style="padding-right:38px;" oninput="filterCampaigns()">
+      </div>
+      <select id="typeFilter" class="form-input form-select" style="width:160px;" onchange="filterCampaigns()">
+        <option value="">كل الأنواع</option>
+        <option value="economy">اقتصادية</option>
+        <option value="standard">عادية</option>
+        <option value="vip">مميزة</option>
+        <option value="family">عائلية</option>
+        <option value="platinum">بلاتينية</option>
+      </select>
+      <select id="sortFilter" class="form-input form-select" style="width:160px;" onchange="filterCampaigns()">
+        <option value="default">الترتيب الافتراضي</option>
+        <option value="price_asc">السعر: الأقل أولاً</option>
+        <option value="price_desc">السعر: الأعلى أولاً</option>
+        <option value="seats">الأماكن المتبقية</option>
+      </select>
+    </div>
+
+    <!-- فلاتر سريعة -->
+    <div style="display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap;">
+      <button class="filter-chip active" onclick="setQuickFilter(this,'')">الكل</button>
+      <button class="filter-chip" onclick="setQuickFilter(this,'economy')">اقتصادية</button>
+      <button class="filter-chip" onclick="setQuickFilter(this,'standard')">عادية</button>
+      <button class="filter-chip" onclick="setQuickFilter(this,'vip')">مميزة</button>
+      <button class="filter-chip" onclick="setQuickFilter(this,'family')">عائلية</button>
+      <button class="filter-chip" onclick="setQuickFilter(this,'platinum')">بلاتينية</button>
+    </div>
+
+    <!-- شبكة الحملات -->
+    <div id="campaignsGrid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;">
+      <!-- تُملأ بالكود -->
+    </div>
+
+    <!-- حالة التحميل / الفراغ -->
+    <div id="emptyState" style="display:none; text-align:center; padding:80px 0; color:var(--c-label);">
+      <div style="font-size:48px; margin-bottom:16px;">🔍</div>
+      <div style="font-size:16px; font-weight:700; margin-bottom:6px;">لا توجد حملات مطابقة</div>
+      <div style="font-size:13px;">حاول تغيير معايير البحث</div>
+    </div>
+
+  </div>
+
+  <!-- ══ مودال تفاصيل الحملة وتقديم الطلب ══ -->
+  <div id="campModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999; align-items:flex-start; justify-content:center; overflow-y:auto; padding:40px 20px;">
+    <div style="background:#fff; border-radius:10px; width:100%; max-width:560px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="background:var(--c-primary); padding:18px 24px; display:flex; align-items:center; justify-content:space-between;">
+        <span id="modalTitle" style="font-size:16px; font-weight:700; color:#fff;"></span>
+        <span onclick="closeModal()" style="color:rgba(255,255,255,0.7); cursor:pointer; font-size:22px; line-height:1;">✕</span>
+      </div>
+      <div style="padding:24px;">
+
+        <!-- معلومات الحملة -->
+        <div id="modalInfo" style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;"></div>
+
+        <!-- الوصف -->
+        <div id="modalDesc" style="font-size:13px; color:var(--c-muted); line-height:1.7; margin-bottom:20px; padding:14px; background:var(--c-bg); border-radius:8px;"></div>
+
+        <!-- تحذير الأماكن -->
+        <div id="seatsWarn" style="display:none; background:#FEF3C7; border:1px solid #FDE68A; border-radius:6px; padding:10px 14px; font-size:12px; color:#92400E; margin-bottom:16px;">
+          ⚠️ الأماكن المتبقية محدودة — لا يُحجز مكانك إلا بعد إتمام الدفع
+        </div>
+
+        <!-- زر التقديم -->
+        <div id="modalActions"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <script type="module">
+    import { getSession, signOut }           from '/js/auth.js';
+    import { getCampaigns, createApplication,
+             getPilgrimApplications }        from '/js/data-service.js';
+    import { showToast }                     from '/js/ui.js';
+
+    let allCampaigns    = [];
+    let myApplications  = [];
+    let currentUserId   = null;
+    let selectedCamp    = null;
+
+    const typeLabels = {
+      economy:'اقتصادية', standard:'عادية',
+      vip:'مميزة', family:'عائلية', platinum:'بلاتينية'
+    };
+
+    /* ── تهيئة ── */
+    async function init() {
+      const session = await getSession();
+      if (!session) { window.location.href = '/pages/login.html'; return; }
+
+      currentUserId = session.user.id;
+      const name = `${session.profile.first_name||''} ${session.profile.last_name||''}`.trim() || 'حاج';
+      document.getElementById('navUserName').textContent = name;
+
+      const [camps, apps] = await Promise.all([
+        getCampaigns(),
+        getPilgrimApplications(currentUserId)
+      ]);
+      allCampaigns   = camps;
+      myApplications = apps;
+      renderCampaigns(camps);
+    }
+
+    /* ── رسم الحملات ── */
+    function renderCampaigns(list) {
+      const grid  = document.getElementById('campaignsGrid');
+      const empty = document.getElementById('emptyState');
+
+      if (!list.length) {
+        grid.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+
+      grid.innerHTML = list.map(c => {
+        const applied   = myApplications.find(a => a.campaign_id === c.id);
+        const seatsLeft = c.seats_left ?? c.capacity;
+        const full      = seatsLeft <= 0;
+
+        return `
+        <div style="background:#fff; border:1px solid var(--c-border); border-radius:10px; overflow:hidden; transition:all 0.18s; cursor:pointer;"
+             onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 24px rgba(11,77,46,0.09)'"
+             onmouseout="this.style.transform=''; this.style.boxShadow=''"
+             onclick="openModal(${JSON.stringify(JSON.stringify(c))})">
+          <!-- رأس البطاقة -->
+          <div style="background:var(--c-primary); padding:18px 20px; position:relative;">
+            <div style="font-size:16px; font-weight:800; color:#fff; margin-bottom:4px;">${c.name}</div>
+            <div style="font-size:11px; color:rgba(255,255,255,0.65);">${c.provider_name || 'مزود الخدمة'}</div>
+            ${c.campaign_type ? `<span style="position:absolute; top:14px; left:16px; background:rgba(255,255,255,0.15); color:#fff; font-size:10px; font-weight:700; padding:3px 9px; border-radius:20px;">${typeLabels[c.campaign_type]||c.campaign_type}</span>` : ''}
+          </div>
+          <!-- جسم البطاقة -->
+          <div style="padding:16px 20px;">
+            <div style="font-size:22px; font-weight:900; color:var(--c-primary); margin-bottom:12px;">
+              ${Number(c.price||0).toLocaleString('ar-SA')} <span style="font-size:13px; font-weight:600;">ر.س</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:7px; margin-bottom:14px;">
+              <div style="font-size:12px; color:var(--c-muted); display:flex; align-items:center; gap:6px;">
+                <span>👥</span> الطاقة: ${c.capacity} حاج
+              </div>
+              <div style="font-size:12px; color:${seatsLeft<=5?'var(--c-danger)':'var(--c-muted)'}; display:flex; align-items:center; gap:6px; font-weight:${seatsLeft<=5?'700':'400'};">
+                <span>🪑</span> ${full ? 'مكتملة' : `${seatsLeft} مكان متبقٍ`}
+              </div>
+              ${c.start_date ? `<div style="font-size:12px; color:var(--c-muted); display:flex; align-items:center; gap:6px;"><span>📅</span> ${new Date(c.start_date).toLocaleDateString('ar-SA')}</div>` : ''}
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              ${applied
+                ? `<span class="badge ${applied.status==='paid'?'badge-paid':'badge-pending'}">${applied.status==='paid'?'مدفوع ✓':'قدّمت طلبك'}</span>`
+                : full
+                  ? `<span class="badge badge-danger">مكتملة</span>`
+                  : `<span style="font-size:12px; color:var(--c-primary); font-weight:700;">اضغط للتفاصيل →</span>`}
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    /* ── فلترة ── */
+    window.filterCampaigns = () => {
+      const q    = document.getElementById('searchInput').value.trim().toLowerCase();
+      const type = document.getElementById('typeFilter').value;
+      const sort = document.getElementById('sortFilter').value;
+
+      let list = allCampaigns.filter(c => {
+        const matchQ    = !q    || c.name.toLowerCase().includes(q);
+        const matchType = !type || c.campaign_type === type;
+        return matchQ && matchType;
+      });
+
+      if (sort === 'price_asc')  list.sort((a,b) => (a.price||0)-(b.price||0));
+      if (sort === 'price_desc') list.sort((a,b) => (b.price||0)-(a.price||0));
+      if (sort === 'seats')      list.sort((a,b) => (b.seats_left??b.capacity)-(a.seats_left??a.capacity));
+
+      renderCampaigns(list);
+    };
+
+    window.setQuickFilter = (el, type) => {
+      document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('typeFilter').value = type;
+      filterCampaigns();
+    };
+
+    /* ── مودال التفاصيل ── */
+    window.openModal = (jsonStr) => {
+      selectedCamp = JSON.parse(jsonStr);
+      const c      = selectedCamp;
+      const applied = myApplications.find(a => a.campaign_id === c.id);
+      const seatsLeft = c.seats_left ?? c.capacity;
+
+      document.getElementById('modalTitle').textContent = c.name;
+      document.getElementById('modalDesc').textContent  = c.description || 'لا يوجد وصف متاح لهذه الحملة.';
+
+      document.getElementById('modalInfo').innerHTML = [
+        { label:'السعر',       value:`${Number(c.price||0).toLocaleString('ar-SA')} ر.س` },
+        { label:'الطاقة',      value:`${c.capacity} حاج` },
+        { label:'مكان متبقٍ', value: seatsLeft <= 0 ? 'مكتملة' : seatsLeft },
+        { label:'نوع الحملة', value: typeLabels[c.campaign_type] || '—' },
+        { label:'تاريخ البدء', value: c.start_date ? new Date(c.start_date).toLocaleDateString('ar-SA') : '—' },
+        { label:'رقم الترخيص',value: c.license_number || '—' },
+      ].map(i => `
+        <div style="background:var(--c-bg); border-radius:6px; padding:10px 12px; border:1px solid var(--c-border);">
+          <div style="font-size:11px; color:var(--c-label); margin-bottom:3px;">${i.label}</div>
+          <div style="font-size:14px; font-weight:700; color:var(--c-text);">${i.value}</div>
+        </div>`).join('');
+
+      const warn = document.getElementById('seatsWarn');
+      warn.style.display = seatsLeft <= 5 && seatsLeft > 0 ? 'block' : 'none';
+
+      const actions = document.getElementById('modalActions');
+      if (applied) {
+        actions.innerHTML = `<div class="badge ${applied.status==='paid'?'badge-paid':'badge-pending'}" style="padding:10px 16px; font-size:13px; display:block; text-align:center; border-radius:6px;">${applied.status==='paid'?'✓ لديك طلب مدفوع على هذه الحملة':'✓ لديك طلب قيد المراجعة على هذه الحملة'}</div>`;
+      } else if (seatsLeft <= 0) {
+        actions.innerHTML = `<div style="background:#FEE2E2; border-radius:6px; padding:12px; text-align:center; font-size:13px; font-weight:700; color:#991B1B;">الحملة مكتملة — لا تتوفر أماكن</div>`;
+      } else {
+        actions.innerHTML = `<button class="btn btn-primary btn-full" onclick="applyToCampaign()">تقديم طلب الانضمام</button>`;
+      }
+
+      const m = document.getElementById('campModal');
+      m.style.display = 'flex';
+    };
+
+    window.closeModal = () => { document.getElementById('campModal').style.display = 'none'; };
+
+    /* ── تقديم الطلب ── */
+    window.applyToCampaign = async () => {
+      const btn = document.querySelector('#modalActions .btn');
+      btn.disabled  = true;
+      btn.innerHTML = '<span class="spinner"></span> جارٍ تقديم الطلب...';
+      try {
+        await createApplication(currentUserId, selectedCamp.id);
+        showToast('تم تقديم طلبك بنجاح! انتظر موافقة صاحب الحملة.', 'success');
+        closeModal();
+        const apps = await getPilgrimApplications(currentUserId);
+        myApplications = apps;
+        filterCampaigns();
+      } catch (e) {
+        showToast(e.message || 'حدث خطأ، يرجى المحاولة مجدداً.', 'error');
+        btn.disabled  = false;
+        btn.textContent = 'تقديم طلب الانضمام';
+      }
+    };
+
+    /* ── تسجيل الخروج ── */
+    window.handleLogout = async () => {
+      await signOut();
+      window.location.href = '/pages/primaryHome.html';
+    };
+
+    init();
+  </script>
+
+</body>
+</html>

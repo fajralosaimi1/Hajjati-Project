@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الأسئلة الشائعة | منصة حجتي</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body>
+
+<div class="gov-bar">
+  <div class="gov-bar-right">
+    <span>المملكة العربية السعودية</span>
+    <div class="gov-sep"></div>
+    <span class="gov-ministry">وزارة الحج والعمرة</span>
+  </div>
+  <div class="gov-bar-left">
+    <a class="gov-bar-link" href="/pages/hajjati-guide.html">دليل المستخدم</a>
+    <a class="gov-bar-link" href="/pages/faq.html" style="color:#7FD4A0;">الأسئلة الشائعة</a>
+  </div>
+</div>
+
+<nav class="navbar">
+  <a class="nav-brand" href="/pages/primaryHome.html">
+    <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img" onerror="this.style.display='none'">
+  </a>
+  <div class="nav-links">
+    <a class="nav-link" href="/pages/primaryHome.html">الرئيسية</a>
+    <a class="nav-link active" href="/pages/faq.html">الأسئلة الشائعة</a>
+    <a class="nav-link" href="/pages/smart-guide.html">التوجه الذكي</a>
+  </div>
+  <div class="nav-actions">
+    <button class="btn-login" onclick="window.location.href='/pages/login.html'">تسجيل الدخول</button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="breadcrumb">
+    <a href="/pages/primaryHome.html">الرئيسية</a>
+    <span class="breadcrumb-sep">&#8249;</span>
+    <span class="breadcrumb-current">الأسئلة الشائعة</span>
+  </div>
+  <div class="page-hero-title">الأسئلة الشائعة</div>
+  <div class="page-hero-sub">ابحث عن إجابة سؤالك أو تصفّح الفئات أدناه</div>
+  <div class="search-wrap">
+    <input class="search-input" type="text" id="search-input"
+           placeholder="ابحث عن سؤالك..." oninput="searchFaq(this.value)">
+    <div class="search-icon">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+  </div>
+</div>
+
+<div class="faq-layout">
+  <div class="faq-sidebar">
+    <div class="sidebar-title">الفئات</div>
+    <button class="cat-btn active" onclick="showCat(this,'general')">
+      <div class="cat-dot"></div><span>حج عام</span><span class="cat-count">٥</span>
+    </button>
+    <button class="cat-btn" onclick="showCat(this,'booking')">
+      <div class="cat-dot"></div><span>الحجز والدفع</span><span class="cat-count">٤</span>
+    </button>
+    <button class="cat-btn" onclick="showCat(this,'mashair')">
+      <div class="cat-dot"></div><span>المشاعر والمناسك</span><span class="cat-count">٥</span>
+    </button>
+    <button class="cat-btn" onclick="showCat(this,'emergency')">
+      <div class="cat-dot"></div><span>الطوارئ والصحة</span><span class="cat-count">٤</span>
+    </button>
+  </div>
+
+  <div id="faq-content">
+    <div class="search-results" id="search-results">
+      <div class="search-results-title" id="search-label"></div>
+      <div id="search-items"></div>
+    </div>
+
+    <!-- حج عام -->
+    <div class="faq-section active" id="cat-general">
+      <div class="faq-section-title">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>حج عام
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>ما هي منصة حجتي وما الهدف منها؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">منصة حجتي هي نظام وطني متكامل لإدارة رحلات الحج، تتيح للحجاج تصفح الحملات والحجز وتتبع رحلتهم، وللمشرفين إدارة حجاجهم وحملاتهم بكفاءة عالية — كل ذلك تحت إشراف وزارة الحج والعمرة.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>من يستطيع استخدام المنصة؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">المنصة مخصصة لثلاث فئات: الحجاج الراغبين في تسجيل رحلة الحج، ومشرفي الحملات المسؤولين عن إدارة المجموعات، ومديري النظام من الجهات الحكومية المختصة.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>كيف أنشئ حسابًا في المنصة؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">يمكنك إنشاء حساب بطريقتين: إما عبر بوابة نفاذ الوطنية مباشرة بنقرة واحدة، أو بإدخال رقم هويتك الوطنية وإنشاء كلمة مرور. العملية لا تستغرق أكثر من دقيقة واحدة.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>هل المنصة معتمدة رسمياً من وزارة الحج؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">نعم، منصة حجتي منصة وطنية معتمدة وتعمل تحت إشراف مباشر من وزارة الحج والعمرة في المملكة العربية السعودية. جميع الحملات المدرجة فيها خضعت للفحص والاعتماد الرسمي.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>هل يمكن استخدام المنصة بلغات أخرى؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">المنصة تدعم اللغة العربية حالياً كلغة رئيسية، وتعمل على إضافة دعم للغة الإنجليزية والأردية والإندونيسية في الإصدارات القادمة لخدمة الحجاج من مختلف الجنسيات.</div></div></div>
+    </div>
+
+    <!-- الحجز والدفع -->
+    <div class="faq-section" id="cat-booking">
+      <div class="faq-section-title">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>الحجز والدفع
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>كيف أحجز حملة حج عبر المنصة؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">تصفّح قائمة الحملات المتاحة، اختر الحملة المناسبة وانقر على "متابعة الحجز"، ثم أدخل بياناتك الشخصية واختر طريقة الدفع، وأخيراً راجع الملخص وأكّد الحجز. ستصلك رسالة تأكيد فورية.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>ما طرق الدفع المتاحة؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">تتوفر ثلاث خيارات للدفع: مدى، فيزا، أبل باي.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>هل يمكن إلغاء الحجز واسترداد المبلغ؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">يمكن الإلغاء واسترداد ١٠٠٪ من المبلغ إذا كان قبل ٦٠ يوماً من تاريخ السفر. بين ٣٠ و٦٠ يوماً يُسترد ٥٠٪. أقل من ٣٠ يوماً لا يُسترد المبلغ إلا في الحالات الطارئة الموثّقة.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>هل يمكن تعديل بيانات الحجز بعد التأكيد؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">حالياً هذه الخدمة غير متوفرة، في حال أردت التعديل يرجى التواصل مع مشرف حملتك وإبلاغه.</div></div></div>
+    </div>
+
+    <!-- المشاعر والمناسك -->
+    <div class="faq-section" id="cat-mashair">
+      <div class="faq-section-title">
+        <svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>المشاعر والمناسك
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>ما ترتيب أيام الحج بالتسلسل؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">٨ ذو الحجة: التوجه إلى منى والمبيت. ٩ ذو الحجة: الوقوف بعرفات من الزوال حتى الغروب ثم المبيت بمزدلفة. ١٠ ذو الحجة: رمي جمرة العقبة، الهدي، الحلق أو التقصير، طواف الإفاضة، السعي. ١١-١٢-١٣: المبيت بمنى ورمي الجمرات الثلاث.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>أين تقع خيمتي في منى وكيف أصل إليها؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">موقع خيمتك مذكور في وثائق حجزك بالتفصيل (المنطقة ورقم الخيمة). كما يمكنك الاستفسار من مشرف حملتك مباشرة، أو استخدام المساعد الذكي في المنصة الذي يساعدك في التوجيه إذا تهت.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>ماذا أفعل إذا فاتني الوقوف بعرفات؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">الوقوف بعرفات ركن أساسي في الحج ولا يصح الحج بدونه. وقته يمتد من زوال يوم ٩ ذو الحجة حتى فجر يوم ١٠. إذا فاتك بالكامل فحجك غير صحيح وعليك التحلل ثم إعادة الحج. تواصل فوراً مع مشرف حملتك.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>كم عدد حصى الجمرات وما ترتيب رميها؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">يوم ١٠: ٧ حصيات لجمرة العقبة الكبرى فقط. أيام ١١، ١٢، ١٣: ٧ حصيات لكل جمرة من الثلاث (الصغرى ثم الوسطى ثم الكبرى) أي ٢١ حصاة في كل يوم. المجموع الكلي ٤٩ حصاة أو ٧٠ إذا بتّ الليالي الثلاث.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>هل يجوز التقصير بدلاً من الحلق؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">نعم، يجوز التقصير للرجل والمرأة، لكن الحلق أفضل للرجل لأن النبي صلى الله عليه وسلم دعا للمحلقين ثلاثاً وللمقصرين مرة. أما المرأة فيكفيها التقصير ولا يجوز لها الحلق.</div></div></div>
+    </div>
+
+    <!-- الطوارئ والصحة -->
+    <div class="faq-section" id="cat-emergency">
+      <div class="faq-section-title">
+        <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>الطوارئ والصحة
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>ماذا أفعل إذا تهت في المشاعر؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">التوجه تدريجياً إلى الحواف أو مكان أقل ازدحاماً. اتصل بمشرف حملتك فوراً. إذا لم تستطع، ارفع يدك ونادِ بصوت عالٍ لطلب المساعدة. يمكنك أيضاً استخدام المساعد الذكي في المنصة الذي سيوجهك خطوة بخطوة.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>كيف أتعامل مع ضربة الشمس؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">الأعراض: ارتفاع شديد في درجة الحرارة، صداع، دوخة، ارتباك، غثيان، تسارع في النبض. الإسعافات الأولية: انقل المصاب فوراً إلى مكان مظلل، وقم بتبريد جسمه بماء بارد أو كمادات على الرأس والرقبة، مع تهوية جيدة. إذا كان واعياً أعطه ماء على دفعات صغيرة. اتصل بالإسعاف 911 خاصة إذا ظهرت علامات الإغماء.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>كيف أُبلّغ عن حالة فقدان شخص؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">عبر المنصة: ارفع بلاغاً فورياً من خلال "قسم الطوارئ" في منصة حجتي مع ذكر كافة التفاصيل المطلوبة. مشرف الحملة: أبلغ مشرف حملتك مباشرة ليقوم بالتنسيق الميداني اللازم. الرقم الموحد: 920002814.</div></div></div>
+      <div class="faq-item" onclick="toggleFaq(this)"><button class="faq-q"><span>أين أجد أقرب عيادة أو مستشفى في المشاعر؟</span><div class="faq-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div></button><div class="faq-a"><div class="faq-a-inner">تتوفر الخدمات الطبية في مشاعر (منى، عرفة، مزدلفة) على مدار الساعة. ابحث عن المراكز الصحية ذات اللافتات الخضراء بشعار الهلال الأحمر السعودي. تواصل مع مشرف حملتك فهو يمتلك خريطة لأقرب نقطة إسعاف. في الحالات الحرجة اتصل مباشرة بالرقم 911.</div></div></div>
+    </div>
+
+    <div class="contact-banner">
+      <div class="contact-banner-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+      <div class="contact-banner-text">
+        <div class="contact-banner-title">لم تجد إجابة سؤالك؟</div>
+        <div class="contact-banner-sub">تواصل معنا مباشرة أو استخدم المساعد الذكي للحصول على مساعدة فورية</div>
+      </div>
+      <button class="contact-banner-btn" onclick="window.location.href='/pages/smart-guide.html'">تحدث مع المساعد الذكي &larr;</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-bottom">
+    <div>&#169; ١٤٤٧ هـ &mdash; منصة حجتي &mdash; وزارة الحج والعمرة</div>
+    <div class="footer-bottom-links">
+      <a href="/pages/hajjati-guide.html">دليل المستخدم</a>
+      <a href="/pages/smart-guide.html">المساعد الذكي</a>
+    </div>
+  </div>
+</footer>
+
+<script src="/js/faq.js"></script>
+</body>
+</html>

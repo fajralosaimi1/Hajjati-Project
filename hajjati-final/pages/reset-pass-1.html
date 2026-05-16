@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نسيت كلمة المرور | حجتي</title>
+<link rel="stylesheet" href="/css/reset-pass-style.css">
+
+</head>
+
+<body>
+
+<div class="card">
+  <h2>نسيت كلمة المرور؟</h2>
+  <p>أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين</p>
+
+  <input type="email" placeholder="البريد الإلكتروني" id="email">
+  <button onclick="sendReset()">إرسال الرابط</button>
+
+  <a class="back" href="/pages/primaryHome.html">العودة للرئيسية</a>
+</div>
+
+<script>
+function sendReset(){
+  var email = document.getElementById('email').value;
+
+  if(!email){
+    alert("اكتب البريد الإلكتروني");
+    return;
+  }
+
+  alert("تم إرسال رابط إعادة التعيين إلى: " + email);
+  // هنا تربطه لاحقاً بالباك اند
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>التحقق برمز OTP | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body class="page-otp auth-bg">
+
+  <!-- ══ الشريط الحكومي ══ -->
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+    </div>
+  </div>
+
+  <!-- ══ شريط التنقل ══ -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+  </nav>
+
+  <!-- ══ منطقة الكارد ══ -->
+  <div class="auth-main">
+    <div class="auth-card otp-card">
+
+      <!-- رأس الكارد -->
+      <div class="auth-card-header">
+        <div class="auth-card-icon">
+          <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <div>
+          <div class="auth-card-title">التحقق برمز OTP</div>
+          <div class="auth-card-sub" id="otpSubtitle">أُرسل رمز التحقق إلى بريدك الإلكتروني</div>
+        </div>
+      </div>
+
+      <!-- جسم الكارد -->
+      <div class="auth-card-body">
+
+        <!-- رسالة الخطأ -->
+        <div id="errorMsg" style="display:none; background:#FEE2E2; border:1px solid #FECACA; border-radius:6px; padding:10px 14px; font-size:13px; font-weight:600; color:#991B1B; margin-bottom:16px;"></div>
+
+        <!-- رسالة النجاح -->
+        <div id="successMsg" style="display:none; background:#D1FAE5; border:1px solid #A7F3D0; border-radius:6px; padding:10px 14px; font-size:13px; font-weight:600; color:#065F46; margin-bottom:16px;"></div>
+
+        <!-- وصف -->
+        <p style="font-size:13px; color:var(--c-label); text-align:center; margin-bottom:4px;">
+          أدخل الرمز المكوّن من ٦ أرقام
+        </p>
+        <p id="emailDisplay" style="font-size:13px; font-weight:700; color:var(--c-primary); text-align:center; margin-bottom:20px;"></p>
+
+        <!-- خانات الرمز -->
+        <div class="otp-digits" id="otpDigits">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="0">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="1">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="2">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="3">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="4">
+          <input class="otp-input" type="text" inputmode="numeric" maxlength="1" data-index="5">
+        </div>
+
+        <!-- العداد التنازلي -->
+        <div class="otp-timer">
+          انتهاء الرمز خلال <span id="timerDisplay">03:00</span>
+        </div>
+
+        <!-- زر التحقق -->
+        <button id="verifyBtn" class="auth-submit" onclick="handleVerify()">
+          تحقق وأكمل الدخول
+        </button>
+
+        <!-- إعادة الإرسال -->
+        <p style="text-align:center; margin-top:16px; font-size:13px; color:var(--c-label);">
+          لم يصلك الرمز؟
+          <button id="resendBtn" class="otp-resend-btn" onclick="handleResend()" disabled>
+            إعادة الإرسال
+          </button>
+        </p>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ التذييل المختصر ══ -->
+  <footer>
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,0.06);">
+      <span>© ١٤٤٧ هـ — منصة حجتي</span>
+    </div>
+  </footer>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <script type="module">
+    import { verifyOtp, resendOtp } from '/js/auth.js';
+    import { normalizeRole }        from '/js/config.js';
+
+    /* ── بيانات الجلسة ── */
+    const email = sessionStorage.getItem('otp_email') || '';
+    const role  = sessionStorage.getItem('otp_role')  || 'pilgrim';
+
+    if (!email) window.location.href = '/pages/login.html';
+
+    document.getElementById('emailDisplay').textContent = email;
+    document.getElementById('otpSubtitle').textContent  =
+      `أُرسل رمز التحقق إلى: ${email}`;
+
+    /* ── خانات الأرقام ── */
+    const inputs = Array.from(document.querySelectorAll('.otp-input'));
+
+    inputs.forEach((inp, i) => {
+      inp.addEventListener('input', () => {
+        inp.value = inp.value.replace(/\D/g, '').slice(0, 1);
+        inp.classList.toggle('filled', inp.value !== '');
+        if (inp.value && i < 5) inputs[i + 1].focus();
+        if (getOTP().length === 6) handleVerify();
+      });
+      inp.addEventListener('keydown', e => {
+        if (e.key === 'Backspace' && !inp.value && i > 0) inputs[i - 1].focus();
+      });
+      inp.addEventListener('paste', e => {
+        e.preventDefault();
+        const pasted = (e.clipboardData || window.clipboardData)
+          .getData('text').replace(/\D/g, '').slice(0, 6);
+        pasted.split('').forEach((ch, j) => {
+          if (inputs[j]) { inputs[j].value = ch; inputs[j].classList.add('filled'); }
+        });
+        if (pasted.length === 6) handleVerify();
+      });
+    });
+
+    const getOTP = () => inputs.map(i => i.value).join('');
+
+    /* ── العداد التنازلي ── */
+    let seconds  = 180;
+    const timerEl = document.getElementById('timerDisplay');
+    const resendBtn = document.getElementById('resendBtn');
+
+    const tick = setInterval(() => {
+      seconds--;
+      const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+      const s = String(seconds % 60).padStart(2, '0');
+      timerEl.textContent = `${m}:${s}`;
+      if (seconds <= 0) {
+        clearInterval(tick);
+        timerEl.textContent = '00:00';
+        resendBtn.disabled  = false;
+      }
+    }, 1000);
+
+    /* ── التحقق ── */
+    window.handleVerify = async function () {
+      const otp   = getOTP();
+      const errEl = document.getElementById('errorMsg');
+      const btn   = document.getElementById('verifyBtn');
+
+      errEl.style.display = 'none';
+
+      if (otp.length < 6) {
+        errEl.textContent   = 'يرجى إدخال الرمز المكوّن من ٦ أرقام كاملاً.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled  = true;
+      btn.innerHTML = '<span class="spinner"></span> جارٍ التحقق...';
+
+      try {
+        await verifyOtp(email, otp);
+        clearInterval(tick);
+
+        const successEl = document.getElementById('successMsg');
+        successEl.textContent   = '✓ تم التحقق بنجاح! جارٍ التوجيه...';
+        successEl.style.display = 'block';
+
+        setTimeout(() => {
+          const r = normalizeRole(role);
+          window.location.href = r === 'provider'
+            ? '/pages/provider-dashboard.html'
+            : '/pages/pilgrim-dashboard.html';
+        }, 1000);
+
+      } catch (err) {
+        errEl.textContent   = err.message || 'الرمز غير صحيح أو انتهت صلاحيته.';
+        errEl.style.display = 'block';
+        btn.disabled        = false;
+        btn.textContent     = 'تحقق وأكمل الدخول';
+        inputs.forEach(i => { i.value = ''; i.classList.remove('filled'); });
+        inputs[0].focus();
+      }
+    };
+
+    /* ── إعادة الإرسال ── */
+    window.handleResend = async function () {
+      const errEl = document.getElementById('errorMsg');
+      const sucEl = document.getElementById('successMsg');
+      errEl.style.display = 'none';
+      sucEl.style.display = 'none';
+
+      resendBtn.disabled  = true;
+      try {
+        await resendOtp(email);
+        sucEl.textContent   = 'تم إرسال رمز جديد إلى بريدك الإلكتروني.';
+        sucEl.style.display = 'block';
+        seconds = 180;
+      } catch (err) {
+        errEl.textContent   = err.message || 'حدث خطأ، حاول مجدداً.';
+        errEl.style.display = 'block';
+        resendBtn.disabled  = false;
+      }
+    };
+
+    inputs[0].focus();
+  </script>
+
+</body>
+</html>

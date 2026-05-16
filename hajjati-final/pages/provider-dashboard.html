@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة مزود الخدمة | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
+</head>
+<body>
+
+  <!-- ══ الشريط الحكومي ══ -->
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+    </div>
+  </div>
+
+  <!-- ══ شريط التنقل ══ -->
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link active" href="/pages/provider-dashboard.html">لوحتي</a>
+      <a class="nav-link" href="/pages/provider-campaigns.html">حملاتي</a>
+      <a class="nav-link" href="/pages/provider-scanner.html">مسح QR</a>
+    </div>
+    <div class="nav-actions">
+      <div class="nav-user">
+        <span class="nav-user-name" id="navUserName">جارٍ التحميل...</span>
+        <button class="btn-logout" onclick="handleLogout()">خروج</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ══ تخطيط اللوحة ══ -->
+  <div class="dashboard-layout">
+
+    <!-- ══ الشريط الجانبي ══ -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <img src="/assets/logo_white-removebg.png" alt="حجتي" class="sidebar-logo-img">
+      </div>
+
+      <div class="sidebar-user">
+        <div class="sidebar-avatar" id="sidebarAvatar">؟</div>
+        <div>
+          <div class="sidebar-user-name" id="sidebarName">جارٍ التحميل...</div>
+          <div class="sidebar-user-role">مزود الخدمة</div>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-section">الإدارة</div>
+        <a class="sidebar-link active" href="/pages/provider-dashboard.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          لوحة التحكم
+        </a>
+        <a class="sidebar-link" href="/pages/provider-campaigns.html">
+          <svg viewBox="0 0 24 24"><path d="M3 22 12 2l9 20"/><path d="M7.5 14h9"/></svg>
+          حملاتي
+        </a>
+        <a class="sidebar-link" href="/pages/provider-scanner.html">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 17h4"/><path d="M17 21v-4"/><path d="M21 17v4"/></svg>
+          مسح QR
+        </a>
+
+        <div class="sidebar-section">الطلبات</div>
+        <a class="sidebar-link" href="#pendingSection">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          طلبات بانتظار الموافقة
+          <span class="sidebar-badge" id="pendingBadge" style="display:none;"></span>
+        </a>
+
+        <div class="sidebar-section">الطوارئ</div>
+        <a class="sidebar-link" href="#emergencySection">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          بلاغات الطوارئ
+          <span class="sidebar-badge" id="emergencyBadge" style="display:none;"></span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button class="sidebar-link" style="width:100%; border:none; background:none; cursor:pointer;" onclick="handleLogout()">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          تسجيل الخروج
+        </button>
+      </div>
+    </aside>
+
+    <!-- ══ المحتوى الرئيسي ══ -->
+    <main class="dashboard-main">
+
+      <!-- رأس الصفحة -->
+      <div class="dashboard-topbar">
+        <div>
+          <div class="dashboard-title" id="welcomeTitle">أهلاً بك 👋</div>
+          <div class="dashboard-sub" id="welcomeSub"></div>
+        </div>
+        <a href="/pages/provider-campaigns.html" class="btn btn-primary">
+          <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          إنشاء حملة جديدة
+        </a>
+      </div>
+
+      <!-- بطاقات الإحصاء -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-num" id="statCampaigns">—</div>
+          <div class="stat-label">حملاتي</div>
+        </div>
+        <div class="stat-card accent">
+          <div class="stat-num" id="statPilgrims">—</div>
+          <div class="stat-label">حجاج مسجّلون</div>
+        </div>
+        <div class="stat-card warning">
+          <div class="stat-num" id="statPending">—</div>
+          <div class="stat-label">طلبات بانتظار موافقة</div>
+        </div>
+        <div class="stat-card danger">
+          <div class="stat-num" id="statEmergency">—</div>
+          <div class="stat-label">بلاغات طوارئ</div>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 360px; gap:20px;">
+
+        <!-- ══ طلبات الانتظار ══ -->
+        <div>
+          <div class="surface-card" id="pendingSection">
+            <div class="surface-card-title">
+              طلبات بانتظار موافقتك
+              <span id="pendingCount" class="badge badge-pending" style="display:none;"></span>
+            </div>
+            <div id="pendingList">
+              <div style="text-align:center; padding:32px 0; color:var(--c-label);">
+                <div style="font-size:36px; margin-bottom:10px;">✅</div>
+                <div style="font-size:14px; font-weight:600;">لا توجد طلبات معلّقة</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══ بلاغات الطوارئ ══ -->
+          <div class="surface-card" id="emergencySection">
+            <div class="surface-card-title">
+              بلاغات الطوارئ
+              <span id="emergencyCount" class="badge badge-danger" style="display:none;"></span>
+            </div>
+            <div id="emergencyList">
+              <div style="text-align:center; padding:32px 0; color:var(--c-label);">
+                <div style="font-size:36px; margin-bottom:10px;">🟢</div>
+                <div style="font-size:14px; font-weight:600;">لا توجد بلاغات نشطة</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ الجانب الأيمن ══ -->
+        <div style="display:flex; flex-direction:column; gap:20px;">
+
+          <!-- ملخص الحملات -->
+          <div class="surface-card">
+            <div class="surface-card-title">
+              حملاتي
+              <a href="/pages/provider-campaigns.html" style="font-size:12px; font-weight:600; color:var(--c-primary);">إدارة الكل ←</a>
+            </div>
+            <div id="campaignsSummary">
+              <div style="text-align:center; padding:20px 0; color:var(--c-label); font-size:13px;">لا توجد حملات بعد</div>
+            </div>
+          </div>
+
+          <!-- روابط سريعة -->
+          <div class="surface-card">
+            <div class="surface-card-title">إجراءات سريعة</div>
+            <div style="display:flex; flex-direction:column; gap:8px;">
+              <a href="/pages/provider-campaigns.html" class="btn btn-primary" style="justify-content:flex-start; gap:10px; font-size:13px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                إنشاء حملة جديدة
+              </a>
+              <a href="/pages/provider-scanner.html" class="btn btn-outline" style="justify-content:flex-start; gap:10px; font-size:13px;">
+                <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                مسح باركود الدخول
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- ══ مودال تفاصيل البلاغ ══ -->
+  <div id="emergencyModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:10px; width:480px; overflow:hidden; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="background:var(--c-danger); padding:16px 24px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:15px; font-weight:700; color:#fff;">تفاصيل البلاغ</span>
+        <span onclick="closeEmModal()" style="color:rgba(255,255,255,0.7); cursor:pointer; font-size:20px;">✕</span>
+      </div>
+      <div style="padding:24px;" id="emergencyModalBody"></div>
+      <div style="padding:0 24px 20px; display:flex; gap:10px;" id="emergencyModalActions"></div>
+    </div>
+  </div>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <script type="module">
+    import { getSession, signOut }                       from '/js/auth.js';
+    import { getProviderCampaigns, getProviderApplications,
+             updateApplicationStatus, getEmergencyReports,
+             resolveEmergency }                          from '/js/data-service.js';
+    import { showToast }                                 from '/js/ui.js';
+
+    let currentEmId = null;
+
+    /* ── تهيئة ── */
+    async function init() {
+      const session = await getSession();
+      if (!session) { window.location.href = '/pages/login.html'; return; }
+
+      const profile = session.profile;
+      const name    = `${profile.first_name||''} ${profile.last_name||''}`.trim() || 'مزود';
+
+      document.getElementById('navUserName').textContent  = name;
+      document.getElementById('sidebarName').textContent  = name;
+      document.getElementById('sidebarAvatar').textContent = name.charAt(0) || '؟';
+      document.getElementById('welcomeTitle').textContent = `أهلاً ${name} 👋`;
+      document.getElementById('welcomeSub').textContent   = new Date().toLocaleDateString('ar-SA', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+
+      const userId = session.user.id;
+      const [campaigns, applications, emergencies] = await Promise.all([
+        getProviderCampaigns(userId),
+        getProviderApplications(userId),
+        getEmergencyReports(userId),
+      ]);
+
+      renderStats(campaigns, applications, emergencies);
+      renderCampaignsSummary(campaigns);
+      renderPending(applications.filter(a => a.status === 'pending'), applications);
+      renderEmergencies(emergencies);
+    }
+
+    /* ── إحصاءات ── */
+    function renderStats(campaigns, apps, emergencies) {
+      document.getElementById('statCampaigns').textContent = campaigns.length;
+      document.getElementById('statPilgrims').textContent  = apps.filter(a => a.status === 'paid').length;
+      document.getElementById('statPending').textContent   = apps.filter(a => a.status === 'pending').length;
+      document.getElementById('statEmergency').textContent = emergencies.filter(e => e.status === 'open').length;
+
+      const pCount = apps.filter(a => a.status === 'pending').length;
+      if (pCount > 0) {
+        const b = document.getElementById('pendingBadge');
+        b.textContent    = pCount;
+        b.style.display  = 'inline-flex';
+        const pc = document.getElementById('pendingCount');
+        pc.textContent   = pCount;
+        pc.style.display = 'inline-flex';
+      }
+
+      const eCount = emergencies.filter(e => e.status === 'open').length;
+      if (eCount > 0) {
+        const b = document.getElementById('emergencyBadge');
+        b.textContent    = eCount;
+        b.style.display  = 'inline-flex';
+        const ec = document.getElementById('emergencyCount');
+        ec.textContent   = eCount;
+        ec.style.display = 'inline-flex';
+      }
+    }
+
+    /* ── ملخص الحملات ── */
+    function renderCampaignsSummary(campaigns) {
+      const el = document.getElementById('campaignsSummary');
+      if (!campaigns.length) return;
+      el.innerHTML = campaigns.slice(0, 4).map(c => `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f0f5f1;">
+          <div>
+            <div style="font-size:13px; font-weight:700; color:var(--c-text);">${c.name}</div>
+            <div style="font-size:11px; color:var(--c-label); margin-top:2px;">الطاقة: ${c.capacity} | متبقٍ: ${c.seats_left ?? c.capacity}</div>
+          </div>
+          <span class="badge ${c.status === 'open' ? 'badge-open' : 'badge-complete'}">${c.status === 'open' ? 'مفتوحة' : 'مغلقة'}</span>
+        </div>`).join('');
+    }
+
+    /* ── طلبات الانتظار ── */
+    function renderPending(pending, allApps) {
+      const el = document.getElementById('pendingList');
+      if (!pending.length) return;
+      el.innerHTML = pending.map(app => `
+        <div style="border:1px solid var(--c-border); border-radius:8px; padding:14px; margin-bottom:10px;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px;">
+            <div>
+              <div style="font-size:14px; font-weight:700; color:var(--c-text);">${app.profiles?.first_name || ''} ${app.profiles?.last_name || ''}</div>
+              <div style="font-size:12px; color:var(--c-label); margin-top:3px;">
+                📅 ${new Date(app.created_at).toLocaleDateString('ar-SA')}
+                &nbsp;|&nbsp;
+                🏕️ ${app.campaigns?.name || '—'}
+              </div>
+            </div>
+            <span class="badge badge-pending">بانتظار الموافقة</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button onclick="handleDecision('${app.id}','approved')" class="btn btn-primary" style="flex:1; padding:8px; font-size:12px;">
+              ✓ قبول
+            </button>
+            <button onclick="handleDecision('${app.id}','rejected')" class="btn btn-danger" style="flex:1; padding:8px; font-size:12px;">
+              ✕ رفض
+            </button>
+          </div>
+        </div>`).join('');
+    }
+
+    /* ── بلاغات الطوارئ ── */
+    function renderEmergencies(emergencies) {
+      const el = document.getElementById('emergencyList');
+      const open = emergencies.filter(e => e.status === 'open');
+      if (!open.length) return;
+
+      const typeColors = { health:'#0D4F8A', lost:'#7A3E00', security:'#6A0000' };
+      const typeLabels = { health:'صحية', lost:'مفقود', security:'أمنية' };
+
+      el.innerHTML = open.map(e => `
+        <div style="border:1px solid #FECACA; border-radius:8px; padding:14px; margin-bottom:10px; background:#FFF5F5;">
+          <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:8px;">
+            <div>
+              <div style="font-size:13px; font-weight:700; color:var(--c-text);">${e.profiles?.first_name||''} ${e.profiles?.last_name||''}</div>
+              <div style="font-size:11px; color:var(--c-label); margin-top:2px;">📅 ${new Date(e.created_at).toLocaleDateString('ar-SA')}</div>
+            </div>
+            <span style="background:${typeColors[e.type]||'#333'}; color:#fff; font-size:11px; font-weight:700; padding:3px 10px; border-radius:20px;">${typeLabels[e.type]||e.type}</span>
+          </div>
+          <div style="font-size:12px; color:var(--c-muted); margin-bottom:10px; line-height:1.6;">${e.description||'—'}</div>
+          <button onclick="openEmModal('${e.id}')" class="btn btn-danger" style="width:100%; padding:8px; font-size:12px;">
+            الرد على البلاغ
+          </button>
+        </div>`).join('');
+
+      window._emergencies = emergencies;
+    }
+
+    /* ── قبول/رفض طلب ── */
+    window.handleDecision = async (appId, status) => {
+      try {
+        await updateApplicationStatus(appId, status);
+        showToast(status === 'approved' ? 'تم قبول الطلب ✓' : 'تم رفض الطلب', status === 'approved' ? 'success' : 'warning');
+        setTimeout(() => location.reload(), 800);
+      } catch (e) {
+        showToast(e.message || 'حدث خطأ', 'error');
+      }
+    };
+
+    /* ── مودال البلاغ ── */
+    window.openEmModal = (id) => {
+      currentEmId = id;
+      const em    = (window._emergencies || []).find(e => e.id === id);
+      if (!em) return;
+      document.getElementById('emergencyModalBody').innerHTML = `
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;">
+          <div style="background:var(--c-bg); padding:10px; border-radius:6px; border:1px solid var(--c-border);">
+            <div style="font-size:11px; color:var(--c-label);">الحاج</div>
+            <div style="font-size:13px; font-weight:700;">${em.profiles?.first_name||''} ${em.profiles?.last_name||''}</div>
+          </div>
+          <div style="background:var(--c-bg); padding:10px; border-radius:6px; border:1px solid var(--c-border);">
+            <div style="font-size:11px; color:var(--c-label);">نوع البلاغ</div>
+            <div style="font-size:13px; font-weight:700;">${em.type === 'health' ? 'صحية' : em.type === 'lost' ? 'مفقود' : 'أمنية'}</div>
+          </div>
+        </div>
+        <div style="background:#FFF5F5; border:1px solid #FECACA; border-radius:6px; padding:14px; font-size:13px; color:var(--c-muted); line-height:1.7;">
+          ${em.description || 'لا يوجد وصف'}
+        </div>
+        <div style="margin-top:16px;">
+          <label class="form-label">ردّك على البلاغ <span class="form-req">*</span></label>
+          <textarea id="emResponse" class="form-input form-textarea" rows="3" placeholder="اكتب ردّك للحاج..."></textarea>
+        </div>`;
+      document.getElementById('emergencyModalActions').innerHTML = `
+        <button onclick="resolveReport()" class="btn btn-primary btn-full">إرسال الرد وإغلاق البلاغ</button>`;
+      document.getElementById('emergencyModal').style.display = 'flex';
+    };
+
+    window.closeEmModal = () => { document.getElementById('emergencyModal').style.display = 'none'; };
+
+    window.resolveReport = async () => {
+      const response = document.getElementById('emResponse').value.trim();
+      if (!response) { showToast('يرجى كتابة ردّ قبل الإغلاق', 'warning'); return; }
+      try {
+        await resolveEmergency(currentEmId, response);
+        showToast('تم الرد على البلاغ وإغلاقه ✓', 'success');
+        closeEmModal();
+        setTimeout(() => location.reload(), 800);
+      } catch (e) {
+        showToast(e.message || 'حدث خطأ', 'error');
+      }
+    };
+
+    /* ── تسجيل الخروج ── */
+    window.handleLogout = async () => {
+      await signOut();
+      window.location.href = '/pages/primaryHome.html';
+    };
+
+    init();
+  </script>
+
+</body>
+</html>
