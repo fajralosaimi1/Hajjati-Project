@@ -4,10 +4,5 @@
       "source": "/",
       "destination": "/pages/primaryHome.html"
     }
-  ],
-  "functions": {
-    "api/smart-guide.mjs": {
-      "runtime": "edge"
-    }
-  }
+  ]
 }
