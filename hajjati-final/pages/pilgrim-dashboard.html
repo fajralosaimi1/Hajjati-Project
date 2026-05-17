@@ -6,6 +6,7 @@
   <title>لوحة الحاج | حجتي</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/hajjati.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -153,8 +154,7 @@
           <div class="surface-card" id="qrSection" style="display:none;">
             <div class="surface-card-title">باركود دخولك</div>
             <div style="text-align:center; padding:10px 0;">
-              <div id="qrContainer" style="width:140px; height:140px; margin:0 auto 12px; background:var(--c-bg); border:1px solid var(--c-border); border-radius:8px; display:flex; align-items:center; justify-content:center;">
-                <svg viewBox="0 0 24 24" style="width:40px;height:40px;stroke:var(--c-label);fill:none;stroke-width:1.5;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/><path d="M17 17h4"/><path d="M17 21v-4"/><path d="M21 17v4"/></svg>
+              <div id="qrContainer" style="width:140px; height:140px; margin:0 auto 12px; background:#fff; border:1px solid var(--c-border); border-radius:8px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
               </div>
               <div id="qrCampName" style="font-size:13px; font-weight:700; color:var(--c-text);"></div>
               <div id="qrStatus" style="font-size:11px; color:var(--c-label); margin-top:4px;"></div>
@@ -220,7 +220,6 @@
 
     let currentAppId = null;
 
-    /* ── جلسة المستخدم ── */
     async function init() {
       const session = await getSession();
       if (!session) { window.location.href = '/pages/login.html'; return; }
@@ -237,7 +236,6 @@
       await loadApplications(session.user.id);
     }
 
-    /* ── تحميل الطلبات ── */
     async function loadApplications(userId) {
       try {
         const apps = await getPilgrimApplications(userId);
@@ -249,12 +247,23 @@
 
         if (!apps.length) return;
 
-        // باركود أول طلب مدفوع
-        const paid = apps.find(a => a.status === 'paid' && a.qr_code);
+        // ✅ باركود أول طلب مدفوع
+        const paid = apps.find(a => a.status === 'paid' && (a.qr_code || a.qr_token));
         if (paid) {
-          document.getElementById('qrSection').style.display   = 'block';
-          document.getElementById('qrCampName').textContent    = paid.campaigns?.name || 'حملتي';
-          document.getElementById('qrStatus').textContent      = 'باركود دخول نشط';
+          const token = paid.qr_code || paid.qr_token;
+          document.getElementById('qrSection').style.display = 'block';
+          document.getElementById('qrCampName').textContent  = paid.campaigns?.name || 'حملتي';
+          document.getElementById('qrStatus').textContent    = 'باركود دخول نشط';
+
+          const container = document.getElementById('qrContainer');
+          container.innerHTML = '';
+          new QRCode(container, {
+            text: token,
+            width: 130,
+            height: 130,
+            colorDark: '#0B4D2E',
+            colorLight: '#ffffff'
+          });
         }
 
         // قائمة الطلبات
@@ -288,13 +297,11 @@
       return { pending:'قيد المراجعة', approved:'مقبول - بانتظار الدفع', paid:'مدفوع ✓', rejected:'مرفوض' }[s] || s;
     }
 
-    /* ── الدفع ── */
     window.openPayModal = (id, name, price) => {
       currentAppId = id;
       document.getElementById('payDetails').innerHTML =
         `<strong>الحملة:</strong> ${name}<br><strong>المبلغ:</strong> ${Number(price).toLocaleString('ar-SA')} ريال سعودي`;
-      const m = document.getElementById('payModal');
-      m.style.display = 'flex';
+      document.getElementById('payModal').style.display = 'flex';
     };
     window.closePayModal = () => { document.getElementById('payModal').style.display = 'none'; };
 
@@ -314,7 +321,6 @@
       }
     };
 
-    /* ── تسجيل الخروج ── */
     window.handleLogout = async () => {
       await signOut();
       window.location.href = '/pages/primaryHome.html';
