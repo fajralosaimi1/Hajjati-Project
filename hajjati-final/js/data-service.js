@@ -1,4 +1,4 @@
-﻿import { DEMO_CAMPAIGNS } from "./site.js";
+import { DEMO_CAMPAIGNS } from "./site.js";
 import { assertSupabase, supabase } from "./supabaseClient.js";
 
 function toIsoNow() {
@@ -19,8 +19,9 @@ export function formatPrice(value) {
   return `SAR ${Number(value || 0).toLocaleString("en-US")}`;
 }
 
+// ✅ الإصلاح: يحسب المقاعد المحجوزة بناءً على الدفع فقط (بدون شرط qr_token)
 function confirmedSeatCount(rows) {
-  return (rows || []).filter((item) => item.payment_status === "paid" && item.qr_token).length;
+  return (rows || []).filter((item) => item.payment_status === "paid").length;
 }
 
 async function countConfirmedSeats(campaignId) {
@@ -178,23 +179,23 @@ export async function createCampaign(payload, userId) {
   const description = payload.descriptionAr || payload.description || campaignName;
   const capacity = Number(payload.capacity || 0);
   const insertPayload = {
-      owner_id: ownerId,
-      title_ar: campaignName,
-      title_en: payload.titleEn || payload.name || campaignName,
-      city: payload.city || "مكة المكرمة",
-      meeting_point: payload.meetingPoint || payload.meeting_point || "نقطة التجمع",
-      accommodation_ar: payload.accommodationAr || payload.accommodation_ar || "سكن منظم للحجاج",
-      accommodation_en: payload.accommodationEn || payload.accommodation_en || "Organized pilgrim accommodation",
-      price: Number(payload.price || 0),
-      capacity,
-      seats_left: Number(payload.seats_left ?? capacity),
-      duration_days: Number(payload.durationDays || payload.duration_days || 10),
-      description_ar: description,
-      description_en: payload.descriptionEn || payload.description || description,
-      terms_ar: payload.termsAr || payload.terms_ar || "الالتزام بتعليمات الحملة وإكمال البيانات المطلوبة.",
-      terms_en: payload.termsEn || payload.terms_en || "Follow campaign instructions and complete the required data.",
-      status: payload.status || "open"
-    };
+    owner_id: ownerId,
+    title_ar: campaignName,
+    title_en: payload.titleEn || payload.name || campaignName,
+    city: payload.city || "مكة المكرمة",
+    meeting_point: payload.meetingPoint || payload.meeting_point || "نقطة التجمع",
+    accommodation_ar: payload.accommodationAr || payload.accommodation_ar || "سكن منظم للحجاج",
+    accommodation_en: payload.accommodationEn || payload.accommodation_en || "Organized pilgrim accommodation",
+    price: Number(payload.price || 0),
+    capacity,
+    seats_left: Number(payload.seats_left ?? capacity),
+    duration_days: Number(payload.durationDays || payload.duration_days || 10),
+    description_ar: description,
+    description_en: payload.descriptionEn || payload.description || description,
+    terms_ar: payload.termsAr || payload.terms_ar || "الالتزام بتعليمات الحملة وإكمال البيانات المطلوبة.",
+    terms_en: payload.termsEn || payload.terms_en || "Follow campaign instructions and complete the required data.",
+    status: payload.status || "open"
+  };
   const { data, error } = await supabase
     .from("campaigns")
     .insert(insertPayload)
@@ -296,6 +297,7 @@ async function findActiveCampaignIdForPilgrim(userId) {
     .maybeSingle();
   return data?.campaign_id || null;
 }
+
 export async function loadEmergencyReports(userId) {
   if (!supabase) return [];
   const { data, error } = await supabase
@@ -409,6 +411,7 @@ export async function logSmartGuideMessage(userId, message, responseText) {
     language: localStorage.getItem("hajjati-lang") || "ar"
   });
 }
+
 function campaignView(row) {
   if (!row) return row;
   return {
@@ -547,9 +550,3 @@ export async function verifyQRCode(qrToken) {
     message: result.status === "invalid" ? "الرمز غير صحيح أو لا يتبع لحملاتك." : ""
   };
 }
-
-
-
-
-
-
