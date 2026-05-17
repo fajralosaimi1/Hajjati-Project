@@ -185,7 +185,7 @@
         <div style="background:#fff; border:1px solid var(--c-border); border-radius:10px; overflow:hidden; transition:all 0.18s; cursor:pointer;"
              onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 8px 24px rgba(11,77,46,0.09)'"
              onmouseout="this.style.transform=''; this.style.boxShadow=''"
-             onclick="openModal(${JSON.stringify(JSON.stringify(c))})">
+             onclick="openModal('${encodeURIComponent(JSON.stringify(c))}')">
           <!-- رأس البطاقة -->
           <div style="background:var(--c-primary); padding:18px 20px; position:relative;">
             <div style="font-size:16px; font-weight:800; color:#fff; margin-bottom:4px;">${c.name}</div>
@@ -246,7 +246,7 @@
 
     /* ── مودال التفاصيل ── */
     window.openModal = (jsonStr) => {
-      selectedCamp = JSON.parse(jsonStr);
+      selectedCamp = JSON.parse(decodeURIComponent(jsonStr));
       const c      = selectedCamp;
       const applied = myApplications.find(a => a.campaign_id === c.id);
       const seatsLeft = c.seats_left ?? c.capacity;
