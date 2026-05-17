@@ -1,0 +1,1479 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة تحكم المدير | حجتي</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0f0d;
+  --surface: #111816;
+  --surface2: #1a2320;
+  --surface3: #202e2a;
+  --border: #2a3d37;
+  --border2: #354a44;
+  --primary: #1db87a;
+  --primary-dim: #157a52;
+  --primary-glow: rgba(29,184,122,0.15);
+  --primary-glow2: rgba(29,184,122,0.08);
+  --accent: #f0c040;
+  --accent2: #e05a3a;
+  --accent3: #5ab4e0;
+  --text: #e8f0ee;
+  --text2: #9db8b0;
+  --text3: #5a7a72;
+  --danger: #e05a3a;
+  --warning: #f0c040;
+  --success: #1db87a;
+  --info: #5ab4e0;
+  --sidebar-w: 240px;
+  --header-h: 60px;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── LOGIN SCREEN ─── */
+#loginScreen {
+  position: fixed; inset: 0; z-index: 1000;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+}
+.login-box {
+  width: 380px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 36px;
+  box-shadow: 0 0 60px rgba(29,184,122,0.1);
+}
+.login-logo {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.login-logo .logo-icon {
+  width: 56px; height: 56px;
+  background: var(--primary-glow);
+  border: 1px solid var(--primary);
+  border-radius: 14px;
+  display: inline-flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+}
+.login-logo .logo-icon svg { width: 28px; height: 28px; stroke: var(--primary); fill: none; stroke-width: 1.8; }
+.login-logo h2 { font-size: 20px; font-weight: 800; color: var(--text); }
+.login-logo p { font-size: 13px; color: var(--text2); margin-top: 4px; }
+.login-field { margin-bottom: 16px; }
+.login-field label { display: block; font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 6px; }
+.login-field input {
+  width: 100%; padding: 11px 14px;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text); font-family: 'Tajawal',sans-serif; font-size: 14px;
+  outline: none; transition: border-color .2s;
+}
+.login-field input:focus { border-color: var(--primary); }
+.login-err { display:none; font-size: 12px; color: var(--danger); margin-bottom: 12px; padding: 8px 12px; background: rgba(224,90,58,0.1); border-radius: var(--radius-sm); }
+.login-btn {
+  width: 100%; padding: 13px;
+  background: var(--primary); color: #fff;
+  border: none; border-radius: var(--radius-sm);
+  font-family: 'Tajawal',sans-serif; font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: background .2s;
+}
+.login-btn:hover { background: var(--primary-dim); }
+.login-note { text-align: center; font-size: 11px; color: var(--text3); margin-top: 20px; }
+
+/* ─── LAYOUT ─── */
+#appScreen { display: none; }
+
+.sidebar {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: var(--sidebar-w);
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  z-index: 100;
+}
+.sidebar-head {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+.sidebar-head .brand-icon {
+  width: 34px; height: 34px;
+  background: var(--primary-glow);
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.sidebar-head .brand-icon svg { width: 18px; height: 18px; stroke: var(--primary); fill: none; stroke-width: 1.8; }
+.sidebar-head .brand-name { font-size: 15px; font-weight: 800; color: var(--text); }
+.sidebar-head .brand-role { font-size: 10px; color: var(--primary); font-weight: 600; letter-spacing: .5px; }
+
+.sidebar-nav { flex: 1; padding: 12px 0; overflow-y: auto; }
+.nav-section-label {
+  font-size: 10px; font-weight: 700; color: var(--text3);
+  padding: 14px 20px 6px; letter-spacing: 1px; text-transform: uppercase;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 20px; cursor: pointer;
+  font-size: 13px; font-weight: 600; color: var(--text2);
+  border-right: 3px solid transparent;
+  transition: all .15s;
+  position: relative;
+}
+.nav-item:hover { background: var(--primary-glow2); color: var(--text); }
+.nav-item.active {
+  background: var(--primary-glow);
+  color: var(--primary);
+  border-right-color: var(--primary);
+}
+.nav-item svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; flex-shrink: 0; }
+.nav-badge {
+  margin-right: auto; font-size: 10px; font-weight: 700;
+  background: var(--danger); color: #fff;
+  padding: 2px 6px; border-radius: 10px;
+}
+
+.sidebar-foot {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+}
+.admin-info { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.admin-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--primary-glow); border: 1px solid var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 800; color: var(--primary);
+}
+.admin-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.admin-email { font-size: 11px; color: var(--text3); }
+.logout-btn {
+  width: 100%; padding: 8px;
+  background: transparent; border: 1px solid var(--border2);
+  border-radius: var(--radius-sm); color: var(--text2);
+  font-family: 'Tajawal',sans-serif; font-size: 12px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: all .15s;
+}
+.logout-btn:hover { border-color: var(--danger); color: var(--danger); }
+.logout-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+
+/* ─── MAIN ─── */
+.main {
+  margin-right: var(--sidebar-w);
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+.topbar {
+  height: var(--header-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px; position: sticky; top: 0; z-index: 50;
+}
+.topbar-title { font-size: 16px; font-weight: 800; color: var(--text); }
+.topbar-title span { color: var(--primary); }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.refresh-btn {
+  padding: 7px 14px; font-family: 'Tajawal',sans-serif; font-size: 12px; font-weight: 700;
+  background: var(--primary-glow); border: 1px solid var(--primary);
+  border-radius: var(--radius-sm); color: var(--primary); cursor: pointer;
+  display: flex; align-items: center; gap: 6px; transition: all .15s;
+}
+.refresh-btn:hover { background: var(--primary); color: #fff; }
+.refresh-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 6px var(--primary); }
+
+/* ─── CONTENT ─── */
+.content { flex: 1; padding: 28px; }
+
+/* ─── SECTION ─── */
+.section { display: none; }
+.section.active { display: block; }
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px;
+}
+.section-title { font-size: 20px; font-weight: 800; color: var(--text); }
+.section-sub { font-size: 13px; color: var(--text2); margin-top: 2px; }
+.breadcrumb { font-size: 12px; color: var(--text3); }
+.breadcrumb span { color: var(--primary); }
+
+/* ─── STATS CARDS ─── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all .2s;
+  position: relative; overflow: hidden;
+}
+.stat-card::before {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 3px; height: 100%;
+  background: var(--card-color, var(--primary));
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.stat-card:hover {
+  border-color: var(--card-color, var(--primary));
+  background: var(--surface2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.stat-card.active-card {
+  border-color: var(--card-color, var(--primary));
+  background: var(--surface2);
+}
+.stat-icon {
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--card-color, var(--primary)) 15%, transparent);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+.stat-icon svg { width: 18px; height: 18px; stroke: var(--card-color, var(--primary)); fill: none; stroke-width: 1.8; }
+.stat-label { font-size: 11px; font-weight: 700; color: var(--text2); letter-spacing: .5px; text-transform: uppercase; }
+.stat-value { font-size: 32px; font-weight: 900; color: var(--text); margin: 4px 0; line-height: 1; }
+.stat-meta { font-size: 11px; color: var(--text3); }
+
+/* ─── TABLES ─── */
+.table-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.table-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.table-head-title { font-size: 14px; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.table-head-title .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+.search-box {
+  padding: 7px 12px; background: var(--surface2);
+  border: 1px solid var(--border); border-radius: var(--radius-sm);
+  color: var(--text); font-family: 'Tajawal',sans-serif; font-size: 13px;
+  outline: none; width: 220px;
+}
+.search-box:focus { border-color: var(--primary); }
+.search-box::placeholder { color: var(--text3); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+thead tr { background: var(--surface2); }
+th {
+  padding: 11px 16px; text-align: right;
+  font-size: 11px; font-weight: 700; color: var(--text2);
+  letter-spacing: .5px; text-transform: uppercase;
+  border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+td {
+  padding: 12px 16px;
+  font-size: 13px; color: var(--text);
+  border-bottom: 1px solid var(--border2);
+}
+tbody tr:hover { background: var(--surface2); }
+tbody tr:last-child td { border-bottom: none; }
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+}
+.badge.success { background: rgba(29,184,122,.15); color: var(--success); }
+.badge.danger { background: rgba(224,90,58,.15); color: var(--danger); }
+.badge.warning { background: rgba(240,192,64,.15); color: var(--warning); }
+.badge.info { background: rgba(90,180,224,.15); color: var(--info); }
+.badge.neutral { background: var(--surface3); color: var(--text2); }
+.badge::before { content:''; width:5px; height:5px; border-radius:50%; background: currentColor; }
+.tbl-action {
+  background: transparent; border: 1px solid var(--border2);
+  border-radius: 4px; padding: 4px 10px;
+  font-family: 'Tajawal',sans-serif; font-size: 11px; font-weight: 700;
+  color: var(--text2); cursor: pointer; transition: all .15s;
+}
+.tbl-action:hover { border-color: var(--primary); color: var(--primary); }
+.tbl-action.danger:hover { border-color: var(--danger); color: var(--danger); }
+.empty-row td { text-align: center; color: var(--text3); padding: 40px; font-size: 13px; }
+.loading-row td { text-align: center; color: var(--text2); padding: 32px; font-size: 13px; }
+.loading-row td::after { content: ' ...'; animation: dots 1.2s infinite; }
+@keyframes dots { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ─── DETAIL PANEL ─── */
+.detail-panel {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 460px; background: var(--surface);
+  border-right: 1px solid var(--border);
+  transform: translateX(-100%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  z-index: 200; display: flex; flex-direction: column;
+  box-shadow: var(--shadow);
+}
+.detail-panel.open { transform: translateX(0); }
+.detail-panel-head {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.detail-panel-title { font-size: 16px; font-weight: 800; color: var(--text); }
+.close-panel {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--surface2); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 16px; color: var(--text2); transition: all .15s;
+}
+.close-panel:hover { border-color: var(--danger); color: var(--danger); }
+.detail-panel-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+.overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.5);
+  z-index: 190; display: none;
+}
+.overlay.open { display: block; }
+.detail-row { display: flex; gap: 8px; margin-bottom: 12px; }
+.detail-label { font-size: 11px; font-weight: 700; color: var(--text3); min-width: 120px; padding-top: 2px; }
+.detail-value { font-size: 13px; color: var(--text); flex: 1; }
+.detail-sep { height: 1px; background: var(--border); margin: 16px 0; }
+.detail-section-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 12px; letter-spacing: .5px; }
+.detail-action-row { display: flex; gap: 8px; margin-top: 20px; }
+.det-btn {
+  flex: 1; padding: 10px;
+  border-radius: var(--radius-sm); font-family: 'Tajawal',sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: all .15s;
+}
+.det-btn.primary { background: var(--primary); color: #fff; }
+.det-btn.primary:hover { background: var(--primary-dim); }
+.det-btn.outline { background: transparent; border: 1px solid var(--border2); color: var(--text2); }
+.det-btn.outline:hover { border-color: var(--primary); color: var(--primary); }
+.det-btn.danger { background: rgba(224,90,58,.15); border: 1px solid var(--danger); color: var(--danger); }
+.det-btn.danger:hover { background: var(--danger); color: #fff; }
+
+/* ─── CHARTS ─── */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 1100px) { .charts-grid { grid-template-columns: 1fr; } }
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+.chart-title { font-size: 13px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.chart-sub { font-size: 11px; color: var(--text3); margin-bottom: 16px; }
+.bar-chart { display: flex; flex-direction: column; gap: 12px; }
+.bar-row { display: flex; align-items: center; gap: 10px; }
+.bar-label { font-size: 12px; color: var(--text2); width: 120px; flex-shrink: 0; text-align: right; }
+.bar-track { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 4px; transition: width .6s ease; }
+.bar-val { font-size: 12px; font-weight: 700; color: var(--text); width: 36px; text-align: left; }
+.pie-legend { display: flex; flex-direction: column; gap: 8px; }
+.pie-row { display: flex; align-items: center; gap: 10px; }
+.pie-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.pie-label { font-size: 12px; color: var(--text2); flex: 1; }
+.pie-val { font-size: 12px; font-weight: 700; color: var(--text); }
+.pie-pct { font-size: 11px; color: var(--text3); }
+
+/* ─── MESSAGES SECTION ─── */
+.msg-list { display: flex; flex-direction: column; gap: 12px; }
+.msg-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  cursor: pointer; transition: all .15s;
+}
+.msg-card:hover { border-color: var(--primary); }
+.msg-card.unread { border-right: 3px solid var(--primary); }
+.msg-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+.msg-sender { font-size: 13px; font-weight: 700; color: var(--text); }
+.msg-time { font-size: 11px; color: var(--text3); }
+.msg-preview { font-size: 12px; color: var(--text2); }
+.msg-tags { display: flex; gap: 6px; margin-top: 8px; }
+
+/* ─── TOAST ─── */
+.toast-root { position: fixed; bottom: 24px; left: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  padding: 12px 16px; border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 600; font-family: 'Tajawal',sans-serif;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); box-shadow: var(--shadow);
+  transform: translateX(-20px); opacity: 0; transition: all .25s;
+  max-width: 300px;
+}
+.toast.show { transform: translateX(0); opacity: 1; }
+.toast.success { border-color: var(--success); }
+.toast.error { border-color: var(--danger); }
+.toast.info { border-color: var(--info); }
+
+/* ─── SPINNER ─── */
+.spinner {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid var(--border2); border-top-color: var(--primary);
+  border-radius: 50%; animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 768px) {
+  .sidebar { width: 200px; }
+  .main { margin-right: 200px; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .detail-panel { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════
+     LOGIN SCREEN
+════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <h2>لوحة تحكم المدير</h2>
+      <p>منصة حجتي — نظام الإدارة المركزي</p>
+    </div>
+    <div id="loginErr" class="login-err"></div>
+    <div class="login-field">
+      <label>البريد الإلكتروني</label>
+      <input type="email" id="loginEmail" placeholder="admin@hajjati.sa" autocomplete="email">
+    </div>
+    <div class="login-field">
+      <label>كلمة المرور</label>
+      <input type="password" id="loginPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="login-btn" id="loginBtn" onclick="doLogin()">دخول إلى لوحة التحكم</button>
+    <p class="login-note">هذه البوابة مخصصة لمديري النظام فقط</p>
+  </div>
+</div>
+
+<!-- ════════════════════════════════
+     APP SCREEN
+════════════════════════════════ -->
+<div id="appScreen">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">حجتي</div>
+        <div class="brand-role">ADMIN PANEL</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">الرئيسي</div>
+      <div class="nav-item active" data-section="overview" onclick="showSection('overview', this)">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        لوحة الإحصائيات
+      </div>
+      <div class="nav-item" data-section="analytics" onclick="showSection('analytics', this)">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        التحليلات والرسوم
+      </div>
+
+      <div class="nav-section-label">الإدارة</div>
+      <div class="nav-item" data-section="campaigns" onclick="showSection('campaigns', this)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        الحملات
+      </div>
+      <div class="nav-item" data-section="providers" onclick="showSection('providers', this)">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        مسؤولو الحملات
+      </div>
+      <div class="nav-item" data-section="pilgrims" onclick="showSection('pilgrims', this)">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        الحجاج
+      </div>
+      <div class="nav-item" data-section="applications" onclick="showSection('applications', this)">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        طلبات التسجيل
+      </div>
+      <div class="nav-item" data-section="emergency" onclick="showSection('emergency', this)">
+        <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        بلاغات الطوارئ
+        <span class="nav-badge" id="emergencyBadge">0</span>
+      </div>
+
+      <div class="nav-section-label">الدعم</div>
+      <div class="nav-item" data-section="messages" onclick="showSection('messages', this)">
+        <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        الرسائل والدعم
+        <span class="nav-badge" id="msgBadge" style="display:none">!</span>
+      </div>
+      <div class="nav-item" data-section="notifications" onclick="showSection('notifications', this)">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        التنبيهات
+      </div>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="admin-info">
+        <div class="admin-avatar" id="sidebarInitial">م</div>
+        <div>
+          <div class="admin-name" id="sidebarName">المدير</div>
+          <div class="admin-email" id="sidebarEmail">admin</div>
+        </div>
+      </div>
+      <button class="logout-btn" onclick="doLogout()">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        تسجيل الخروج
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title">لوحة تحكم <span>المدير</span></div>
+      <div class="topbar-right">
+        <div class="status-dot"></div>
+        <span style="font-size:12px;color:var(--text3)">متصل بـ Supabase</span>
+        <button class="refresh-btn" onclick="refreshAll()">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          تحديث
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- ══ OVERVIEW ══ -->
+      <div class="section active" id="section-overview">
+        <div class="section-header">
+          <div>
+            <div class="section-title">لوحة الإحصائيات</div>
+            <div class="section-sub">نظرة عامة على المنصة — اضغط على أي بطاقة لعرض التفاصيل</div>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card" style="--card-color:var(--primary)" onclick="showSection('campaigns',document.querySelector('[data-section=campaigns]'))">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <div class="stat-label">الحملات</div>
+            <div class="stat-value" id="kpi-campaigns">—</div>
+            <div class="stat-meta">إجمالي الحملات المسجلة</div>
+          </div>
+          <div class="stat-card" style="--card-color:var(--accent3)" onclick="showSection('providers',document.querySelector('[data-section=providers]'))">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <div class="stat-label">مسؤولو الحملات</div>
+            <div class="stat-value" id="kpi-providers">—</div>
+            <div class="stat-meta">أصحاب الحملات المسجلون</div>
+          </div>
+          <div class="stat-card" style="--card-color:var(--accent)" onclick="showSection('pilgrims',document.querySelector('[data-section=pilgrims]'))">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+            <div class="stat-label">الحجاج</div>
+            <div class="stat-value" id="kpi-pilgrims">—</div>
+            <div class="stat-meta">إجمالي الحجاج المسجلين</div>
+          </div>
+          <div class="stat-card" style="--card-color:var(--success)" onclick="showSection('applications',document.querySelector('[data-section=applications]'))">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+            <div class="stat-label">طلبات التسجيل</div>
+            <div class="stat-value" id="kpi-applications">—</div>
+            <div class="stat-meta">إجمالي الطلبات المقدمة</div>
+          </div>
+          <div class="stat-card" style="--card-color:var(--accent)">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
+            <div class="stat-label">المدفوعات</div>
+            <div class="stat-value" id="kpi-paid">—</div>
+            <div class="stat-meta">طلبات مكتملة الدفع</div>
+          </div>
+          <div class="stat-card" style="--card-color:var(--danger)" onclick="showSection('emergency',document.querySelector('[data-section=emergency]'))">
+            <div class="stat-icon"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+            <div class="stat-label">البلاغات المفتوحة</div>
+            <div class="stat-value" id="kpi-emergency">—</div>
+            <div class="stat-meta">بلاغات طوارئ قيد المتابعة</div>
+          </div>
+        </div>
+
+        <!-- Quick recent tables -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="table-section">
+            <div class="table-head">
+              <div class="table-head-title"><div class="dot"></div> أحدث الحملات</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr>
+                  <th>الحملة</th>
+                  <th>الحالة</th>
+                  <th>المقاعد</th>
+                </tr></thead>
+                <tbody id="recentCampaigns"><tr class="loading-row"><td colspan="3">جارٍ التحميل</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="table-section">
+            <div class="table-head">
+              <div class="table-head-title"><div class="dot" style="background:var(--danger)"></div> أحدث البلاغات</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr>
+                  <th>النوع</th>
+                  <th>الحالة</th>
+                  <th>التاريخ</th>
+                </tr></thead>
+                <tbody id="recentEmergency"><tr class="loading-row"><td colspan="3">جارٍ التحميل</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ ANALYTICS ══ -->
+      <div class="section" id="section-analytics">
+        <div class="section-header">
+          <div>
+            <div class="section-title">التحليلات والرسوم البيانية</div>
+            <div class="section-sub">إحصائيات مفصّلة للمنصة</div>
+          </div>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-title">توزيع حالات الطلبات</div>
+            <div class="chart-sub">حسب الحالة الحالية لكل طلب</div>
+            <div class="pie-legend" id="appStatusChart">
+              <div style="color:var(--text3);font-size:13px">جارٍ التحميل...</div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">الحملات حسب المدينة</div>
+            <div class="chart-sub">توزيع الحملات جغرافياً</div>
+            <div class="bar-chart" id="cityCampaignsChart">
+              <div style="color:var(--text3);font-size:13px">جارٍ التحميل...</div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">حالات طلبات الطوارئ</div>
+            <div class="chart-sub">توزيع البلاغات حسب الحالة</div>
+            <div class="bar-chart" id="emergencyChart">
+              <div style="color:var(--text3);font-size:13px">جارٍ التحميل...</div>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">أكثر الحملات تسجيلاً</div>
+            <div class="chart-sub">الحملات بأعلى عدد طلبات</div>
+            <div class="bar-chart" id="topCampaignsChart">
+              <div style="color:var(--text3);font-size:13px">جارٍ التحميل...</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ CAMPAIGNS ══ -->
+      <div class="section" id="section-campaigns">
+        <div class="section-header">
+          <div>
+            <div class="section-title">الحملات</div>
+            <div class="section-sub">جميع حملات الحج المسجلة في المنصة</div>
+          </div>
+        </div>
+        <div class="table-section">
+          <div class="table-head">
+            <div class="table-head-title"><div class="dot"></div> قائمة الحملات</div>
+            <input class="search-box" placeholder="بحث في الحملات..." oninput="filterTable('campaignsTable', this.value)">
+          </div>
+          <div class="table-wrap">
+            <table id="campaignsTable">
+              <thead><tr>
+                <th>اسم الحملة</th>
+                <th>المدينة</th>
+                <th>المسؤول</th>
+                <th>المقاعد المتبقية</th>
+                <th>السعر</th>
+                <th>الحالة</th>
+                <th>التفاصيل</th>
+              </tr></thead>
+              <tbody id="campaignsBody"><tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PROVIDERS ══ -->
+      <div class="section" id="section-providers">
+        <div class="section-header">
+          <div>
+            <div class="section-title">مسؤولو الحملات</div>
+            <div class="section-sub">أصحاب الحملات المسجلون في المنصة</div>
+          </div>
+        </div>
+        <div class="table-section">
+          <div class="table-head">
+            <div class="table-head-title"><div class="dot" style="background:var(--accent3)"></div> قائمة مسؤولي الحملات</div>
+            <input class="search-box" placeholder="بحث..." oninput="filterTable('providersTable', this.value)">
+          </div>
+          <div class="table-wrap">
+            <table id="providersTable">
+              <thead><tr>
+                <th>الاسم</th>
+                <th>اسم الحملة/الشركة</th>
+                <th>البريد الإلكتروني</th>
+                <th>الجوال</th>
+                <th>عدد الحملات</th>
+                <th>الحالة</th>
+                <th>تفاصيل</th>
+              </tr></thead>
+              <tbody id="providersBody"><tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PILGRIMS ══ -->
+      <div class="section" id="section-pilgrims">
+        <div class="section-header">
+          <div>
+            <div class="section-title">الحجاج</div>
+            <div class="section-sub">بيانات الحجاج المسجلين — صلاحية عرض فقط</div>
+          </div>
+        </div>
+        <div class="table-section">
+          <div class="table-head">
+            <div class="table-head-title"><div class="dot" style="background:var(--accent)"></div> قائمة الحجاج</div>
+            <input class="search-box" placeholder="بحث باسم أو بريد..." oninput="filterTable('pilgrimsTable', this.value)">
+          </div>
+          <div class="table-wrap">
+            <table id="pilgrimsTable">
+              <thead><tr>
+                <th>الاسم الكامل</th>
+                <th>البريد الإلكتروني</th>
+                <th>الجوال</th>
+                <th>مسجّل في حملة</th>
+                <th>حالة الطلب</th>
+                <th>الدفع</th>
+                <th>تاريخ التسجيل</th>
+              </tr></thead>
+              <tbody id="pilgrimsBody"><tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ APPLICATIONS ══ -->
+      <div class="section" id="section-applications">
+        <div class="section-header">
+          <div>
+            <div class="section-title">طلبات التسجيل</div>
+            <div class="section-sub">جميع طلبات الحجاج على الحملات</div>
+          </div>
+        </div>
+        <div class="table-section">
+          <div class="table-head">
+            <div class="table-head-title"><div class="dot" style="background:var(--success)"></div> جميع الطلبات</div>
+            <input class="search-box" placeholder="بحث..." oninput="filterTable('applicationsTable', this.value)">
+          </div>
+          <div class="table-wrap">
+            <table id="applicationsTable">
+              <thead><tr>
+                <th>اسم الحاج</th>
+                <th>الحملة</th>
+                <th>الحالة</th>
+                <th>الدفع</th>
+                <th>QR</th>
+                <th>تاريخ الطلب</th>
+                <th>تفاصيل</th>
+              </tr></thead>
+              <tbody id="applicationsBody"><tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ EMERGENCY ══ -->
+      <div class="section" id="section-emergency">
+        <div class="section-header">
+          <div>
+            <div class="section-title">بلاغات الطوارئ</div>
+            <div class="section-sub">مراقبة البلاغات — المدير يشاهد ويتابع، معالجة البلاغ تكون من مسؤول الحملة</div>
+          </div>
+        </div>
+        <div class="table-section">
+          <div class="table-head">
+            <div class="table-head-title"><div class="dot" style="background:var(--danger)"></div> جميع البلاغات</div>
+            <input class="search-box" placeholder="بحث..." oninput="filterTable('emergencyTable', this.value)">
+          </div>
+          <div class="table-wrap">
+            <table id="emergencyTable">
+              <thead><tr>
+                <th>المُبلِّغ</th>
+                <th>نوع البلاغ</th>
+                <th>الرسالة</th>
+                <th>الموقع</th>
+                <th>الحالة</th>
+                <th>التاريخ</th>
+                <th>تفاصيل</th>
+              </tr></thead>
+              <tbody id="emergencyBody"><tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ MESSAGES ══ -->
+      <div class="section" id="section-messages">
+        <div class="section-header">
+          <div>
+            <div class="section-title">الرسائل والدعم</div>
+            <div class="section-sub">رسائل المستخدمين والاستفسارات — مبنية من سجلات المساعد الذكي</div>
+          </div>
+        </div>
+        <div class="table-section">
+          <div class="table-head">
+            <div class="table-head-title"><div class="dot" style="background:var(--accent3)"></div> سجلات الدعم</div>
+          </div>
+          <div class="table-wrap">
+            <table id="messagesTable">
+              <thead><tr>
+                <th>المستخدم</th>
+                <th>الرسالة</th>
+                <th>رد النظام</th>
+                <th>اللغة</th>
+                <th>التاريخ</th>
+              </tr></thead>
+              <tbody id="messagesBody"><tr class="loading-row"><td colspan="5">جارٍ التحميل</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ NOTIFICATIONS ══ -->
+      <div class="section" id="section-notifications">
+        <div class="section-header">
+          <div>
+            <div class="section-title">التنبيهات</div>
+            <div class="section-sub">جميع التنبيهات المرسلة على المنصة</div>
+          </div>
+        </div>
+        <div class="table-section">
+          <div class="table-head">
+            <div class="table-head-title"><div class="dot"></div> سجل التنبيهات</div>
+          </div>
+          <div class="table-wrap">
+            <table id="notificationsTable">
+              <thead><tr>
+                <th>العنوان</th>
+                <th>الجهة المرسلة</th>
+                <th>الجمهور</th>
+                <th>الأولوية</th>
+                <th>التاريخ</th>
+              </tr></thead>
+              <tbody id="notificationsBody"><tr class="loading-row"><td colspan="5">جارٍ التحميل</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+
+</div><!-- /appScreen -->
+
+<!-- DETAIL PANEL -->
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+<div class="detail-panel" id="detailPanel">
+  <div class="detail-panel-head">
+    <div class="detail-panel-title" id="panelTitle">التفاصيل</div>
+    <div class="close-panel" onclick="closePanel()">×</div>
+  </div>
+  <div class="detail-panel-body" id="panelBody"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-root" id="toastRoot"></div>
+
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+
+// ─── CONFIG (same as project config.js) ───
+const SUPABASE_URL = "https://zukehvlzvihwnxyfdutg.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp1a2Vodmx6dmlod254eWZkdXRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MDA5MjEsImV4cCI6MjA5MjQ3NjkyMX0.T6miypJ3rAojGfy2YtYye8sSbUw1VplEGf8i9V266N8";
+
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { autoRefreshToken: true, persistSession: true, detectSessionInUrl: true }
+});
+
+// ─── STATE ───
+let currentAdmin = null;
+let allData = {};
+
+// ─── HELPERS ───
+function toast(msg, type = "info") {
+  const root = document.getElementById("toastRoot");
+  const el = document.createElement("div");
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  root.appendChild(el);
+  setTimeout(() => el.classList.add("show"), 10);
+  setTimeout(() => { el.classList.remove("show"); setTimeout(() => el.remove(), 250); }, 3200);
+}
+
+function fmtDate(d) {
+  if (!d) return "—";
+  return new Date(d).toLocaleDateString("ar-SA", { year: "numeric", month: "short", day: "numeric" });
+}
+
+function fmtNum(n) {
+  if (n === undefined || n === null) return "—";
+  return Number(n).toLocaleString("ar-SA");
+}
+
+function truncate(s, n = 40) {
+  if (!s) return "—";
+  return s.length > n ? s.slice(0, n) + "…" : s;
+}
+
+function statusBadge(status) {
+  const map = {
+    pending: ["neutral","قيد المراجعة"], payment_pending: ["warning","بانتظار الدفع"],
+    paid: ["success","مدفوع"], rejected: ["danger","مرفوض"], completed: ["success","مكتمل"],
+    open: ["danger","مفتوح"], in_progress: ["warning","قيد المعالجة"], closed: ["success","مغلق"],
+    draft: ["neutral","مسودة"], active: ["success","نشط"], all: ["info","الكل"]
+  };
+  const [cls, label] = map[status] || ["neutral", status || "—"];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function payBadge(status) {
+  const map = { unpaid: ["danger","غير مدفوع"], pending: ["warning","انتظار"], paid: ["success","مدفوع"] };
+  const [cls, label] = map[status] || ["neutral", status || "—"];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function priorityBadge(p) {
+  const map = { high: ["danger","عالية"], normal: ["info","عادية"], low: ["neutral","منخفضة"] };
+  const [cls, label] = map[p] || ["neutral", p || "—"];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function reportTypeBadge(t) {
+  const map = { lost_person: ["danger","مفقود"], medical: ["warning","طبي"], field_support: ["info","دعم ميداني"] };
+  const [cls, label] = map[t] || ["neutral", t || "—"];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+// ─── LOGIN ───
+window.doLogin = async function() {
+  const email = document.getElementById("loginEmail").value.trim();
+  const pass  = document.getElementById("loginPass").value;
+  const errEl = document.getElementById("loginErr");
+  const btn   = document.getElementById("loginBtn");
+  errEl.style.display = "none";
+  if (!email || !pass) { errEl.textContent = "أدخل البريد وكلمة المرور."; errEl.style.display = "block"; return; }
+  btn.innerHTML = '<span class="spinner"></span> جارٍ الدخول...'; btn.disabled = true;
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pass });
+    if (error) throw error;
+    const { data: prof } = await sb.from("profiles").select("*").eq("id", data.user.id).maybeSingle();
+    if (!prof || prof.role !== "admin") {
+      await sb.auth.signOut();
+      throw new Error("هذا الحساب ليس حساب مدير.");
+    }
+    currentAdmin = prof;
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("appScreen").style.display = "block";
+    document.getElementById("sidebarName").textContent = prof.full_name || prof.email;
+    document.getElementById("sidebarEmail").textContent = prof.email || "";
+    document.getElementById("sidebarInitial").textContent = (prof.full_name || "م").slice(0,1).toUpperCase();
+    await refreshAll();
+    toast("مرحباً، " + (prof.full_name || "المدير"), "success");
+  } catch (err) {
+    errEl.textContent = err.message || "بيانات خاطئة."; errEl.style.display = "block";
+    btn.innerHTML = "دخول إلى لوحة التحكم"; btn.disabled = false;
+  }
+};
+
+window.doLogout = async function() {
+  await sb.auth.signOut();
+  document.getElementById("appScreen").style.display = "none";
+  document.getElementById("loginScreen").style.display = "flex";
+  document.getElementById("loginPass").value = "";
+  toast("تم تسجيل الخروج", "info");
+};
+
+// Enter key login
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && document.getElementById("loginScreen").style.display !== "none") window.doLogin();
+});
+
+// ─── SECTION NAV ───
+window.showSection = function(name, navEl) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.getElementById("section-" + name)?.classList.add("active");
+  if (navEl) navEl.classList.add("active");
+  loadSection(name);
+};
+
+async function loadSection(name) {
+  if (name === "overview") { await loadOverview(); }
+  else if (name === "analytics") { await loadAnalytics(); }
+  else if (name === "campaigns") { await loadCampaigns(); }
+  else if (name === "providers") { await loadProviders(); }
+  else if (name === "pilgrims") { await loadPilgrims(); }
+  else if (name === "applications") { await loadApplications(); }
+  else if (name === "emergency") { await loadEmergency(); }
+  else if (name === "messages") { await loadMessages(); }
+  else if (name === "notifications") { await loadNotifications(); }
+}
+
+// ─── REFRESH ALL ───
+window.refreshAll = async function() {
+  toast("جارٍ تحديث البيانات...", "info");
+  await loadOverview();
+  const active = document.querySelector(".section.active");
+  if (active) {
+    const name = active.id.replace("section-", "");
+    if (name !== "overview") await loadSection(name);
+  }
+};
+
+// ─── OVERVIEW ───
+async function loadOverview() {
+  try {
+    const [camps, profs, apps, emerg] = await Promise.all([
+      sb.from("campaigns").select("id, title_ar, city, status, seats_left, capacity, created_at", { count: "exact" }),
+      sb.from("profiles").select("id, role, created_at", { count: "exact" }),
+      sb.from("campaign_applications").select("id, status, payment_status, created_at", { count: "exact" }),
+      sb.from("emergency_reports").select("id, report_type, status, created_at", { count: "exact" })
+    ]);
+
+    const campaigns = camps.data || [];
+    const profiles  = profs.data || [];
+    const applications = apps.data || [];
+    const emergency = emerg.data || [];
+
+    const providers = profiles.filter(p => p.role === "owner");
+    const pilgrims  = profiles.filter(p => p.role === "pilgrim");
+    const paidCount = applications.filter(a => a.payment_status === "paid").length;
+    const openEmerg = emergency.filter(e => e.status === "open").length;
+
+    document.getElementById("kpi-campaigns").textContent = fmtNum(campaigns.length);
+    document.getElementById("kpi-providers").textContent = fmtNum(providers.length);
+    document.getElementById("kpi-pilgrims").textContent  = fmtNum(pilgrims.length);
+    document.getElementById("kpi-applications").textContent = fmtNum(applications.length);
+    document.getElementById("kpi-paid").textContent = fmtNum(paidCount);
+    document.getElementById("kpi-emergency").textContent = fmtNum(openEmerg);
+    document.getElementById("emergencyBadge").textContent = openEmerg;
+
+    allData = { campaigns, profiles, applications, emergency };
+
+    // Recent campaigns mini-table
+    const recentCamp = [...campaigns].sort((a,b) => new Date(b.created_at)-new Date(a.created_at)).slice(0,5);
+    document.getElementById("recentCampaigns").innerHTML = recentCamp.length ? recentCamp.map(c => `
+      <tr>
+        <td>${truncate(c.title_ar, 28)}</td>
+        <td>${statusBadge(c.status)}</td>
+        <td>${fmtNum(c.seats_left)} / ${fmtNum(c.capacity)}</td>
+      </tr>`).join("") : `<tr class="empty-row"><td colspan="3">لا توجد بيانات</td></tr>`;
+
+    // Recent emergency mini-table
+    const recentEmg = [...emergency].sort((a,b) => new Date(b.created_at)-new Date(a.created_at)).slice(0,5);
+    document.getElementById("recentEmergency").innerHTML = recentEmg.length ? recentEmg.map(e => `
+      <tr>
+        <td>${reportTypeBadge(e.report_type)}</td>
+        <td>${statusBadge(e.status)}</td>
+        <td>${fmtDate(e.created_at)}</td>
+      </tr>`).join("") : `<tr class="empty-row"><td colspan="3">لا توجد بلاغات</td></tr>`;
+
+  } catch(err) {
+    toast("خطأ في تحميل الإحصائيات: " + err.message, "error");
+  }
+}
+
+// ─── ANALYTICS ───
+async function loadAnalytics() {
+  try {
+    const { data: apps } = await sb.from("campaign_applications").select("status, payment_status, campaign_id");
+    const { data: camps } = await sb.from("campaigns").select("id, title_ar, city");
+    const { data: emerg } = await sb.from("emergency_reports").select("status, report_type");
+
+    // App status pie
+    const statusCount = {};
+    (apps||[]).forEach(a => { statusCount[a.status] = (statusCount[a.status]||0)+1; });
+    const total = (apps||[]).length || 1;
+    const statusColors = { pending:"var(--text3)", payment_pending:"var(--warning)", paid:"var(--success)", rejected:"var(--danger)", completed:"var(--accent3)" };
+    const statusLabels = { pending:"قيد المراجعة", payment_pending:"بانتظار الدفع", paid:"مدفوع", rejected:"مرفوض", completed:"مكتمل" };
+    document.getElementById("appStatusChart").innerHTML = Object.entries(statusCount).map(([k,v]) => `
+      <div class="pie-row">
+        <div class="pie-dot" style="background:${statusColors[k]||'var(--text3)'}"></div>
+        <div class="pie-label">${statusLabels[k]||k}</div>
+        <div class="pie-val">${v}</div>
+        <div class="pie-pct">${Math.round(v/total*100)}%</div>
+      </div>
+      <div style="height:4px;background:var(--surface2);border-radius:2px;margin-bottom:4px;overflow:hidden">
+        <div style="height:100%;width:${Math.round(v/total*100)}%;background:${statusColors[k]||'var(--text3)'};border-radius:2px;transition:width .6s"></div>
+      </div>`).join("") || `<div style="color:var(--text3)">لا توجد بيانات</div>`;
+
+    // Cities
+    const cityCount = {};
+    (camps||[]).forEach(c => { cityCount[c.city] = (cityCount[c.city]||0)+1; });
+    const maxCity = Math.max(...Object.values(cityCount), 1);
+    document.getElementById("cityCampaignsChart").innerHTML = Object.entries(cityCount)
+      .sort((a,b) => b[1]-a[1]).slice(0,6).map(([city,cnt]) => `
+      <div class="bar-row">
+        <div class="bar-label">${city}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${cnt/maxCity*100}%;background:var(--primary)"></div></div>
+        <div class="bar-val">${cnt}</div>
+      </div>`).join("") || `<div style="color:var(--text3)">لا توجد بيانات</div>`;
+
+    // Emergency
+    const emgCount = {};
+    (emerg||[]).forEach(e => { emgCount[e.status] = (emgCount[e.status]||0)+1; });
+    const maxEmg = Math.max(...Object.values(emgCount), 1);
+    const emgColors = { open:"var(--danger)", in_progress:"var(--warning)", closed:"var(--success)" };
+    const emgLabels = { open:"مفتوح", in_progress:"قيد المعالجة", closed:"مغلق" };
+    document.getElementById("emergencyChart").innerHTML = Object.entries(emgCount).map(([k,v]) => `
+      <div class="bar-row">
+        <div class="bar-label">${emgLabels[k]||k}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${v/maxEmg*100}%;background:${emgColors[k]||'var(--text3)'}"></div></div>
+        <div class="bar-val">${v}</div>
+      </div>`).join("") || `<div style="color:var(--text3)">لا توجد بيانات</div>`;
+
+    // Top campaigns by applications
+    const campCount = {};
+    (apps||[]).forEach(a => { campCount[a.campaign_id] = (campCount[a.campaign_id]||0)+1; });
+    const campMap = {};
+    (camps||[]).forEach(c => { campMap[c.id] = c.title_ar; });
+    const sorted = Object.entries(campCount).sort((a,b)=>b[1]-a[1]).slice(0,5);
+    const maxCamp = Math.max(...sorted.map(x=>x[1]), 1);
+    document.getElementById("topCampaignsChart").innerHTML = sorted.map(([id,cnt]) => `
+      <div class="bar-row">
+        <div class="bar-label">${truncate(campMap[id]||"—", 18)}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${cnt/maxCamp*100}%;background:var(--accent3)"></div></div>
+        <div class="bar-val">${cnt}</div>
+      </div>`).join("") || `<div style="color:var(--text3)">لا توجد بيانات</div>`;
+
+  } catch(err) { toast("خطأ في التحليلات: " + err.message, "error"); }
+}
+
+// ─── CAMPAIGNS TABLE ───
+async function loadCampaigns() {
+  document.getElementById("campaignsBody").innerHTML = `<tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr>`;
+  try {
+    const { data } = await sb.from("campaigns")
+      .select("*, owner:profiles!campaigns_owner_id_fkey(full_name, email, phone)")
+      .order("created_at", { ascending: false });
+    const rows = data || [];
+    document.getElementById("campaignsBody").innerHTML = rows.length ? rows.map(c => `
+      <tr>
+        <td><strong>${c.title_ar}</strong><div style="font-size:11px;color:var(--text3)">${c.title_en}</div></td>
+        <td>${c.city}</td>
+        <td>${c.owner?.full_name || "—"}<div style="font-size:11px;color:var(--text3)">${c.owner?.email || ""}</div></td>
+        <td><span style="color:${c.seats_left < 10 ? 'var(--danger)' : 'var(--text)'}">${fmtNum(c.seats_left)}</span> / ${fmtNum(c.capacity)}</td>
+        <td>${fmtNum(c.price)} ر.س</td>
+        <td>${statusBadge(c.status)}</td>
+        <td><button class="tbl-action" onclick="showCampaignDetail(${JSON.stringify(JSON.stringify(c))})">عرض</button></td>
+      </tr>`).join("") : `<tr class="empty-row"><td colspan="7">لا توجد حملات</td></tr>`;
+    allData.campaignsFull = rows;
+  } catch(err) { toast("خطأ: " + err.message, "error"); }
+}
+
+// ─── PROVIDERS TABLE ───
+async function loadProviders() {
+  document.getElementById("providersBody").innerHTML = `<tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr>`;
+  try {
+    const { data: profs } = await sb.from("profiles").select("*, provider_profiles(*)").eq("role","owner").order("created_at",{ascending:false});
+    const { data: camps } = await sb.from("campaigns").select("owner_id");
+    const campCount = {};
+    (camps||[]).forEach(c => { campCount[c.owner_id] = (campCount[c.owner_id]||0)+1; });
+    const rows = profs || [];
+    document.getElementById("providersBody").innerHTML = rows.length ? rows.map(p => {
+      const pp = p.provider_profiles?.[0] || {};
+      const cnt = campCount[p.id] || 0;
+      return `<tr>
+        <td><strong>${p.full_name}</strong><div style="font-size:11px;color:var(--text3)">${p.id.slice(0,8)}...</div></td>
+        <td>${pp.company_name || "—"}</td>
+        <td>${p.email || "—"}</td>
+        <td>${p.phone || "—"}</td>
+        <td><strong>${cnt}</strong> حملة</td>
+        <td>${pp.verified ? `<span class="badge success">موثّق</span>` : `<span class="badge neutral">غير موثّق</span>`}</td>
+        <td><button class="tbl-action" onclick="showProviderDetail(${JSON.stringify(JSON.stringify({...p, campCount: cnt}))})">عرض</button></td>
+      </tr>`;}).join("") : `<tr class="empty-row"><td colspan="7">لا يوجد مسؤولون</td></tr>`;
+    allData.providersFull = rows;
+  } catch(err) { toast("خطأ: " + err.message, "error"); }
+}
+
+// ─── PILGRIMS TABLE ───
+async function loadPilgrims() {
+  document.getElementById("pilgrimsBody").innerHTML = `<tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr>`;
+  try {
+    const { data: profs } = await sb.from("profiles").select("*").eq("role","pilgrim").order("created_at",{ascending:false});
+    const { data: apps } = await sb.from("campaign_applications")
+      .select("pilgrim_id, status, payment_status, campaigns(title_ar)");
+    const appMap = {};
+    (apps||[]).forEach(a => { appMap[a.pilgrim_id] = a; });
+    const rows = profs || [];
+    document.getElementById("pilgrimsBody").innerHTML = rows.length ? rows.map(p => {
+      const app = appMap[p.id];
+      return `<tr>
+        <td><strong>${p.full_name}</strong></td>
+        <td style="font-size:12px">${p.email || "—"}</td>
+        <td>${p.phone || "—"}</td>
+        <td style="font-size:12px">${app?.campaigns?.title_ar || `<span style="color:var(--text3)">لا</span>`}</td>
+        <td>${app ? statusBadge(app.status) : `<span class="badge neutral">لا يوجد</span>`}</td>
+        <td>${app ? payBadge(app.payment_status) : "—"}</td>
+        <td style="font-size:12px">${fmtDate(p.created_at)}</td>
+      </tr>`;}).join("") : `<tr class="empty-row"><td colspan="7">لا يوجد حجاج</td></tr>`;
+  } catch(err) { toast("خطأ: " + err.message, "error"); }
+}
+
+// ─── APPLICATIONS TABLE ───
+async function loadApplications() {
+  document.getElementById("applicationsBody").innerHTML = `<tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr>`;
+  try {
+    const { data } = await sb.from("campaign_applications")
+      .select("*, pilgrim:profiles!campaign_applications_pilgrim_id_fkey(full_name, email), campaigns(title_ar)")
+      .order("applied_at", { ascending: false });
+    const rows = data || [];
+    document.getElementById("applicationsBody").innerHTML = rows.length ? rows.map(a => `
+      <tr>
+        <td><strong>${a.pilgrim?.full_name || "—"}</strong><div style="font-size:11px;color:var(--text3)">${a.pilgrim?.email || ""}</div></td>
+        <td style="font-size:12px">${a.campaigns?.title_ar || "—"}</td>
+        <td>${statusBadge(a.status)}</td>
+        <td>${payBadge(a.payment_status)}</td>
+        <td>${a.qr_token ? (a.qr_used ? `<span class="badge neutral">مستخدم</span>` : `<span class="badge success">نشط</span>`) : "—"}</td>
+        <td style="font-size:12px">${fmtDate(a.applied_at)}</td>
+        <td><button class="tbl-action" onclick="showAppDetail(${JSON.stringify(JSON.stringify(a))})">عرض</button></td>
+      </tr>`).join("") : `<tr class="empty-row"><td colspan="7">لا توجد طلبات</td></tr>`;
+  } catch(err) { toast("خطأ: " + err.message, "error"); }
+}
+
+// ─── EMERGENCY TABLE ───
+async function loadEmergency() {
+  document.getElementById("emergencyBody").innerHTML = `<tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr>`;
+  try {
+    const { data } = await sb.from("emergency_reports")
+      .select("*, reporter:profiles!emergency_reports_reporter_id_fkey(full_name, email, phone)")
+      .order("created_at", { ascending: false });
+    const rows = data || [];
+    const openCount = rows.filter(r => r.status === "open").length;
+    document.getElementById("emergencyBadge").textContent = openCount;
+    document.getElementById("emergencyBody").innerHTML = rows.length ? rows.map(r => `
+      <tr>
+        <td><strong>${r.reporter?.full_name || "—"}</strong><div style="font-size:11px;color:var(--text3)">${r.reporter?.phone || r.reporter?.email || ""}</div></td>
+        <td>${reportTypeBadge(r.report_type)}</td>
+        <td style="font-size:12px">${truncate(r.message, 45)}</td>
+        <td style="font-size:12px">${r.location_text || "—"}</td>
+        <td>${statusBadge(r.status)}</td>
+        <td style="font-size:12px">${fmtDate(r.created_at)}</td>
+        <td><button class="tbl-action" onclick="showEmergencyDetail(${JSON.stringify(JSON.stringify(r))})">عرض</button></td>
+      </tr>`).join("") : `<tr class="empty-row"><td colspan="7">لا توجد بلاغات</td></tr>`;
+  } catch(err) { toast("خطأ: " + err.message, "error"); }
+}
+
+// ─── MESSAGES (smart guide logs) ───
+async function loadMessages() {
+  document.getElementById("messagesBody").innerHTML = `<tr class="loading-row"><td colspan="5">جارٍ التحميل</td></tr>`;
+  try {
+    const { data } = await sb.from("smart_guide_logs")
+      .select("*, user:profiles!smart_guide_logs_user_id_fkey(full_name, email)")
+      .order("created_at", { ascending: false }).limit(100);
+    const rows = data || [];
+    document.getElementById("messagesBody").innerHTML = rows.length ? rows.map(m => `
+      <tr>
+        <td><strong>${m.user?.full_name || "—"}</strong><div style="font-size:11px;color:var(--text3)">${m.user?.email || ""}</div></td>
+        <td style="font-size:12px">${truncate(m.user_message, 50)}</td>
+        <td style="font-size:12px;color:var(--text2)">${truncate(m.assistant_reply, 50)}</td>
+        <td>${m.language === "ar" ? "عربي" : "English"}</td>
+        <td style="font-size:12px">${fmtDate(m.created_at)}</td>
+      </tr>`).join("") : `<tr class="empty-row"><td colspan="5">لا توجد رسائل</td></tr>`;
+  } catch(err) { toast("خطأ: " + err.message, "error"); }
+}
+
+// ─── NOTIFICATIONS ───
+async function loadNotifications() {
+  document.getElementById("notificationsBody").innerHTML = `<tr class="loading-row"><td colspan="5">جارٍ التحميل</td></tr>`;
+  try {
+    const { data } = await sb.from("notifications")
+      .select("*, sender:profiles!notifications_sender_id_fkey(full_name)")
+      .order("created_at", { ascending: false });
+    const rows = data || [];
+    document.getElementById("notificationsBody").innerHTML = rows.length ? rows.map(n => `
+      <tr>
+        <td><strong>${n.title_ar}</strong><div style="font-size:11px;color:var(--text3)">${n.title_en}</div></td>
+        <td style="font-size:12px">${n.sender?.full_name || "—"}</td>
+        <td><span class="badge info">${n.audience === "all" ? "الكل" : n.audience === "campaign_members" ? "أعضاء الحملة" : "مسؤول"}</span></td>
+        <td>${priorityBadge(n.priority)}</td>
+        <td style="font-size:12px">${fmtDate(n.created_at)}</td>
+      </tr>`).join("") : `<tr class="empty-row"><td colspan="5">لا توجد تنبيهات</td></tr>`;
+  } catch(err) { toast("خطأ: " + err.message, "error"); }
+}
+
+// ─── DETAIL PANELS ───
+function openPanel(title, html) {
+  document.getElementById("panelTitle").textContent = title;
+  document.getElementById("panelBody").innerHTML = html;
+  document.getElementById("detailPanel").classList.add("open");
+  document.getElementById("overlay").classList.add("open");
+}
+window.closePanel = function() {
+  document.getElementById("detailPanel").classList.remove("open");
+  document.getElementById("overlay").classList.remove("open");
+};
+
+window.showCampaignDetail = function(jsonStr) {
+  const c = JSON.parse(jsonStr);
+  const o = c.owner || {};
+  openPanel("تفاصيل الحملة", `
+    <div class="detail-section-title">بيانات الحملة</div>
+    <div class="detail-row"><div class="detail-label">الاسم (عربي)</div><div class="detail-value">${c.title_ar}</div></div>
+    <div class="detail-row"><div class="detail-label">الاسم (إنجليزي)</div><div class="detail-value">${c.title_en}</div></div>
+    <div class="detail-row"><div class="detail-label">المدينة</div><div class="detail-value">${c.city}</div></div>
+    <div class="detail-row"><div class="detail-label">نقطة التجمع</div><div class="detail-value">${c.meeting_point || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">السعر</div><div class="detail-value">${fmtNum(c.price)} ر.س</div></div>
+    <div class="detail-row"><div class="detail-label">المقاعد الكلية</div><div class="detail-value">${fmtNum(c.capacity)}</div></div>
+    <div class="detail-row"><div class="detail-label">المقاعد المتبقية</div><div class="detail-value" style="color:${c.seats_left < 10 ? 'var(--danger)' : 'var(--success)'}">${fmtNum(c.seats_left)}</div></div>
+    <div class="detail-row"><div class="detail-label">مدة الرحلة</div><div class="detail-value">${c.duration_days} أيام</div></div>
+    <div class="detail-row"><div class="detail-label">الحالة</div><div class="detail-value">${statusBadge(c.status)}</div></div>
+    <div class="detail-row"><div class="detail-label">تاريخ الإنشاء</div><div class="detail-value">${fmtDate(c.created_at)}</div></div>
+    <div class="detail-sep"></div>
+    <div class="detail-section-title">مسؤول الحملة</div>
+    <div class="detail-row"><div class="detail-label">الاسم</div><div class="detail-value">${o.full_name || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">البريد</div><div class="detail-value">${o.email || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">الجوال</div><div class="detail-value">${o.phone || "—"}</div></div>
+    <div class="detail-sep"></div>
+    <div class="detail-section-title">الوصف والشروط</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:10px">${c.description_ar || "—"}</div>
+    <div style="font-size:12px;color:var(--text3);line-height:1.6">${c.terms_ar || "—"}</div>
+  `);
+};
+
+window.showProviderDetail = function(jsonStr) {
+  const p = JSON.parse(jsonStr);
+  const pp = p.provider_profiles?.[0] || {};
+  openPanel("تفاصيل مسؤول الحملة", `
+    <div class="detail-section-title">البيانات الشخصية</div>
+    <div class="detail-row"><div class="detail-label">الاسم الكامل</div><div class="detail-value">${p.full_name}</div></div>
+    <div class="detail-row"><div class="detail-label">البريد</div><div class="detail-value">${p.email || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">الجوال</div><div class="detail-value">${p.phone || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">الدولة</div><div class="detail-value">${p.country_code || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">تاريخ التسجيل</div><div class="detail-value">${fmtDate(p.created_at)}</div></div>
+    <div class="detail-row"><div class="detail-label">ID</div><div class="detail-value" style="font-size:11px;color:var(--text3)">${p.id}</div></div>
+    <div class="detail-sep"></div>
+    <div class="detail-section-title">بيانات الحملة</div>
+    <div class="detail-row"><div class="detail-label">اسم الحملة</div><div class="detail-value">${pp.company_name || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">جهة التواصل</div><div class="detail-value">${pp.contact_person || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">رقم الترخيص</div><div class="detail-value">${pp.license_number || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">السجل التجاري</div><div class="detail-value">${pp.commercial_registration || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">الرقم الموحد</div><div class="detail-value">${pp.unified_number || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">المدينة</div><div class="detail-value">${pp.city || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">موثّق</div><div class="detail-value">${pp.verified ? `<span class="badge success">موثّق</span>` : `<span class="badge neutral">غير موثّق</span>`}</div></div>
+    <div class="detail-row"><div class="detail-label">عدد الحملات</div><div class="detail-value">${p.campCount || 0}</div></div>
+  `);
+};
+
+window.showAppDetail = function(jsonStr) {
+  const a = JSON.parse(jsonStr);
+  const pil = a.pilgrim || {};
+  const camp = a.campaigns || {};
+  openPanel("تفاصيل الطلب", `
+    <div class="detail-section-title">بيانات الطلب</div>
+    <div class="detail-row"><div class="detail-label">الحالة</div><div class="detail-value">${statusBadge(a.status)}</div></div>
+    <div class="detail-row"><div class="detail-label">حالة الدفع</div><div class="detail-value">${payBadge(a.payment_status)}</div></div>
+    <div class="detail-row"><div class="detail-label">تاريخ التقديم</div><div class="detail-value">${fmtDate(a.applied_at)}</div></div>
+    <div class="detail-row"><div class="detail-label">ملاحظة المسؤول</div><div class="detail-value">${a.owner_note || "—"}</div></div>
+    <div class="detail-sep"></div>
+    <div class="detail-section-title">الحاج</div>
+    <div class="detail-row"><div class="detail-label">الاسم</div><div class="detail-value">${pil.full_name || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">البريد</div><div class="detail-value">${pil.email || "—"}</div></div>
+    <div class="detail-sep"></div>
+    <div class="detail-section-title">الحملة</div>
+    <div class="detail-row"><div class="detail-label">اسم الحملة</div><div class="detail-value">${camp.title_ar || "—"}</div></div>
+    <div class="detail-sep"></div>
+    <div class="detail-section-title">رمز QR</div>
+    <div class="detail-row"><div class="detail-label">الرمز</div><div class="detail-value" style="font-size:11px;word-break:break-all;color:var(--text2)">${a.qr_token || "لم يُولَّد بعد"}</div></div>
+    <div class="detail-row"><div class="detail-label">مستخدم؟</div><div class="detail-value">${a.qr_used ? `<span class="badge neutral">مستخدم</span>` : `<span class="badge success">لم يستخدم</span>`}</div></div>
+    <div class="detail-row"><div class="detail-label">تاريخ الدخول</div><div class="detail-value">${fmtDate(a.checked_in_at)}</div></div>
+  `);
+};
+
+window.showEmergencyDetail = function(jsonStr) {
+  const r = JSON.parse(jsonStr);
+  const rep = r.reporter || {};
+  openPanel("تفاصيل البلاغ", `
+    <div class="detail-section-title">معلومات البلاغ</div>
+    <div class="detail-row"><div class="detail-label">نوع البلاغ</div><div class="detail-value">${reportTypeBadge(r.report_type)}</div></div>
+    <div class="detail-row"><div class="detail-label">الحالة</div><div class="detail-value">${statusBadge(r.status)}</div></div>
+    <div class="detail-row"><div class="detail-label">الموقع</div><div class="detail-value">${r.location_text || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">تاريخ البلاغ</div><div class="detail-value">${fmtDate(r.created_at)}</div></div>
+    <div class="detail-sep"></div>
+    <div class="detail-section-title">رسالة البلاغ</div>
+    <div style="font-size:13px;color:var(--text2);line-height:1.7;background:var(--surface2);padding:12px;border-radius:var(--radius-sm);margin-bottom:12px">${r.message}</div>
+    <div class="detail-sep"></div>
+    <div class="detail-section-title">المُبلِّغ</div>
+    <div class="detail-row"><div class="detail-label">الاسم</div><div class="detail-value">${rep.full_name || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">البريد</div><div class="detail-value">${rep.email || "—"}</div></div>
+    <div class="detail-row"><div class="detail-label">الجوال</div><div class="detail-value">${rep.phone || "—"}</div></div>
+    ${r.response ? `<div class="detail-sep"></div><div class="detail-section-title">رد مسؤول الحملة</div><div style="font-size:13px;color:var(--text2);line-height:1.7;background:var(--surface2);padding:12px;border-radius:var(--radius-sm)">${r.response}</div>` : ""}
+    <div class="detail-sep"></div>
+    <div style="font-size:11px;color:var(--text3);padding:8px 12px;background:var(--surface2);border-radius:var(--radius-sm)">
+      ⚠️ معالجة هذا البلاغ تكون من مسؤول الحملة — المدير يراقب ويتابع فقط
+    </div>
+  `);
+};
+
+// ─── FILTER TABLE ───
+window.filterTable = function(tableId, query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll(`#${tableId} tbody tr`).forEach(row => {
+    row.style.display = row.textContent.toLowerCase().includes(q) ? "" : "none";
+  });
+};
+
+// ─── CHECK EXISTING SESSION ───
+(async () => {
+  const { data } = await sb.auth.getSession();
+  if (data?.session) {
+    const { data: prof } = await sb.from("profiles").select("*").eq("id", data.session.user.id).maybeSingle();
+    if (prof?.role === "admin") {
+      currentAdmin = prof;
+      document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("appScreen").style.display = "block";
+      document.getElementById("sidebarName").textContent = prof.full_name || prof.email;
+      document.getElementById("sidebarEmail").textContent = prof.email || "";
+      document.getElementById("sidebarInitial").textContent = (prof.full_name || "م").slice(0,1).toUpperCase();
+      await refreshAll();
+    }
+  }
+})();
+
+</script>
+</body>
+</html>
