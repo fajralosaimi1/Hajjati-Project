@@ -1,38 +1,125 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نسيت كلمة المرور | حجتي</title>
-<link rel="stylesheet" href="/css/reset-pass-style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نسيت كلمة المرور | حجتي</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/hajjati.css">
 </head>
+<body class="page-otp auth-bg">
 
-<body>
+  <div class="gov-bar">
+    <div class="gov-bar-right">
+      <span>المملكة العربية السعودية</span>
+      <div class="gov-sep"></div>
+      <span class="gov-ministry">وزارة الحج والعمرة</span>
+    </div>
+    <div class="gov-bar-left">
+      <a class="gov-bar-link" href="/pages/faq.html">الأسئلة الشائعة</a>
+    </div>
+  </div>
 
-<div class="card">
-  <h2>نسيت كلمة المرور؟</h2>
-  <p>أدخل بريدك الإلكتروني وسنرسل لك رابط إعادة التعيين</p>
+  <nav class="navbar">
+    <a class="nav-brand" href="/pages/primaryHome.html">
+      <img src="/assets/logo_white-removebg.png" alt="حجتي" class="nav-logo-img">
+      <div class="brand-sub">منصة إدارة الحج الوطنية</div>
+    </a>
+    <div class="nav-actions">
+      <button class="btn-register" onclick="window.location.href='/pages/login.html'">← اختيار الدور</button>
+    </div>
+  </nav>
 
-  <input type="email" placeholder="البريد الإلكتروني" id="email">
-  <button onclick="sendReset()">إرسال الرابط</button>
+  <div class="auth-main">
+    <div class="auth-card otp-card">
 
-  <a class="back" href="/pages/primaryHome.html">العودة للرئيسية</a>
-</div>
+      <div class="auth-card-header">
+        <div class="auth-card-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z" fill="none"/><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <div>
+          <div class="auth-card-title">نسيت كلمة المرور؟</div>
+          <div class="auth-card-sub">سنرسل لك رابط إعادة التعيين على بريدك</div>
+        </div>
+      </div>
 
-<script>
-function sendReset(){
-  var email = document.getElementById('email').value;
+      <div class="auth-card-body">
 
-  if(!email){
-    alert("اكتب البريد الإلكتروني");
-    return;
-  }
+        <div id="errorMsg" style="display:none; background:#FEE2E2; border:1px solid #FECACA; border-radius:6px; padding:10px 14px; font-size:13px; font-weight:600; color:#991B1B; margin-bottom:16px;"></div>
+        <div id="successMsg" style="display:none; background:#D1FAE5; border:1px solid #6EE7B7; border-radius:6px; padding:10px 14px; font-size:13px; font-weight:600; color:#065F46; margin-bottom:16px;"></div>
 
-  alert("تم إرسال رابط إعادة التعيين إلى: " + email);
-  // هنا تربطه لاحقاً بالباك اند
-}
-</script>
+        <div class="form-field">
+          <label class="form-label">البريد الإلكتروني <span class="form-req">*</span></label>
+          <input id="email" type="email" class="form-input" placeholder="example@email.com" autocomplete="email">
+        </div>
+
+        <button id="sendBtn" class="auth-submit" onclick="sendReset()">
+          إرسال رابط الاستعادة
+        </button>
+
+      </div>
+
+      <div class="auth-card-footer">
+        تذكرت كلمة المرور؟
+        <a href="/pages/login-haj.html">تسجيل الدخول</a>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-bottom" style="border-top:1px solid rgba(255,255,255,0.06);">
+      <span>© ١٤٤٧ هـ — منصة حجتي</span>
+      <div class="footer-bottom-links">
+        <a href="/pages/faq.html">الأسئلة الشائعة</a>
+        <a href="#">سياسة الخصوصية</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-root" id="toastRoot"></div>
+
+  <script type="module">
+    import { supabase } from '/js/supabaseClient.js';
+
+    window.sendReset = async function () {
+      const email  = document.getElementById('email').value.trim();
+      const errEl  = document.getElementById('errorMsg');
+      const succEl = document.getElementById('successMsg');
+      const btn    = document.getElementById('sendBtn');
+
+      errEl.style.display  = 'none';
+      succEl.style.display = 'none';
+
+      if (!email) {
+        errEl.textContent   = 'يرجى إدخال البريد الإلكتروني.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      btn.disabled  = true;
+      btn.innerHTML = '<span class="spinner"></span> جارٍ الإرسال...';
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/pages/update-password.html'
+      });
+
+      btn.disabled    = false;
+      btn.textContent = 'إرسال رابط الاستعادة';
+
+      if (error) {
+        errEl.textContent   = 'حدث خطأ: ' + error.message;
+        errEl.style.display = 'block';
+      } else {
+        succEl.textContent   = '✅ تم الإرسال! تحقق من بريدك الإلكتروني واضغط على الرابط.';
+        succEl.style.display = 'block';
+      }
+    };
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') window.sendReset();
+    });
+  </script>
 
 </body>
 </html>
