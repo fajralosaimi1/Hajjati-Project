@@ -1,17 +1,20 @@
-﻿function fallbackReply(message, lang) {
+// ─── مهم: يخبر Vercel إن هذا Edge Function ───
+export const config = { runtime: "edge" };
+
+function fallbackReply(message, lang) {
   if (/عرفات|منى|مزدلفة|شعائر|مسار/i.test(message)) {
     return lang === "ar"
-      ? "راجعي خطوات المناسك الأساسية من لوحة الحاج وتابعي تعليمات الحملة في التنبيهات."
+      ? "راجع خطوات المناسك الأساسية من لوحة الحاج وتابع تعليمات الحملة في التنبيهات."
       : "Review the ritual flow from the pilgrim dashboard and follow your campaign alerts.";
   }
   if (/فقدان|مفقود|lost/i.test(message)) {
     return lang === "ar"
-      ? "استخدمي صفحة الطوارئ واختاري بلاغ فقدان مع كتابة آخر موقع معروف ووسيلة التواصل."
+      ? "استخدم صفحة الطوارئ واختر بلاغ فقدان مع كتابة آخر موقع معروف ووسيلة التواصل."
       : "Use the emergency page, choose the lost-person report type, and include the last known location.";
   }
   return lang === "ar"
-    ? "رفيق حجتي غير مربوط بمفتاح AI بعد. أضيفي OPENAI_API_KEY و OPENAI_MODEL في Vercel لتفعيل الرد الذكي."
-    : "Rafiq Hajjati is not connected to AI yet. Add OPENAI_API_KEY and OPENAI_MODEL in Vercel to enable live responses.";
+    ? "عذراً، تعذّر الاتصال بالمساعد. حاول مجدداً."
+    : "Sorry, could not reach the assistant. Please try again.";
 }
 
 function json(payload, status = 200) {
@@ -27,7 +30,7 @@ export default async (request) => {
   }
 
   const body = await request.json().catch(() => ({}));
-    const lastMessage = Array.isArray(body.messages)
+  const lastMessage = Array.isArray(body.messages)
     ? [...body.messages].reverse().find((item) => item?.role === "user")?.content
     : "";
   const message = String(body.message || lastMessage || "").trim();
@@ -43,9 +46,8 @@ export default async (request) => {
     );
   }
 
-  // تحذير: وضع المفتاح هنا غير آمن، استخدم Environment Variables في Vercel بدلاً من ذلك
   const apiKey = process.env.OPENAI_API_KEY;
-  const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+  const model  = process.env.OPENAI_MODEL || "gpt-4o-mini";
 
   if (!apiKey) {
     return json({
@@ -80,6 +82,8 @@ export default async (request) => {
     });
 
     if (!response.ok) {
+      const errText = await response.text().catch(() => "");
+      console.error("OpenAI error:", response.status, errText);
       return json({
         reply: fallbackReply(message, lang),
         mode: "fallback"
@@ -89,7 +93,8 @@ export default async (request) => {
     const payload = await response.json();
     const reply = payload.choices?.[0]?.message?.content || fallbackReply(message, lang);
     return json({ reply, mode: "openai" });
-  } catch {
+  } catch (err) {
+    console.error("smart-guide error:", err);
     return json({
       reply: fallbackReply(message, lang),
       mode: "fallback"
