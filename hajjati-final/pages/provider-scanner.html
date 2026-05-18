@@ -6,7 +6,6 @@
   <title>مسح QR | حجتي</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/hajjati.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
 </head>
 <body>
 
@@ -56,16 +55,17 @@
             <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg>
             <span style="font-size:14px; font-weight:700; color:#fff;">الكاميرا</span>
           </div>
-          <div class="scanner-box" style="border-radius:0; aspect-ratio:1; position:relative;">
+          <div style="border-radius:0; aspect-ratio:1; position:relative; background:#000; overflow:hidden;">
             <video id="scannerVideo" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>
             <canvas id="scannerCanvas" style="display:none;"></canvas>
-            <div class="scanner-overlay">
-              <div class="scanner-frame" id="scannerFrame">
-                <div style="position:absolute; top:-3px; right:-3px; width:20px; height:20px; border-top:3px solid var(--c-accent); border-right:3px solid var(--c-accent); border-radius:0 4px 0 0;"></div>
-                <div style="position:absolute; top:-3px; left:-3px; width:20px; height:20px; border-top:3px solid var(--c-accent); border-left:3px solid var(--c-accent); border-radius:4px 0 0 0;"></div>
-                <div style="position:absolute; bottom:-3px; right:-3px; width:20px; height:20px; border-bottom:3px solid var(--c-accent); border-right:3px solid var(--c-accent); border-radius:0 0 4px 0;"></div>
-                <div style="position:absolute; bottom:-3px; left:-3px; width:20px; height:20px; border-bottom:3px solid var(--c-accent); border-left:3px solid var(--c-accent); border-radius:0 0 0 4px;"></div>
-                <div id="scanLine" style="position:absolute; top:0; left:0; right:0; height:2px; background:var(--c-accent); opacity:0.8; animation:scanAnim 2s linear infinite;"></div>
+            <!-- إطار المسح -->
+            <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+              <div style="position:relative; width:60%; aspect-ratio:1;">
+                <div style="position:absolute; top:-3px; right:-3px; width:20px; height:20px; border-top:3px solid #22c55e; border-right:3px solid #22c55e;"></div>
+                <div style="position:absolute; top:-3px; left:-3px; width:20px; height:20px; border-top:3px solid #22c55e; border-left:3px solid #22c55e;"></div>
+                <div style="position:absolute; bottom:-3px; right:-3px; width:20px; height:20px; border-bottom:3px solid #22c55e; border-right:3px solid #22c55e;"></div>
+                <div style="position:absolute; bottom:-3px; left:-3px; width:20px; height:20px; border-bottom:3px solid #22c55e; border-left:3px solid #22c55e;"></div>
+                <div id="scanLine" style="position:absolute; top:0; left:0; right:0; height:2px; background:#22c55e; opacity:0.8; animation:scanAnim 2s linear infinite;"></div>
               </div>
             </div>
           </div>
@@ -95,7 +95,7 @@
       <div>
         <div id="resultWaiting" class="surface-card" style="text-align:center; padding:48px 24px;">
           <div style="width:80px; height:80px; background:var(--c-bg); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
-            <svg viewBox="0 0 24 24" style="width:36px;height:36px;stroke:var(--c-label);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg>
+            <svg viewBox="0 0 24 24" style="width:36px;height:36px;stroke:var(--c-label);fill:none;stroke-width:1.5;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg>
           </div>
           <div style="font-size:16px; font-weight:700; color:var(--c-text); margin-bottom:8px;">جاهز للمسح</div>
           <div style="font-size:13px; color:var(--c-label); line-height:1.7;">شغّل الكاميرا ووجّهها نحو باركود الحاج،<br>أو أدخل الرمز يدوياً</div>
@@ -175,6 +175,7 @@
     let scanning    = false;
     let scanLog     = [];
     let lastScanned = null;
+    let detector    = null;
     let animFrame   = null;
 
     async function init() {
@@ -182,6 +183,11 @@
       if (!session) { window.location.href = '/pages/login.html'; return; }
       const name = `${session.profile.first_name||''} ${session.profile.last_name||''}`.trim() || 'مزود';
       document.getElementById('navUserName').textContent = name;
+
+      // تحقق من دعم BarcodeDetector
+      if ('BarcodeDetector' in window) {
+        detector = new BarcodeDetector({ formats: ['qr_code'] });
+      }
     }
 
     window.startScanner = async () => {
@@ -193,45 +199,42 @@
         document.getElementById('startBtn').style.display = 'none';
         document.getElementById('stopBtn').style.display  = 'block';
         scanning = true;
-        scanFrame();
-        showToast('الكاميرا تعمل — وجّهها نحو الباركود', 'info');
+
+        if (detector) {
+          // استخدام BarcodeDetector API المدمج
+          scanWithDetector();
+          showToast('الكاميرا تعمل — وجّهها نحو الباركود', 'info');
+        } else {
+          // fallback: canvas + manual
+          showToast('الكاميرا تعمل — متصفحك لا يدعم القراءة التلقائية، استخدم الإدخال اليدوي', 'warning');
+        }
       } catch (e) {
         showToast('تعذّر الوصول للكاميرا — استخدم الإدخال اليدوي', 'error');
       }
     };
 
+    async function scanWithDetector() {
+      if (!scanning) return;
+      const video = document.getElementById('scannerVideo');
+      try {
+        const barcodes = await detector.detect(video);
+        if (barcodes.length > 0) {
+          const code = barcodes[0].rawValue;
+          if (code && code !== lastScanned) {
+            await processCode(code);
+          }
+        }
+      } catch (e) { /* تجاهل أخطاء الفريم */ }
+      animFrame = setTimeout(scanWithDetector, 300);
+    }
+
     window.stopScanner = () => {
       scanning = false;
-      if (animFrame) cancelAnimationFrame(animFrame);
+      if (animFrame) clearTimeout(animFrame);
       if (stream) stream.getTracks().forEach(t => t.stop());
       document.getElementById('startBtn').style.display = 'block';
       document.getElementById('stopBtn').style.display  = 'none';
     };
-
-    // ✅ قراءة حقيقية من الكاميرا باستخدام jsQR
-    function scanFrame() {
-      if (!scanning) return;
-      const video  = document.getElementById('scannerVideo');
-      const canvas = document.getElementById('scannerCanvas');
-      const ctx    = canvas.getContext('2d');
-
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvas.width  = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-        const code = jsQR(imageData.data, imageData.width, imageData.height, {
-          inversionAttempts: 'dontInvert'
-        });
-
-        if (code && code.data && code.data !== lastScanned) {
-          processCode(code.data);
-        }
-      }
-
-      animFrame = requestAnimationFrame(scanFrame);
-    }
 
     window.verifyManual = async () => {
       const code = document.getElementById('manualCode').value.trim();
@@ -310,8 +313,8 @@
       document.getElementById('scanLog').innerHTML = scanLog.map(entry => `
         <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:${entry.status==='valid'?'#F0FDF4':'#FEF2F2'}; border-radius:6px;">
           <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:14px;">${entry.status==='valid'?'✓':'✗'}</span>
-            <span style="font-size:13px; font-weight:600; color:var(--c-text);">${entry.name}</span>
+            <span>${entry.status==='valid'?'✓':'✗'}</span>
+            <span style="font-size:13px; font-weight:600;">${entry.name}</span>
           </div>
           <span style="font-size:11px; color:var(--c-label);">${entry.time}</span>
         </div>`).join('');
