@@ -6,6 +6,8 @@
   <title>مسح QR | حجتي</title>
   <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/hajjati.css">
+  <!-- jsQR مستضافة في نفس المشروع -->
+  <script src="/js/jsQR.js"></script>
 </head>
 <body>
 
@@ -48,40 +50,35 @@
   <div style="background:var(--c-bg); padding:40px 60px; min-height:60vh;">
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:28px; max-width:900px; margin:0 auto;">
 
-      <!-- ═ الكاميرا ═ -->
       <div>
         <div class="surface-card" style="padding:0; overflow:hidden;">
           <div style="background:var(--c-primary); padding:14px 20px; display:flex; align-items:center; gap:10px;">
-            <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg>
+            <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:#fff;fill:none;stroke-width:1.8;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg>
             <span style="font-size:14px; font-weight:700; color:#fff;">الكاميرا</span>
           </div>
-          <div style="border-radius:0; aspect-ratio:1; position:relative; background:#000; overflow:hidden;">
+          <div style="position:relative; aspect-ratio:1; background:#000; overflow:hidden;">
             <video id="scannerVideo" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover;"></video>
             <canvas id="scannerCanvas" style="display:none;"></canvas>
-            <!-- إطار المسح -->
             <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;">
               <div style="position:relative; width:60%; aspect-ratio:1;">
                 <div style="position:absolute; top:-3px; right:-3px; width:20px; height:20px; border-top:3px solid #22c55e; border-right:3px solid #22c55e;"></div>
                 <div style="position:absolute; top:-3px; left:-3px; width:20px; height:20px; border-top:3px solid #22c55e; border-left:3px solid #22c55e;"></div>
                 <div style="position:absolute; bottom:-3px; right:-3px; width:20px; height:20px; border-bottom:3px solid #22c55e; border-right:3px solid #22c55e;"></div>
                 <div style="position:absolute; bottom:-3px; left:-3px; width:20px; height:20px; border-bottom:3px solid #22c55e; border-left:3px solid #22c55e;"></div>
-                <div id="scanLine" style="position:absolute; top:0; left:0; right:0; height:2px; background:#22c55e; opacity:0.8; animation:scanAnim 2s linear infinite;"></div>
+                <div style="position:absolute; top:0; left:0; right:0; height:2px; background:#22c55e; animation:scanAnim 2s linear infinite;"></div>
               </div>
             </div>
           </div>
           <div style="padding:16px 20px; display:flex; gap:10px;">
             <button id="startBtn" class="btn btn-primary btn-full" onclick="startScanner()">
-              <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
               تشغيل الكاميرا
             </button>
             <button id="stopBtn" class="btn btn-outline btn-full" onclick="stopScanner()" style="display:none;">
-              <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><rect x="6" y="6" width="12" height="12"/></svg>
               إيقاف
             </button>
           </div>
         </div>
 
-        <!-- إدخال يدوي -->
         <div class="surface-card" style="margin-top:16px;">
           <div class="surface-card-title">أو أدخل الرمز يدوياً</div>
           <div style="display:flex; gap:10px;">
@@ -91,12 +88,8 @@
         </div>
       </div>
 
-      <!-- ═ نتيجة المسح ═ -->
       <div>
         <div id="resultWaiting" class="surface-card" style="text-align:center; padding:48px 24px;">
-          <div style="width:80px; height:80px; background:var(--c-bg); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px;">
-            <svg viewBox="0 0 24 24" style="width:36px;height:36px;stroke:var(--c-label);fill:none;stroke-width:1.5;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3z"/></svg>
-          </div>
           <div style="font-size:16px; font-weight:700; color:var(--c-text); margin-bottom:8px;">جاهز للمسح</div>
           <div style="font-size:13px; color:var(--c-label); line-height:1.7;">شغّل الكاميرا ووجّهها نحو باركود الحاج،<br>أو أدخل الرمز يدوياً</div>
         </div>
@@ -175,22 +168,20 @@
     let scanning    = false;
     let scanLog     = [];
     let lastScanned = null;
-    let detector    = null;
-    let animFrame   = null;
+    let rafId       = null;
 
     async function init() {
       const session = await getSession();
       if (!session) { window.location.href = '/pages/login.html'; return; }
       const name = `${session.profile.first_name||''} ${session.profile.last_name||''}`.trim() || 'مزود';
       document.getElementById('navUserName').textContent = name;
-
-      // تحقق من دعم BarcodeDetector
-      if ('BarcodeDetector' in window) {
-        detector = new BarcodeDetector({ formats: ['qr_code'] });
-      }
     }
 
     window.startScanner = async () => {
+      if (typeof jsQR === 'undefined') {
+        showToast('مكتبة jsQR غير محملة — تأكدي من رفع js/jsQR.js على GitHub', 'error');
+        return;
+      }
       try {
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const video = document.getElementById('scannerVideo');
@@ -199,38 +190,37 @@
         document.getElementById('startBtn').style.display = 'none';
         document.getElementById('stopBtn').style.display  = 'block';
         scanning = true;
-
-        if (detector) {
-          // استخدام BarcodeDetector API المدمج
-          scanWithDetector();
-          showToast('الكاميرا تعمل — وجّهها نحو الباركود', 'info');
-        } else {
-          // fallback: canvas + manual
-          showToast('الكاميرا تعمل — متصفحك لا يدعم القراءة التلقائية، استخدم الإدخال اليدوي', 'warning');
-        }
+        requestAnimationFrame(scanFrame);
+        showToast('الكاميرا تعمل — وجّهها نحو الباركود', 'info');
       } catch (e) {
         showToast('تعذّر الوصول للكاميرا — استخدم الإدخال اليدوي', 'error');
       }
     };
 
-    async function scanWithDetector() {
+    function scanFrame() {
       if (!scanning) return;
-      const video = document.getElementById('scannerVideo');
-      try {
-        const barcodes = await detector.detect(video);
-        if (barcodes.length > 0) {
-          const code = barcodes[0].rawValue;
-          if (code && code !== lastScanned) {
-            await processCode(code);
-          }
+      const video  = document.getElementById('scannerVideo');
+      const canvas = document.getElementById('scannerCanvas');
+      const ctx    = canvas.getContext('2d');
+
+      if (video.readyState === video.HAVE_ENOUGH_DATA) {
+        canvas.width  = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height, {
+          inversionAttempts: 'dontInvert'
+        });
+        if (code && code.data && code.data !== lastScanned) {
+          processCode(code.data);
         }
-      } catch (e) { /* تجاهل أخطاء الفريم */ }
-      animFrame = setTimeout(scanWithDetector, 300);
+      }
+      rafId = requestAnimationFrame(scanFrame);
     }
 
     window.stopScanner = () => {
       scanning = false;
-      if (animFrame) clearTimeout(animFrame);
+      if (rafId) cancelAnimationFrame(rafId);
       if (stream) stream.getTracks().forEach(t => t.stop());
       document.getElementById('startBtn').style.display = 'block';
       document.getElementById('stopBtn').style.display  = 'none';
@@ -250,7 +240,6 @@
 
       try {
         const result = await verifyQRCode(code);
-
         if (result.status === 'valid') {
           showValid(result);
           addToLog(result.pilgrim_name || 'حاج', 'valid');
@@ -310,18 +299,14 @@
     function addToLog(name, status) {
       scanLog.unshift({ name, status, time: new Date().toLocaleTimeString('ar-SA') });
       document.getElementById('todayCount').textContent = `${scanLog.length} حاج`;
-      document.getElementById('scanLog').innerHTML = scanLog.map(entry => `
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:${entry.status==='valid'?'#F0FDF4':'#FEF2F2'}; border-radius:6px;">
-          <div style="display:flex; align-items:center; gap:8px;">
-            <span>${entry.status==='valid'?'✓':'✗'}</span>
-            <span style="font-size:13px; font-weight:600;">${entry.name}</span>
-          </div>
-          <span style="font-size:11px; color:var(--c-label);">${entry.time}</span>
+      document.getElementById('scanLog').innerHTML = scanLog.map(e => `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; background:${e.status==='valid'?'#F0FDF4':'#FEF2F2'}; border-radius:6px;">
+          <span style="font-size:13px; font-weight:600;">${e.status==='valid'?'✓':'✗'} ${e.name}</span>
+          <span style="font-size:11px; color:var(--c-label);">${e.time}</span>
         </div>`).join('');
     }
 
     window.handleLogout = async () => { await signOut(); window.location.href = '/pages/primaryHome.html'; };
-
     init();
   </script>
 
