@@ -186,7 +186,7 @@
 
     window.startScanner = async () => {
       try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const video = document.getElementById('scannerVideo');
         video.srcObject = stream;
         await video.play();
