@@ -524,6 +524,10 @@ tbody tr:last-child td { border-bottom: none; }
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         طلبات التسجيل
       </div>
+      <div class="nav-item" data-section="paid" onclick="showSection('paid', this)">
+        <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        الحجاج المدفوعون
+      </div>
       <div class="nav-item" data-section="emergency" onclick="showSection('emergency', this)">
         <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         بلاغات الطوارئ
@@ -607,7 +611,7 @@ tbody tr:last-child td { border-bottom: none; }
             <div class="stat-value" id="kpi-applications">—</div>
             <div class="stat-meta">إجمالي الطلبات المقدمة</div>
           </div>
-          <div class="stat-card" style="--card-color:var(--accent)">
+          <div class="stat-card" style="--card-color:var(--accent)" onclick="showSection('paid',document.querySelector('[data-section=paid]'))">
             <div class="stat-icon"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></div>
             <div class="stat-label">المدفوعات</div>
             <div class="stat-value" id="kpi-paid">—</div>
@@ -811,6 +815,37 @@ tbody tr:last-child td { border-bottom: none; }
                 <th>تفاصيل</th>
               </tr></thead>
               <tbody id="applicationsBody"><tr class="loading-row"><td colspan="7">جارٍ التحميل</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PAID APPLICATIONS ══ -->
+      <div class="section" id="section-paid">
+        <div class="section-header">
+          <div>
+            <div class="section-title">الحجاج المدفوعون</div>
+            <div class="section-sub">الحجاج الذين أتمّوا الدفع — يمتلكون رمز QR نشط</div>
+          </div>
+        </div>
+        <div class="table-section">
+          <div class="table-head">
+            <div class="table-head-title"><div class="dot" style="background:var(--accent)"></div> قائمة المدفوعين</div>
+            <input class="search-box" placeholder="بحث..." oninput="filterTable('paidTable', this.value)">
+          </div>
+          <div class="table-wrap">
+            <table id="paidTable">
+              <thead><tr>
+                <th>اسم الحاج</th>
+                <th>البريد الإلكتروني</th>
+                <th>الجوال</th>
+                <th>الحملة</th>
+                <th>رمز QR</th>
+                <th>حالة الدخول</th>
+                <th>تاريخ الدفع</th>
+                <th>تفاصيل</th>
+              </tr></thead>
+              <tbody id="paidBody"><tr class="loading-row"><td colspan="8">جارٍ التحميل</td></tr></tbody>
             </table>
           </div>
         </div>
@@ -1049,6 +1084,7 @@ async function loadSection(name) {
   else if (name === "providers") { await loadProviders(); }
   else if (name === "pilgrims") { await loadPilgrims(); }
   else if (name === "applications") { await loadApplications(); }
+  else if (name === "paid") { await loadPaidApplications(); }
   else if (name === "emergency") { await loadEmergency(); }
   else if (name === "messages") { await loadMessages(); }
   else if (name === "notifications") { await loadNotifications(); }
@@ -1276,6 +1312,34 @@ async function loadApplications() {
         <td style="font-size:12px">${fmtDate(a.applied_at)}</td>
         <td><button class="tbl-action" onclick="showAppDetail('${a.id}')">عرض</button></td>
       </tr>`).join("") : `<tr class="empty-row"><td colspan="7">لا توجد طلبات</td></tr>`;
+  } catch(err) { toast("خطأ: " + err.message, "error"); }
+}
+
+// ─── PAID APPLICATIONS TABLE ───
+async function loadPaidApplications() {
+  document.getElementById("paidBody").innerHTML = `<tr class="loading-row"><td colspan="8">جارٍ التحميل</td></tr>`;
+  try {
+    const { data } = await sb.from("campaign_applications")
+      .select("*, pilgrim:profiles!campaign_applications_pilgrim_id_fkey(full_name, email, phone), campaigns(title_ar)")
+      .eq("payment_status", "paid")
+      .order("reviewed_at", { ascending: false });
+    const rows = data || [];
+    rows.forEach(r => { _store.applications[r.id] = r; });
+    document.getElementById("paidBody").innerHTML = rows.length ? rows.map(a => `
+      <tr>
+        <td><strong>${a.pilgrim?.full_name || "—"}</strong></td>
+        <td style="font-size:12px">${a.pilgrim?.email || "—"}</td>
+        <td>${a.pilgrim?.phone || "—"}</td>
+        <td style="font-size:12px">${a.campaigns?.title_ar || "—"}</td>
+        <td>${a.qr_token
+          ? `<span class="badge info" style="font-size:10px;word-break:break-all">${a.qr_token.slice(0,12)}…</span>`
+          : "—"}</td>
+        <td>${a.qr_used
+          ? `<span class="badge neutral">دخل ✓</span>`
+          : `<span class="badge success">لم يدخل بعد</span>`}</td>
+        <td style="font-size:12px">${fmtDate(a.reviewed_at || a.created_at)}</td>
+        <td><button class="tbl-action" onclick="showAppDetail('${a.id}')">عرض</button></td>
+      </tr>`).join("") : `<tr class="empty-row"><td colspan="8">لا يوجد حجاج مدفوعون بعد</td></tr>`;
   } catch(err) { toast("خطأ: " + err.message, "error"); }
 }
 
