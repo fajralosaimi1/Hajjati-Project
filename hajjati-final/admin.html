@@ -932,6 +932,7 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 // ─── STATE ───
 let currentAdmin = null;
 let allData = {};
+const _store = { campaigns:{}, providers:{}, applications:{}, emergency:{} };
 
 // ─── HELPERS ───
 function toast(msg, type = "info") {
@@ -1199,9 +1200,10 @@ async function loadCampaigns() {
         <td><span style="color:${c.seats_left < 10 ? 'var(--danger)' : 'var(--text)'}">${fmtNum(c.seats_left)}</span> / ${fmtNum(c.capacity)}</td>
         <td>${fmtNum(c.price)} ر.س</td>
         <td>${statusBadge(c.status)}</td>
-        <td><button class="tbl-action" onclick="showCampaignDetail(${JSON.stringify(JSON.stringify(c))})">عرض</button></td>
+        <td><button class="tbl-action" onclick="showCampaignDetail('${c.id}')">عرض</button></td>
       </tr>`).join("") : `<tr class="empty-row"><td colspan="7">لا توجد حملات</td></tr>`;
     allData.campaignsFull = rows;
+    rows.forEach(r => { _store.campaigns[r.id] = r; });
   } catch(err) { toast("خطأ: " + err.message, "error"); }
 }
 
@@ -1224,9 +1226,10 @@ async function loadProviders() {
         <td>${p.phone || "—"}</td>
         <td><strong>${cnt}</strong> حملة</td>
         <td>${pp.verified ? `<span class="badge success">موثّق</span>` : `<span class="badge neutral">غير موثّق</span>`}</td>
-        <td><button class="tbl-action" onclick="showProviderDetail(${JSON.stringify(JSON.stringify({...p, campCount: cnt}))})">عرض</button></td>
+        <td><button class="tbl-action" onclick="showProviderDetail('${p.id}')">عرض</button></td>
       </tr>`;}).join("") : `<tr class="empty-row"><td colspan="7">لا يوجد مسؤولون</td></tr>`;
     allData.providersFull = rows;
+    rows.forEach(r => { _store.providers[r.id] = {...r, campCount: campCount[r.id]||0}; });
   } catch(err) { toast("خطأ: " + err.message, "error"); }
 }
 
@@ -1262,6 +1265,7 @@ async function loadApplications() {
       .select("*, pilgrim:profiles!campaign_applications_pilgrim_id_fkey(full_name, email), campaigns(title_ar)")
       .order("applied_at", { ascending: false });
     const rows = data || [];
+    rows.forEach(r => { _store.applications[r.id] = r; });
     document.getElementById("applicationsBody").innerHTML = rows.length ? rows.map(a => `
       <tr>
         <td><strong>${a.pilgrim?.full_name || "—"}</strong><div style="font-size:11px;color:var(--text3)">${a.pilgrim?.email || ""}</div></td>
@@ -1270,7 +1274,7 @@ async function loadApplications() {
         <td>${payBadge(a.payment_status)}</td>
         <td>${a.qr_token ? (a.qr_used ? `<span class="badge neutral">مستخدم</span>` : `<span class="badge success">نشط</span>`) : "—"}</td>
         <td style="font-size:12px">${fmtDate(a.applied_at)}</td>
-        <td><button class="tbl-action" onclick="showAppDetail(${JSON.stringify(JSON.stringify(a))})">عرض</button></td>
+        <td><button class="tbl-action" onclick="showAppDetail('${a.id}')">عرض</button></td>
       </tr>`).join("") : `<tr class="empty-row"><td colspan="7">لا توجد طلبات</td></tr>`;
   } catch(err) { toast("خطأ: " + err.message, "error"); }
 }
@@ -1285,6 +1289,7 @@ async function loadEmergency() {
     const rows = data || [];
     const openCount = rows.filter(r => r.status === "open").length;
     document.getElementById("emergencyBadge").textContent = openCount;
+    rows.forEach(r => { _store.emergency[r.id] = r; });
     document.getElementById("emergencyBody").innerHTML = rows.length ? rows.map(r => `
       <tr>
         <td><strong>${r.reporter?.full_name || "—"}</strong><div style="font-size:11px;color:var(--text3)">${r.reporter?.phone || r.reporter?.email || ""}</div></td>
@@ -1293,7 +1298,7 @@ async function loadEmergency() {
         <td style="font-size:12px">${r.location_text || "—"}</td>
         <td>${statusBadge(r.status)}</td>
         <td style="font-size:12px">${fmtDate(r.created_at)}</td>
-        <td><button class="tbl-action" onclick="showEmergencyDetail(${JSON.stringify(JSON.stringify(r))})">عرض</button></td>
+        <td><button class="tbl-action" onclick="showEmergencyDetail('${r.id}')">عرض</button></td>
       </tr>`).join("") : `<tr class="empty-row"><td colspan="7">لا توجد بلاغات</td></tr>`;
   } catch(err) { toast("خطأ: " + err.message, "error"); }
 }
@@ -1348,8 +1353,8 @@ window.closePanel = function() {
   document.getElementById("overlay").classList.remove("open");
 };
 
-window.showCampaignDetail = function(jsonStr) {
-  const c = JSON.parse(jsonStr);
+window.showCampaignDetail = function(id) {
+  const c = _store.campaigns[id] || {};
   const o = c.owner || {};
   openPanel("تفاصيل الحملة", `
     <div class="detail-section-title">بيانات الحملة</div>
@@ -1375,8 +1380,8 @@ window.showCampaignDetail = function(jsonStr) {
   `);
 };
 
-window.showProviderDetail = function(jsonStr) {
-  const p = JSON.parse(jsonStr);
+window.showProviderDetail = function(id) {
+  const p = _store.providers[id] || {};
   const pp = p.provider_profiles?.[0] || {};
   openPanel("تفاصيل مسؤول الحملة", `
     <div class="detail-section-title">البيانات الشخصية</div>
@@ -1399,8 +1404,8 @@ window.showProviderDetail = function(jsonStr) {
   `);
 };
 
-window.showAppDetail = function(jsonStr) {
-  const a = JSON.parse(jsonStr);
+window.showAppDetail = function(id) {
+  const a = _store.applications[id] || {};
   const pil = a.pilgrim || {};
   const camp = a.campaigns || {};
   openPanel("تفاصيل الطلب", `
@@ -1424,8 +1429,8 @@ window.showAppDetail = function(jsonStr) {
   `);
 };
 
-window.showEmergencyDetail = function(jsonStr) {
-  const r = JSON.parse(jsonStr);
+window.showEmergencyDetail = function(id) {
+  const r = _store.emergency[id] || {};
   const rep = r.reporter || {};
   openPanel("تفاصيل البلاغ", `
     <div class="detail-section-title">معلومات البلاغ</div>
